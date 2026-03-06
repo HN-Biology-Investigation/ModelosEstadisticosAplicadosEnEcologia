@@ -1,0 +1,12 @@
+---
+title: "Ecologia y Estadistica"
+author: "David Murillo"
+format: html
+editor: visual
+---
+
+Que es la ecologia?
+
+Que es la estadistica?
+
+Estadistica Descriptiva

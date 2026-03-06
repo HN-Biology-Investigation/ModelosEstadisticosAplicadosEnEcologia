@@ -1,0 +1,69 @@
+---
+title: "Curso Uso de R en Ecologia"
+author: "David Murillo"
+date: today
+format: html
+editor: visual
+---
+
+## Bienvenidos
+
+Este espacio ha sido diseñado como una plataforma para compartir la teoría, los materiales, artículos y códigos utilizados en el **Curso de Uso de R aplicado a la Ecología**. A lo largo de este curso exploraremos cómo las herramientas estadísticas y computacionales pueden ayudarnos a comprender patrones ecológicos, analizar datos biológicos y responder preguntas relevantes para la conservación y el manejo de la biodiversidad.
+
+La ecología moderna depende cada vez más del análisis cuantitativo. Desde la descripción de patrones básicos hasta la construcción de modelos estadísticos más complejos, el uso de **R** se ha convertido en una herramienta fundamental para ecólogos y científicos ambientales. En este curso abordaremos estos métodos de manera progresiva, comenzando con los fundamentos de la estadística y avanzando hacia modelos aplicados comúnmente en investigación ecológica, incluyendo modelos de abundancia, ocupación, análisis de comunidades y enfoques bayesianos.
+
+El objetivo es que los participantes desarrollen una **comprensión conceptual sólida de los métodos estadísticos**, al mismo tiempo que adquieren habilidades prácticas para implementarlos en **R** y aplicarlos a sus propios datos.
+
+Cada clase incluirá explicaciones conceptuales, ejemplos aplicados a problemas ecológicos reales y código reproducible para facilitar el aprendizaje y la implementación de los métodos.
+
+---
+
+### Contenido del curso
+
+[Clase 1: ¿Qué es ecología? ¿Qué es la estadística? y estadística descriptiva](Clase1.html)
+
+[Clase 2: t de Student y análisis de varianza](Clase2.html)
+
+[Clase 3: Pruebas no paramétricas](Clase3.html)
+
+[Clase 4: Modelos lineales](Clase4.html)
+
+[Clase 5: Modelos lineales generalizados: Poisson](Clase5.html)
+
+[Clase 6: Modelos lineales generalizados: Binomial](Clase6.html)
+
+[Clase 7: Modelos lineales generalizados: Proporción](Clase7.html)
+
+[Clase 8: Modelos lineales generalizados mixtos](Clase8.html)
+
+[Clase 9: Análisis de riqueza de especies y sus aplicaciones en conservación](Clase9.html)
+
+[Clase 10: Análisis de comunidades y sus aplicaciones en conservación](Clase10.html)
+
+[Clase 11: ¿Qué es densidad y abundancia y cómo se estiman?](Clase11.html)
+
+[Clase 12: Cómo estimar abundancia](Clase12.html)
+
+[Clase 13: Cómo estimar abundancia considerando detectabilidad](Clase13.html)
+
+[Clase 14: ¿Qué es ocupación y cómo se estima?](Clase14.html)
+
+[Clase 15: Cómo estimar ocupación considerando detectabilidad](Clase15.html)
+
+[Clase 16: Modelos de distribución potencial de especies](Clase16.html)
+
+[Clase 17: Simulación de datos](Clase17.html)
+
+[Clase 18: Simulación de datos: Bootstrap](Clase18.html)
+
+[Clase 19: Simulación de datos: Cadenas de Monte Carlo](Clase19.html)
+
+[Clase 20: Estadística bayesiana](Clase20.html)
+
+[Clase 21: Uso de ubms](Clase21.html)
+
+[Clase 22: Uso de spOccupancy](Clase22.html)
+
+[Clase 23: Uso de spAbundance](Clase23.html)
+
+[Clase 24: Uso de JAGS](Clase24.html)

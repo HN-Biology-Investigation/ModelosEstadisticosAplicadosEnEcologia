@@ -57,3 +57,4 @@ En ecología, estas herramientas permiten explorar los datos y detectar patrones
 Realizar un buen análisis descriptivo es un paso fundamental antes de construir modelos estadísticos, ya que nos ayuda a entender la estructura de los datos, identificar valores atípicos y formular hipótesis iniciales.
 
 :::
+____

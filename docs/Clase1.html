@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Murillo">
+<meta name="dcterms.date" content="2026-03-06">
 
-<title>Ecologia y Estadistica</title>
+<title>Ecología y Estadística</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -46,7 +47,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Ecologia y Estadistica</h1>
+<h1 class="title">Ecología y Estadística</h1>
 </div>
 
 
@@ -60,6 +61,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 6, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -69,9 +76,50 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Que es la ecologia?</p>
-<p>Que es la estadistica?</p>
-<p>Estadistica Descriptiva</p>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>La ecología es una ciencia que busca comprender los patrones y procesos que determinan la distribución y abundancia de los organismos en la naturaleza. Para responder estas preguntas, los ecólogos recolectan datos provenientes de observaciones, experimentos y monitoreos de campo. Sin embargo, los datos por sí solos no son suficientes: es necesario analizarlos de forma rigurosa para identificar patrones, evaluar hipótesis y extraer conclusiones confiables.</p>
+<p>Aquí es donde la estadística se convierte en una herramienta fundamental. La estadística permite describir los datos, cuantificar la incertidumbre y evaluar relaciones entre variables. En esta primera clase exploraremos tres conceptos fundamentales que sirven como base para todo el curso: qué es la ecología, qué es la estadística y cómo la estadística descriptiva nos permite resumir y entender nuestros datos.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">¿Qué es la ecología?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">¿Qué es la estadística?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Estadística descriptiva</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>La <strong>ecología</strong> es la rama de la biología que estudia las interacciones entre los organismos y su ambiente. Estas interacciones pueden ocurrir a diferentes niveles de organización biológica, desde individuos hasta ecosistemas completos.</p>
+<p>En términos generales, la ecología busca responder preguntas como:</p>
+<ul>
+<li>¿Por qué ciertas especies se encuentran en unos lugares y no en otros?</li>
+<li>¿Qué factores determinan la abundancia de una población?</li>
+<li>¿Cómo interactúan las especies dentro de una comunidad?</li>
+<li>¿Cómo influyen los cambios ambientales en los ecosistemas?</li>
+</ul>
+<p>Para responder estas preguntas, los ecólogos utilizan observaciones de campo, experimentos y modelos cuantitativos. En la actualidad, el análisis de datos se ha convertido en un componente central de la investigación ecológica, ya que permite identificar patrones y evaluar hipótesis sobre los procesos que estructuran las comunidades naturales.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>La <strong>estadística</strong> es la disciplina que se encarga de recolectar, organizar, analizar e interpretar datos. Su objetivo principal es extraer información útil de los datos y cuantificar la incertidumbre asociada a nuestras conclusiones.</p>
+<p>En ecología, la estadística nos permite:</p>
+<ul>
+<li>Describir patrones en los datos ecológicos.</li>
+<li>Evaluar hipótesis sobre procesos ecológicos.</li>
+<li>Identificar relaciones entre variables ambientales y biológicas.</li>
+<li>Hacer inferencias sobre poblaciones a partir de muestras.</li>
+</ul>
+<p>La mayoría de los estudios ecológicos trabajan con <strong>muestras</strong> y no con poblaciones completas. Por ejemplo, un investigador puede muestrear aves en ciertos puntos de un bosque para inferir patrones de abundancia en toda el área. La estadística proporciona las herramientas necesarias para realizar este tipo de inferencias de manera rigurosa.</p>
+<p>En este curso utilizaremos el lenguaje <strong>R</strong> como herramienta principal para implementar métodos estadísticos aplicados a problemas ecológicos.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>La <strong>estadística descriptiva</strong> es el primer paso en el análisis de datos. Su objetivo es resumir y visualizar la información contenida en un conjunto de datos antes de aplicar métodos estadísticos más complejos.</p>
+<p>Entre las herramientas más comunes de la estadística descriptiva se encuentran:</p>
+<ul>
+<li><strong>Medidas de tendencia central</strong>, como la media, la mediana y la moda.</li>
+<li><strong>Medidas de dispersión</strong>, como la varianza y la desviación estándar.</li>
+<li><strong>Visualización de datos</strong>, como histogramas, diagramas de caja y gráficos de dispersión.</li>
+</ul>
+<p>En ecología, estas herramientas permiten explorar los datos y detectar patrones preliminares. Por ejemplo, podemos examinar la distribución de abundancias de una especie, comparar la riqueza de especies entre hábitats o explorar relaciones entre variables ambientales y biológicas.</p>
+<p>Realizar un buen análisis descriptivo es un paso fundamental antes de construir modelos estadísticos, ya que nos ayuda a entender la estructura de los datos, identificar valores atípicos y formular hipótesis iniciales.</p>
+</div>
+</div>
+</div>
+</section>
 
 </main>
 <!-- /main column -->

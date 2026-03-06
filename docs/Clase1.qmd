@@ -1,12 +1,59 @@
 ---
-title: "Ecologia y Estadistica"
+title: "Ecología y Estadística"
 author: "David Murillo"
+date: today
 format: html
 editor: visual
 ---
 
-Que es la ecologia?
+## Introducción
 
-Que es la estadistica?
+La ecología es una ciencia que busca comprender los patrones y procesos que determinan la distribución y abundancia de los organismos en la naturaleza. Para responder estas preguntas, los ecólogos recolectan datos provenientes de observaciones, experimentos y monitoreos de campo. Sin embargo, los datos por sí solos no son suficientes: es necesario analizarlos de forma rigurosa para identificar patrones, evaluar hipótesis y extraer conclusiones confiables.
 
-Estadistica Descriptiva
+Aquí es donde la estadística se convierte en una herramienta fundamental. La estadística permite describir los datos, cuantificar la incertidumbre y evaluar relaciones entre variables. En esta primera clase exploraremos tres conceptos fundamentales que sirven como base para todo el curso: qué es la ecología, qué es la estadística y cómo la estadística descriptiva nos permite resumir y entender nuestros datos.
+
+::: {.panel-tabset}
+
+## ¿Qué es la ecología?
+
+La **ecología** es la rama de la biología que estudia las interacciones entre los organismos y su ambiente. Estas interacciones pueden ocurrir a diferentes niveles de organización biológica, desde individuos hasta ecosistemas completos.
+
+En términos generales, la ecología busca responder preguntas como:
+
+- ¿Por qué ciertas especies se encuentran en unos lugares y no en otros?
+- ¿Qué factores determinan la abundancia de una población?
+- ¿Cómo interactúan las especies dentro de una comunidad?
+- ¿Cómo influyen los cambios ambientales en los ecosistemas?
+
+Para responder estas preguntas, los ecólogos utilizan observaciones de campo, experimentos y modelos cuantitativos. En la actualidad, el análisis de datos se ha convertido en un componente central de la investigación ecológica, ya que permite identificar patrones y evaluar hipótesis sobre los procesos que estructuran las comunidades naturales.
+
+## ¿Qué es la estadística?
+
+La **estadística** es la disciplina que se encarga de recolectar, organizar, analizar e interpretar datos. Su objetivo principal es extraer información útil de los datos y cuantificar la incertidumbre asociada a nuestras conclusiones.
+
+En ecología, la estadística nos permite:
+
+- Describir patrones en los datos ecológicos.
+- Evaluar hipótesis sobre procesos ecológicos.
+- Identificar relaciones entre variables ambientales y biológicas.
+- Hacer inferencias sobre poblaciones a partir de muestras.
+
+La mayoría de los estudios ecológicos trabajan con **muestras** y no con poblaciones completas. Por ejemplo, un investigador puede muestrear aves en ciertos puntos de un bosque para inferir patrones de abundancia en toda el área. La estadística proporciona las herramientas necesarias para realizar este tipo de inferencias de manera rigurosa.
+
+En este curso utilizaremos el lenguaje **R** como herramienta principal para implementar métodos estadísticos aplicados a problemas ecológicos.
+
+## Estadística descriptiva
+
+La **estadística descriptiva** es el primer paso en el análisis de datos. Su objetivo es resumir y visualizar la información contenida en un conjunto de datos antes de aplicar métodos estadísticos más complejos.
+
+Entre las herramientas más comunes de la estadística descriptiva se encuentran:
+
+- **Medidas de tendencia central**, como la media, la mediana y la moda.
+- **Medidas de dispersión**, como la varianza y la desviación estándar.
+- **Visualización de datos**, como histogramas, diagramas de caja y gráficos de dispersión.
+
+En ecología, estas herramientas permiten explorar los datos y detectar patrones preliminares. Por ejemplo, podemos examinar la distribución de abundancias de una especie, comparar la riqueza de especies entre hábitats o explorar relaciones entre variables ambientales y biológicas.
+
+Realizar un buen análisis descriptivo es un paso fundamental antes de construir modelos estadísticos, ya que nos ayuda a entender la estructura de los datos, identificar valores atípicos y formular hipótesis iniciales.
+
+:::

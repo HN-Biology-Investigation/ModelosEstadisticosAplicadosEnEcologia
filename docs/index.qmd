@@ -20,7 +20,9 @@ Cada clase incluirá explicaciones conceptuales, ejemplos aplicados a problemas 
 
 ### Contenido del curso
 
-[Clase 1: ¿Qué es ecología? ¿Qué es la estadística? y estadística descriptiva](Clase1.html)
+[Clase 0: Uso de R en ecología](Clase0.html)
+
+[Clase 1: ¿Qué es ecología? ¿Qué es la estadística?](Clase1.html)
 
 [Clase 2: t de Student y análisis de varianza](Clase2.html)
 

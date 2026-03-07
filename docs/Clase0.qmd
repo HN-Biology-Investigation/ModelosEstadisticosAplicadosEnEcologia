@@ -6,7 +6,16 @@ date: today
 editor: visual
 ---
 
-Este clase está diseñado para enseñarte los comandos básicos en R, incluyendo la creación de variables, tablas y el ingreso y análisis de bases de datos. Además, aprenderás a explorar y analizar tus datos de manera efectiva. Con el tiempo, podrás utilizar estas habilidades básicas de R para realizar análisis más complejos y obtener resultados valiosos de tus datos.
+## Introduccion 
+
+Basado en el Articulo ["A comprehensive analysis of R’s application in ecological research from 2008 to 2023"](https://doi.org/10.1093/jpe/rtaf010), el uso del programa R en Ecología ha aumentado de un 10.3% en 2008 a 66.9% en 2023. Doce paquetes han sido especialmente relevantes: ‘lme4’, ‘vegan’, ‘nlme’, ‘MuMIn’, ‘ape’, ‘ggplot2’, ‘car’, ‘mgcv’, ‘MASS’, ‘raster’, ‘multcomp’ y ‘lmerTest’. Otro artículo con la misma temática ha reportado resultados similares: ["Evaluating the popularity of R in ecology"]( https://doi.org/10.1002/ecs2.2567). En este curso aprenderemos a utilizar la mayoría de estos paquetes, ya que son muy importantes, y además incorporaremos otros como DHARMa, performance y landscapemetrics. También abordaremos paquetes más aplicados a modelos para abundancia y ocupación: [unmarked](https://www.jstatsoft.org/article/view/v043i10), [spOcupancy]( https://doi.org/10.1111/2041-210X.13897), [SpAbundance]( https://doi.org/10.1111/2041-210X.14332), [ubms]( https://doi.org/10.1111/2041-210X.13777)
+
+El uso de R ha permitido que las personas se enfoquen más en aprender a programar y en la interpretación de los modelos, en lugar de preocuparse por licencias de software; al ser R un programa libre y de código abierto, esto ha facilitado un crecimiento casi lineal en su adopción en ecología.
+
+Con el desarrollo de las inteligencias artificiales, algunas personas podrían pensar que el uso de R se volverá más sencillo; sin embargo, en ecología lo realmente importante sigue siendo la selección adecuada de los modelos y la correcta interpretación de los resultados ([Spillias et al 2025](https://doi.org/10.1093/biosci/biaf169)) (otro ejemplo, [Generative artificial intelligence use in automated urban ecological assessments requires substantial human oversight](https://doi.org/10.1016/j.landurbplan.2026.105615)). Además, las inteligencias artificiales no suelen resolver códigos que no se encuentran en las bases de datos utilizadas para su entrenamiento, por lo que análisis muy específicos y complejos escapan a su conocimiento. Por ejemplo, los análisis de supervivencia en [JAGS](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/introduction-to-jags.html) que incluyen variables de detección dentro de un enfoque bayesiano son demasiado complejos, y solo con la ayuda de profesionales se puede garantizar la calidad del análisis y la correcta interpretación de los resultados.
+
+
+Esta clase está diseñada para enseñar los comandos básicos en R, incluyendo la creación de variables, tablas, y el ingreso y análisis de bases de datos. Además, permite explorar y analizar los datos de manera efectiva. Con el tiempo, las habilidades adquiridas en R podrán aplicarse para realizar análisis más complejos y obtener resultados de calidad con la información disponible.
 
 
 ::: panel-tabset

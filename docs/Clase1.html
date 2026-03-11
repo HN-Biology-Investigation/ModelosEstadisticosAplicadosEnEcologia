@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Murillo">
-<meta name="dcterms.date" content="2026-03-06">
+<meta name="dcterms.date" content="2026-03-10">
 
 <title>Ecología y Estadística</title>
 <style>
@@ -64,7 +64,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 6, 2026</p>
+      <p class="date">March 10, 2026</p>
     </div>
   </div>
   
@@ -76,48 +76,60 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introducción" class="level2">
-<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
-<p>La ecología es una ciencia que busca comprender los patrones y procesos que determinan la distribución y abundancia de los organismos en la naturaleza. Para responder estas preguntas, los ecólogos recolectan datos provenientes de observaciones, experimentos y monitoreos de campo. Sin embargo, los datos por sí solos no son suficientes: es necesario analizarlos de forma rigurosa para identificar patrones, evaluar hipótesis y extraer conclusiones confiables.</p>
-<p>Aquí es donde la estadística se convierte en una herramienta fundamental. La estadística permite describir los datos, cuantificar la incertidumbre y evaluar relaciones entre variables. En esta primera clase exploraremos tres conceptos fundamentales que sirven como base para todo el curso: qué es la ecología, qué es la estadística y cómo la estadística descriptiva nos permite resumir y entender nuestros datos.</p>
+<section id="introducción" class="level3">
+<h3 class="anchored" data-anchor-id="introducción">Introducción</h3>
+<p>En este curso abordaremos temas relacionados con la ecología y la estadística, enfocándonos en cómo estas disciplinas se complementan para el estudio de los sistemas naturales. Para aprovechar al máximo el contenido, es necesario contar con una base sólida que nos permita comprender y aplicar los conceptos y herramientas que utilizaremos a lo largo del curso. La combinación de enfoques ecológicos y estadísticos nos permitirá analizar datos, interpretar patrones y tomar decisiones fundamentadas en contextos reales de investigación y conservación.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">¿Qué es la ecología?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">¿Qué es la estadística?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Estadística descriptiva</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">¿Qué es la ecología?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">¿Qué es la estadística?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">La ecología y la estadística</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Estadística descriptiva</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Exploración de datos</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p>La <strong>ecología</strong> es la rama de la biología que estudia las interacciones entre los organismos y su ambiente. Estas interacciones pueden ocurrir a diferentes niveles de organización biológica, desde individuos hasta ecosistemas completos.</p>
-<p>En términos generales, la ecología busca responder preguntas como:</p>
-<ul>
-<li>¿Por qué ciertas especies se encuentran en unos lugares y no en otros?</li>
-<li>¿Qué factores determinan la abundancia de una población?</li>
-<li>¿Cómo interactúan las especies dentro de una comunidad?</li>
-<li>¿Cómo influyen los cambios ambientales en los ecosistemas?</li>
-</ul>
-<p>Para responder estas preguntas, los ecólogos utilizan observaciones de campo, experimentos y modelos cuantitativos. En la actualidad, el análisis de datos se ha convertido en un componente central de la investigación ecológica, ya que permite identificar patrones y evaluar hipótesis sobre los procesos que estructuran las comunidades naturales.</p>
+<p>La palabra “<em>ecología</em>” comenzó a usarse en la segunda mitad del siglo XIX. Ernst Haeckel, en 1869, definió la ecología como el conjunto de relaciones del animal con su ambiente tanto orgánico como inorgánico. Esta definición muy amplia ha llevado a algunos autores a señalar que, si esto es ecología, hay muy poco que no sea ecología.</p>
+<p>Charles Elton, en su libro pionero Animal Ecology (1927), definió la ecología como historia natural científica. Aunque esta definición señala el origen de muchos de nuestros problemas ecológicos, sigue siendo demasiado vaga.</p>
+<p>En 1963, Eugene Odum definió la ecología como el estudio de la estructura y función de la naturaleza. Esta definición enfatiza la idea de forma y función que permea la biología, pero aún no es completamente clara.</p>
+<p>Una definición clara pero restrictiva de ecología es la siguiente: la ecología es el estudio científico de la distribución y abundancia de los organismos (Andrewartha, 1961). Esta definición es estática y omite la importante idea de relación.</p>
+<p>Dado que la ecología trata sobre relaciones, se puede modificar la definición de Andrewartha para obtener una definición más precisa de <strong>Ecología</strong>: <em>la Ecología es el estudio científico de las interacciones que determinan la distribución y abundancia de los organismos</em>.</p>
+<p><a href="https://www.pearson.com/en-us/subject-catalog/p/ecology-the-experimental-analysis-of-distribution-and-abundance/P200000006828/9780321688149?srsltid=AfmBOoq1dHqU1vZ1n2EQGbKoRZAInM22pkQ8Z_IxsBDsP9_thRcpSfzh">Referencia: Krebs, C. J. (2009). Ecology: The Experimental Analysis of Distribution and Abundance (6ª ed.). Pearson.</a></p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p>La <strong>estadística</strong> es la disciplina que se encarga de recolectar, organizar, analizar e interpretar datos. Su objetivo principal es extraer información útil de los datos y cuantificar la incertidumbre asociada a nuestras conclusiones.</p>
-<p>En ecología, la estadística nos permite:</p>
-<ul>
-<li>Describir patrones en los datos ecológicos.</li>
-<li>Evaluar hipótesis sobre procesos ecológicos.</li>
-<li>Identificar relaciones entre variables ambientales y biológicas.</li>
-<li>Hacer inferencias sobre poblaciones a partir de muestras.</li>
-</ul>
-<p>La mayoría de los estudios ecológicos trabajan con <strong>muestras</strong> y no con poblaciones completas. Por ejemplo, un investigador puede muestrear aves en ciertos puntos de un bosque para inferir patrones de abundancia en toda el área. La estadística proporciona las herramientas necesarias para realizar este tipo de inferencias de manera rigurosa.</p>
-<p>En este curso utilizaremos el lenguaje <strong>R</strong> como herramienta principal para implementar métodos estadísticos aplicados a problemas ecológicos.</p>
+<p>Se ha sugerido que la <em>estadística</em> puede definirse como el estudio de la incertidumbre (Savage, 1977), de modo que los estadísticos son expertos en su manejo. Para ello han desarrollado herramientas como los errores estándar y los niveles de significancia, que permiten cuantificar la incertidumbre que razonablemente podemos esperar.</p>
+<p>Una revisión de las cuatro series de revistas publicadas por la Royal Statistical Society en 1997 confirma esta visión. Estos artículos abordan temas tan diversos como la contabilidad social y las leyes estables. Salvo algunas excepciones, como la sección de algoritmos (posteriormente eliminada) o un artículo sobre educación, la mayoría de los trabajos tratan directamente sobre la incertidumbre o sobre fenómenos, como las leyes estables, que surgen en problemas caracterizados por la incertidumbre.</p>
+<p>Este enfoque se refuerza al observar que la estadística desempeña un papel más central en áreas donde la variabilidad, y por tanto la incertidumbre, es un componente esencial. Por ejemplo, la agricultura mantiene una relación estrecha con la estadística, mientras que la física lo hace en menor medida.</p>
+<p>Es importante destacar que en estadística nos interesa la manipulación de la incertidumbre, no la materia incierta en sí misma. No estudiamos el mecanismo de la lluvia, sino únicamente la probabilidad de que llueva. Esto sitúa a la estadística en una posición particular: como practicantes, dependemos de otras disciplinas; el pronóstico de lluvia, por ejemplo, requiere tanto del meteorólogo como del estadístico. Solo como teóricos podemos trabajar de forma independiente, aunque incluso entonces debemos mantener un vínculo con la ciencia para que nuestras inferencias sean válidas.</p>
+<p>El término “cliente” se utiliza aquí para referirse a las personas, como científicos o profesionales de otros campos, que enfrentan incertidumbre en su trabajo. Desde esta perspectiva, la estadística consiste en asistir a los clientes en la comprensión y manejo de la incertidumbre, mediante herramientas que conectan la variabilidad observada en los datos con la incertidumbre inherente al fenómeno estudiado.</p>
+<p>Si bien algunos autores han limitado el estudio de la estadística a los datos de frecuencia, capaces de repetición casi idéntica, la estadística también se relaciona con fenómenos más amplios de incertidumbre. Los probabilistas, por ejemplo, estudian cómo la aleatoriedad en una parte de un sistema afecta a otras partes. En este contexto, el modelo de un proceso estocástico permite realizar predicciones sobre los datos que este generará. Las dificultades surgen cuando se intenta el camino inverso: inferir las características del proceso a partir de los datos observados.</p>
+<p>Esta discusión conduce a la fase central de la estadística aplicada: la inferencia, entendida como la acción de extraer conclusiones sobre un fenómeno a partir de la información disponible y de las relaciones de incertidumbre que lo caracterizan.</p>
+<p>Referencia: <a href="https://doi.org/10.1111/1467-9884.00238">Lindley. D (2001). The Philosophy of Statistics</a></p>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<p>La <strong>estadística descriptiva</strong> es el primer paso en el análisis de datos. Su objetivo es resumir y visualizar la información contenida en un conjunto de datos antes de aplicar métodos estadísticos más complejos.</p>
-<p>Entre las herramientas más comunes de la estadística descriptiva se encuentran:</p>
-<ul>
-<li><strong>Medidas de tendencia central</strong>, como la media, la mediana y la moda.</li>
-<li><strong>Medidas de dispersión</strong>, como la varianza y la desviación estándar.</li>
-<li><strong>Visualización de datos</strong>, como histogramas, diagramas de caja y gráficos de dispersión.</li>
-</ul>
-<p>En ecología, estas herramientas permiten explorar los datos y detectar patrones preliminares. Por ejemplo, podemos examinar la distribución de abundancias de una especie, comparar la riqueza de especies entre hábitats o explorar relaciones entre variables ambientales y biológicas.</p>
-<p>Realizar un buen análisis descriptivo es un paso fundamental antes de construir modelos estadísticos, ya que nos ayuda a entender la estructura de los datos, identificar valores atípicos y formular hipótesis iniciales.</p>
+<p>Ecología poblacional de algunas Chipes en bosques de coníferas del norte</p>
+<p>Cinco especies de currucas —Cape May Warbler (Setophaga tigrina), Myrtle Warbler (Setophaga coronata), Black-throated Green Warbler (Setophaga virens), Blackburnian Warbler (Setophaga fusca) y Bay-breasted Warbler (Setophaga castanea)— se encuentran ocasionalmente juntas durante la temporada de reproducción en bosques boreales maduros y relativamente homogéneos. Estas especies son congéneres, con tamaños y formas similares, y todas son principalmente insectívoras. Sus preferencias ecológicas generales son tan parecidas, al menos en años de abundancia de alimento, que los ecólogos han concluido que cualquier diferencia en los requerimientos de estas especies es mínima.</p>
+<p>La presencia de individuos de una especie tiende a hacer que el ambiente sea menos adecuado para otros individuos de la misma especie, un fenómeno conocido como dependencia de la densidad. De manera similar, la presencia de una especie puede afectar la adecuación del ambiente para otras especies, lo que se conoce como competencia interespecífica.</p>
+<p>Aunque la competencia suele estar asociada al alimento, la evidencia indica que las diferencias en el tipo de dieta entre estas especies surgen principalmente de diferencias en el comportamiento y la posición de alimentación. Cada especie aprovecha los alimentos disponibles dentro de su zona de alimentación característica y siguiendo su forma particular de alimentarse.</p>
+<p>Las especies pueden consumir alimentos diferentes por tres motivos:</p>
+<ol type="1">
+<li><p>Se alimentan en lugares distintos o en momentos diferentes del día.</p></li>
+<li><p>Adoptan estrategias de alimentación distintas que les permiten acceder a diferentes recursos.</p></li>
+<li><p>Prefieren tipos de alimento distintos entre los disponibles.</p></li>
+</ol>
+<p>En muchos casos, la coexistencia resulta de una combinación de estos factores.</p>
+<p>En el estudio de Robert H. MacArthur, la competencia se analiza bajo la premisa de que las especies solo pueden coexistir si cada una regula más su propia población que la de las demás. Para las cinco especies estudiadas, se identificaron tres categorías de factores diferenciadores que pueden regular sus poblaciones: diferentes recursos, los mismos recursos en lugares distintos, o los mismos recursos en momentos distintos. Estos tres factores parecen ser importantes, especialmente cuando los distintos lugares y momentos representan hábitats y años muy distintos.</p>
+<p>En este contexto, las Cape May Warblers y, en menor medida, las Bay-breasted Warblers dependen de períodos de alimento superabundante, mientras que las demás especies mantienen poblaciones aproximadamente proporcionales al volumen de follaje del tipo de hábitat donde normalmente se alimentan. Además, las diferencias en posición de alimentación, comportamiento y fecha de anidación, combinadas con ligeras diferencias en preferencias de hábitat y un posible efecto de territorialidad más fuerte sobre la propia especie que sobre las demás, permiten la coexistencia estable de las cinco especies.</p>
+<p>Un estudio reciente de <a href="https://doi.org/10.1098/rsbl.2025.0001">Miller et al.&nbsp;(2025)</a> reevalúa el clásico trabajo de MacArthur sobre los chipes (Parulidae), aplicando un enfoque moderno basado en modelos estadísticos y análisis cuantitativos. Los autores combinaron morfometría, datos de forrajeo cuantitativos y metabarcoding fecal —una medida directa de la dieta de las aves— para analizar la competencia y la partición de nicho en un contexto evolutivo. Sus resultados muestran que, aunque existe una relación estrecha entre la morfología y el comportamiento de forrajeo, la dieta de los individuos está fuertemente conservada filogenéticamente, de modo que especies estrechamente relacionadas consumen conjuntos similares de invertebrados, independientemente de dónde se alimenten. Este enfoque demuestra que la partición de nicho no solo ocurre en el presente, sino que la competencia ha influido en la evolución del comportamiento de estas especies, ofreciendo una visión más completa de cómo la ecología y la evolución interactúan en comunidades de aves similares morfológicamente.</p>
+<p>Referencia: <a href="https://doi.org/10.2307/1931600">Population Ecology of Some Warblers of Northeastern Coniferous Forests</a></p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+
 </div>
 </div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg" class="img-fluid figure-img"></p>
+<figcaption>HN Biology Investigation Academy</figcaption>
+</figure>
 </div>
 </section>
 

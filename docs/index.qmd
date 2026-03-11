@@ -69,3 +69,5 @@ Cada clase incluirá explicaciones conceptuales, ejemplos aplicados a problemas 
 [Clase 23: Uso de spAbundance](Clase23.html)
 
 [Clase 24: Uso de JAGS](Clase24.html)
+
+![HN Biology Investigation Academy](HN Cursos publicidad/HN Biology Inv large.jpg)

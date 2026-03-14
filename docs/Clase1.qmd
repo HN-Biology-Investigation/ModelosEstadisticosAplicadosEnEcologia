@@ -28,6 +28,8 @@ Dado que la ecología trata sobre relaciones, se puede modificar la definición 
 
 ## ¿Qué es la estadística?
 
+Aunque no existe una única definición de **estadística** que sea adecuada para todos los propósitos, puede entenderse de manera general como *la disciplina que desarrolla y aplica métodos para recolectar, organizar, resumir y analizar datos, con el objetivo de obtener conclusiones o inferencias científicas basadas en esa información*.[Schork and Remington 2000](https://www.amazon.com/Statistics-Applications-Biological-Health-Sciences-dp-0130223271/dp/0130223271/ref=dp_ob_image_bk)
+
 Se ha sugerido que la *estadística* puede definirse como el estudio de la incertidumbre (Savage, 1977), de modo que los estadísticos son expertos en su manejo. Para ello han desarrollado herramientas como los errores estándar y los niveles de significancia, que permiten cuantificar la incertidumbre que razonablemente podemos esperar.
 
 Una revisión de las cuatro series de revistas publicadas por la Royal Statistical Society en 1997 confirma esta visión. Estos artículos abordan temas tan diversos como la contabilidad social y las leyes estables. Salvo algunas excepciones, como la sección de algoritmos (posteriormente eliminada) o un artículo sobre educación, la mayoría de los trabajos tratan directamente sobre la incertidumbre o sobre fenómenos, como las leyes estables, que surgen en problemas caracterizados por la incertidumbre.
@@ -75,7 +77,246 @@ Referencia: [Population Ecology of Some Warblers of Northeastern Coniferous Fore
 
 ## Estadística descriptiva
 
+Referencia: [Statistics With Applications to the Biological and Health Sciences](https://www.cabidigitallibrary.org/doi/full/10.5555/19712702614)
+
+El área de la estadística descriptiva se ocupa de resumir y caracterizar conjuntos de observaciones mediante el uso de herramientas gráficas, tablas y medidas numéricas. A través de estos recursos se pueden identificar distintas propiedades de los datos, como la frecuencia con que aparecen determinados valores, la identificación de un valor típico o representativo, el grado de variabilidad dentro de las observaciones y la relación existente entre dos o más variables.
+
+Es importante señalar que la estadística descriptiva no tiene como objetivo principal derivar conclusiones o implicaciones generales a partir de los datos. Su función es organizar la información y resaltar sus características esenciales, de manera que posteriormente sea posible interpretar los datos y extraer conclusiones en etapas posteriores del análisis.
+
+Sin embargo, las conclusiones a las que se llegue dependerán en gran medida de cómo se seleccionen y utilicen las estadísticas descriptivas. Una elección inadecuada puede conducir a inferencias científicas erróneas. Un ejemplo de esto ocurre cuando se seleccionan únicamente ciertas partes del conjunto de datos y se excluyen aquellas que no coinciden con las ideas preconcebidas del investigador sobre cómo debería comportarse la naturaleza, lo cual puede sesgar la interpretación de los resultados.
+
+### Medidas de posición o de tendencia central
+
+#### Media Aritmetica
+
+La medida de tendencia central más simple y, en muchos sentidos, la más evidente es el promedio de las observaciones dentro de un grupo. Sin embargo, el término *promedio* puede resultar ambiguo, ya que existen diferentes tipos de promedios y no siempre es claro a cuál se está haciendo referencia.
+
+Para evitar esta confusión, en estadística se utiliza el término *media aritmética* para referirse específicamente a la suma de todas las observaciones de un conjunto de datos dividida entre el número total de observaciones. De esta manera se distingue con precisión de otros tipos de promedios. Por ello, cuando en estadística se usa simplemente el término media, generalmente se está haciendo referencia a la media aritmética.
+
+Leer: "[Comparación de la media aritmética y la media geométrica como medidas de tendencia central en poblaciones de nematodos en ganado](https://doi.org/10.1016/S0304-4017(98)00206-4)"
+
+Para los siguientes ejemplos utilizaremos la base de datos `penguins` del paquete [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/articles/intro.html)
+
+1. Cargar la base de datos penguins
+
+Primero debemos cargar el paquete `palmerpenguins`
+
+```{r}
+library(palmerpenguins)
+```
+
+Una vez cargada el paquete podemos cargar a la base de datos `penguins`
+
+```{r}
+data("penguins")
+```
+
+
+2. Calcular la media de cada columna del data frame
+
+```{r}
+sapply(penguins[, 3:6], mean, na.rm = TRUE)
+```
+
+Observe que que estamos seleccionando la columna 3 a la 6 (ya que contienen variables numericas), y el na.rm = TRUE, es para que reconosca que existen NA en nuestra base de datos.
+
+
+3. Calcular la media de la masa de los pingüinos para cada especie
+
+```{r}
+tapply(penguins$body_mass_g, penguins$species, mean, na.rm =TRUE )
+```
+
+Observe que que estamos seleccionando la columna `body_mass_g` para estimar la media condicionada por la variable `species`, el nar.rm = TRUE, es para que reconosca que existen NA en nuestra base de datos.
+
+#### Mediana
+
+Otra medida de tendencia central muy utilizada es la mediana, que corresponde al valor que ocupa la posición central cuando las observaciones se ordenan de menor a mayor.
+
+Por ejemplo, para calcular la mediana de los cinco conteos radiológicos mencionados en la sección anterior, primero debemos ordenar las observaciones según su magnitud, obteniendo:
+1, 2, 4, 5, 9.
+La mediana es entonces el valor que ocupa la posición central dentro de este conjunto ordenado de observaciones, es decir, 4.
+
+El procedimiento descrito es adecuado cuando el conjunto de datos tiene un número impar de observaciones, pero evidentemente no puede aplicarse directamente cuando el número de observaciones es par.
+
+Por ejemplo, supongamos el siguiente conjunto de datos:
+2, 3, 5, 8
+
+Al haber cuatro observaciones, no existe un único valor central. En este caso, la mediana se obtiene calculando el promedio de los dos valores centrales. Primero identificamos esos valores (3 y 5) y luego calculamos su media. Por lo tanto, la mediana de este conjunto de datos es 4. De esta forma, la mediana siempre divide el conjunto de datos ordenados en dos partes iguales: la mitad de las observaciones quedan por debajo y la otra mitad por encima de este valor.
+
+```{r}
+tapply(penguins$bill_length_mm,
+       penguins$species,
+       median,
+       na.rm = TRUE)
+```
+
+
+#### Moda
+
+Otra medida común de tendencia central es la moda. La moda es el valor que aparece con mayor frecuencia en un conjunto de observaciones.
+
+Por ejemplo, en la serie de conteos radiológicos 1, 2, 2, 4, 5, 9, la moda sería 2, ya que es el valor que se repite con mayor frecuencia. Conjuntos de observaciones como este se llaman unimodales, porque tienen una sola moda.
+
+Sin embargo, si hubiéramos registrado otra observación con valor 4, entonces tanto el 2 como el 4 aparecerían dos veces en el conjunto resultante de siete observaciones. En ese caso, el conjunto se denominaría bimodal.
+
+El conjunto original de cinco conteos radiológicos (3,7,1,9,5) no tenía moda, ya que cada valor aparecía solo una vez.
+
+Podemos calcular la moda del peso (body_mass_g) de los pingüinos por especie y sexo usando R. Como R base no tiene una función de moda incorporada, primero definimos una función simple que devuelva la moda, y luego la aplicamos a cada grupo.
+
+Función para calcular la moda
+```{r}
+moda <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+```
+
+Aplicar la función por especie y sexo usando tapply
+```{r}
+tapply(penguins$body_mass_g,
+       list(penguins$species, penguins$sex),
+       moda)
+```
+
+
+### Measures of variablity
+
+#### Range
+
+#### Varianza
+
+#### Desviacion standart
+
+#### Error standart
+
+#### Intervalos de confianza
+
+#### Porcentiles, Quantiles
+
 ## Exploración de datos
+
+De acuerdo con [Zuur et al. (2010)](papers/Zuur2010.pdf), hay seis pasos que se deben seguir en la exploración de datos con el fin de facilitar la elección del método estadístico a utilizar.
+
+Para este ejercicio utilizaremos la base de datos del estudio de [O'Neill et al. (2018)](papers/Nest_size.pdf).
+
+para cargar la base de datos utilizares el comando:
+
+```{r, eval=FALSE}
+cyanistes <- read.table("data/cyanistes.txt", header = TRUE)
+```
+
+```{r, echo=FALSE}
+cyanistes <- read.table(here::here("docs/data","cyanistes.txt"), header = TRUE)
+```
+
+Comencemos inspeccionando la estructura de la base de datos con la función 'str()'
+
+```{r}
+str(cyanistes)
+```
+¿Existen valores nulos (NAs) en el conjunto de datos?
+
+```{r}
+colSums(is.na(cyanistes))
+```
+
+
+### 1) Valores extremos (outliers) en la variable respuesta y predictora.
+
+Análisis visual:
+
+```{r}
+boxplot(depth ~ zone,
+        ylab= "Profundidad del nido",
+        xlab = "Zona del bosque",
+        data= cyanistes,
+        outpch = 16,
+        las= 1)
+```
+
+Prueba estadística:
+
+Para este ejercicio, utilizaremos el paquete `outliers`. Los **::** después de outliers indican que usaremos la función `grubbs.test` del paquete `outliers` sin necesidad de cargarlo previamente.
+
+```{r}
+outliers::grubbs.test(cyanistes$depth, type = 10)
+
+```
+
+```{r}
+outliers::grubbs.test(cyanistes$height, type = 11)
+
+```
+
+
+```{r}
+outliers::grubbs.test(cyanistes$day, type = 10)
+
+```
+
+
+### 2) Normalidad y homogeneidad en la variable respuesta.
+
+Un supuesto de algunas pruebas estadísticas es que la variable respuesta sigue una distribución normal. Para verificar este supuesto, se puede utilizar una prueba de normalidad, como la prueba de Shapiro-Wilk. La hipótesis nula de esta prueba establece que los datos se distribuyen normalmente. Si el valor p es menor que 0.05 (p < 0.05), se rechaza la hipótesis nula.
+
+```{r}
+shapiro.test(cyanistes$depth)
+```
+
+La homogeneidad de varianzas es otro supuesto importante en muchas pruebas estadísticas. Para visualizar la homogeneidad de varianzas en una variable categórica, se puede utilizar un gráfico de caja. Sin embargo, un gráfico de dispersión es más adecuado para visualizar la homogeneidad en variables numéricas.
+
+```{r}
+library(ggplot2)
+ggplot(data= cyanistes, aes(x= height, y= depth)) +
+  geom_point()+
+  geom_hline(yintercept = 0.33, linetype = "dashed")+
+  geom_vline(xintercept = 2.19, linetype = "dashed")
+```
+
+Existen varias pruebas estadísticas para evaluar la homogeneidad de varianzas, como la prueba de Bartlett, la prueba F y la prueba de Levene.
+
+```{r}
+car::leveneTest(depth ~ zone, data = cyanistes)
+```
+
+
+### 3) Exceso de ceros en la variable respuesta.
+
+Los ceros no pueden ser omitidos de un conjunto de datos; sin embargo, un exceso de ceros en la variable respuesta, conocido como inflación de ceros, puede causar problemas en los análisis. Una forma de evaluar la inflación de ceros es calculando el porcentaje de ceros en la variable:
+
+```{r}
+sum(cyanistes$depth == 0, na.rm = TRUE) * 100 / nrow(cyanistes)
+```
+En este caso, no tenemos problemas con los ceros. Sin embargo, de presentarse, tendríamos que buscar alternativas para manejarlos, lo cual abordaremos más adelante.
+
+### 4) Multicolinealidad entre variables predictoras.
+
+La multicolinealidad entre variables predictoras se refiere a una situación en la que dos o más variables independientes en un modelo de regresión están altamente correlacionadas entre sí. Esto puede dificultar la estimación de los coeficientes del modelo, ya que hace que sea complicado determinar el efecto individual de cada variable en la variable dependiente. La multicolinealidad puede inflar los errores estándar de los coeficientes, lo que lleva a inferencias estadísticas poco confiables, como valores p engañosos y una disminución en la capacidad predictiva del modelo. 
+
+```{r, message=FALSE, warning=FALSE}
+GGally::ggpairs(cyanistes[,2:7])
+```
+
+
+
+### 5) Relaciones entre variables respuesta y predictoras.
+
+Las relaciones entre variables respuesta y predictoras se refieren a cómo la variable dependiente (respuesta) se ve afectada por las variables independientes (predictoras) en un conjunto de datos. Examinar estas relaciones es fundamental en la exploración de datos porque permite identificar patrones, tendencias y correlaciones que pueden influir en el comportamiento de la variable respuesta. Comprender estas relaciones ayuda a construir modelos predictivos más precisos, a formular hipótesis y a guiar la interpretación de resultados, facilitando así la toma de decisiones informadas en el análisis estadístico y en la investigación.
+
+```{r}
+ggplot(data = cyanistes, aes(x = height, y = depth)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  facet_wrap(~zone) +
+  theme_classic()
+```
+
+
+### 6) Independencia en las observaciones de la variable respuesta.
+
+La independencia en las observaciones de la variable respuesta se refiere a la suposición de que cada observación en el conjunto de datos es independiente de las demás. Esto significa que el valor de una observación no debe influir en el valor de otra. La independencia es crucial en el análisis estadístico porque garantiza que las inferencias y los resultados sean válidos. Si las observaciones no son independientes, puede haber una correlación no reconocida entre ellas, lo que puede conducir a errores en la estimación de parámetros, aumento de la varianza de los errores y, en última instancia, a conclusiones incorrectas sobre las relaciones entre variables. Por lo tanto, verificar la independencia de las observaciones es un paso esencial en la exploración de datos y en la construcción de modelos estadísticos.
+
 
 :::
 

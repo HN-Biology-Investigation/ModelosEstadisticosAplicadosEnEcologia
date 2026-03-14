@@ -70,6 +70,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="Clase1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="Clase1_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -114,9 +143,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="introducción">Introducción</h3>
 <p>En este curso abordaremos temas relacionados con la ecología y la estadística, enfocándonos en cómo estas disciplinas se complementan para el estudio de los sistemas naturales. Para aprovechar al máximo el contenido, es necesario contar con una base sólida que nos permita comprender y aplicar los conceptos y herramientas que utilizaremos a lo largo del curso. La combinación de enfoques ecológicos y estadísticos nos permitirá analizar datos, interpretar patrones y tomar decisiones fundamentadas en contextos reales de investigación y conservación.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">¿Qué es la ecología?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">¿Qué es la estadística?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">La ecología y la estadística</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Estadística descriptiva</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Exploración de datos</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">¿Qué es la ecología?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">¿Qué es la estadística?</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false" href="">La ecología y la estadística</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false" href="">Estadística descriptiva</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-5" role="tab" aria-controls="tabset-5-5" aria-selected="false" href="">Exploración de datos</a></li></ul>
 <div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <p>La palabra “<em>ecología</em>” comenzó a usarse en la segunda mitad del siglo XIX. Ernst Haeckel, en 1869, definió la ecología como el conjunto de relaciones del animal con su ambiente tanto orgánico como inorgánico. Esta definición muy amplia ha llevado a algunos autores a señalar que, si esto es ecología, hay muy poco que no sea ecología.</p>
 <p>Charles Elton, en su libro pionero Animal Ecology (1927), definió la ecología como historia natural científica. Aunque esta definición señala el origen de muchos de nuestros problemas ecológicos, sigue siendo demasiado vaga.</p>
 <p>En 1963, Eugene Odum definió la ecología como el estudio de la estructura y función de la naturaleza. Esta definición enfatiza la idea de forma y función que permea la biología, pero aún no es completamente clara.</p>
@@ -124,7 +153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Dado que la ecología trata sobre relaciones, se puede modificar la definición de Andrewartha para obtener una definición más precisa de <strong>Ecología</strong>: <em>la Ecología es el estudio científico de las interacciones que determinan la distribución y abundancia de los organismos</em>.</p>
 <p><a href="https://www.pearson.com/en-us/subject-catalog/p/ecology-the-experimental-analysis-of-distribution-and-abundance/P200000006828/9780321688149?srsltid=AfmBOoq1dHqU1vZ1n2EQGbKoRZAInM22pkQ8Z_IxsBDsP9_thRcpSfzh">Referencia: Krebs, C. J. (2009). Ecology: The Experimental Analysis of Distribution and Abundance (6ª ed.). Pearson.</a></p>
 </div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <p>Aunque no existe una única definición de <strong>estadística</strong> que sea adecuada para todos los propósitos, puede entenderse de manera general como <em>la disciplina que desarrolla y aplica métodos para recolectar, organizar, resumir y analizar datos, con el objetivo de obtener conclusiones o inferencias científicas basadas en esa información</em>.<a href="https://www.amazon.com/Statistics-Applications-Biological-Health-Sciences-dp-0130223271/dp/0130223271/ref=dp_ob_image_bk">Schork and Remington 2000</a></p>
 <p>Se ha sugerido que la <em>estadística</em> puede definirse como el estudio de la incertidumbre (Savage, 1977), de modo que los estadísticos son expertos en su manejo. Para ello han desarrollado herramientas como los errores estándar y los niveles de significancia, que permiten cuantificar la incertidumbre que razonablemente podemos esperar.</p>
 <p>Una revisión de las cuatro series de revistas publicadas por la Royal Statistical Society en 1997 confirma esta visión. Estos artículos abordan temas tan diversos como la contabilidad social y las leyes estables. Salvo algunas excepciones, como la sección de algoritmos (posteriormente eliminada) o un artículo sobre educación, la mayoría de los trabajos tratan directamente sobre la incertidumbre o sobre fenómenos, como las leyes estables, que surgen en problemas caracterizados por la incertidumbre.</p>
@@ -135,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Esta discusión conduce a la fase central de la estadística aplicada: la inferencia, entendida como la acción de extraer conclusiones sobre un fenómeno a partir de la información disponible y de las relaciones de incertidumbre que lo caracterizan.</p>
 <p>Referencia: <a href="https://doi.org/10.1111/1467-9884.00238">Lindley. D (2001). The Philosophy of Statistics</a></p>
 </div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
 <p>Ecología poblacional de algunas Chipes en bosques de coníferas del norte</p>
 <p>Cinco especies de currucas —Cape May Warbler (Setophaga tigrina), Myrtle Warbler (Setophaga coronata), Black-throated Green Warbler (Setophaga virens), Blackburnian Warbler (Setophaga fusca) y Bay-breasted Warbler (Setophaga castanea)— se encuentran ocasionalmente juntas durante la temporada de reproducción en bosques boreales maduros y relativamente homogéneos. Estas especies son congéneres, con tamaños y formas similares, y todas son principalmente insectívoras. Sus preferencias ecológicas generales son tan parecidas, al menos en años de abundancia de alimento, que los ecólogos han concluido que cualquier diferencia en los requerimientos de estas especies es mínima.</p>
 <p>La presencia de individuos de una especie tiende a hacer que el ambiente sea menos adecuado para otros individuos de la misma especie, un fenómeno conocido como dependencia de la densidad. De manera similar, la presencia de una especie puede afectar la adecuación del ambiente para otras especies, lo que se conoce como competencia interespecífica.</p>
@@ -152,15 +181,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Un estudio reciente de <a href="https://doi.org/10.1098/rsbl.2025.0001">Miller et al.&nbsp;(2025)</a> reevalúa el clásico trabajo de MacArthur sobre los chipes (Parulidae), aplicando un enfoque moderno basado en modelos estadísticos y análisis cuantitativos. Los autores combinaron morfometría, datos de forrajeo cuantitativos y metabarcoding fecal —una medida directa de la dieta de las aves— para analizar la competencia y la partición de nicho en un contexto evolutivo. Sus resultados muestran que, aunque existe una relación estrecha entre la morfología y el comportamiento de forrajeo, la dieta de los individuos está fuertemente conservada filogenéticamente, de modo que especies estrechamente relacionadas consumen conjuntos similares de invertebrados, independientemente de dónde se alimenten. Este enfoque demuestra que la partición de nicho no solo ocurre en el presente, sino que la competencia ha influido en la evolución del comportamiento de estas especies, ofreciendo una visión más completa de cómo la ecología y la evolución interactúan en comunidades de aves similares morfológicamente.</p>
 <p>Referencia: <a href="https://doi.org/10.2307/1931600">Population Ecology of Some Warblers of Northeastern Coniferous Forests</a></p>
 </div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
 <p>Referencia: <a href="https://www.cabidigitallibrary.org/doi/full/10.5555/19712702614">Statistics With Applications to the Biological and Health Sciences</a></p>
 <p>El área de la estadística descriptiva se ocupa de resumir y caracterizar conjuntos de observaciones mediante el uso de herramientas gráficas, tablas y medidas numéricas. A través de estos recursos se pueden identificar distintas propiedades de los datos, como la frecuencia con que aparecen determinados valores, la identificación de un valor típico o representativo, el grado de variabilidad dentro de las observaciones y la relación existente entre dos o más variables.</p>
 <p>Es importante señalar que la estadística descriptiva no tiene como objetivo principal derivar conclusiones o implicaciones generales a partir de los datos. Su función es organizar la información y resaltar sus características esenciales, de manera que posteriormente sea posible interpretar los datos y extraer conclusiones en etapas posteriores del análisis.</p>
 <p>Sin embargo, las conclusiones a las que se llegue dependerán en gran medida de cómo se seleccionen y utilicen las estadísticas descriptivas. Una elección inadecuada puede conducir a inferencias científicas erróneas. Un ejemplo de esto ocurre cuando se seleccionan únicamente ciertas partes del conjunto de datos y se excluyen aquellas que no coinciden con las ideas preconcebidas del investigador sobre cómo debería comportarse la naturaleza, lo cual puede sesgar la interpretación de los resultados.</p>
-<section id="medidas-de-posición-o-de-tendencia-central" class="level3">
-<h3 class="anchored" data-anchor-id="medidas-de-posición-o-de-tendencia-central">Medidas de posición o de tendencia central</h3>
-<section id="media-aritmetica" class="level4">
-<h4 class="anchored" data-anchor-id="media-aritmetica">Media Aritmetica</h4>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Medidas de posición o de tendencia central</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Medidas de variabilidad</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Media Aritmetica</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Mediana</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Moda</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>La medida de tendencia central más simple y, en muchos sentidos, la más evidente es el promedio de las observaciones dentro de un grupo. Sin embargo, el término <em>promedio</em> puede resultar ambiguo, ya que existen diferentes tipos de promedios y no siempre es claro a cuál se está haciendo referencia.</p>
 <p>Para evitar esta confusión, en estadística se utiliza el término <em>media aritmética</em> para referirse específicamente a la suma de todas las observaciones de un conjunto de datos dividida entre el número total de observaciones. De esta manera se distingue con precisión de otros tipos de promedios. Por ello, cuando en estadística se usa simplemente el término media, generalmente se está haciendo referencia a la media aritmética.</p>
 <p>Leer: “<a href="https://doi.org/10.1016/S0304-4017(98)00206-4">Comparación de la media aritmética y la media geométrica como medidas de tendencia central en poblaciones de nematodos en ganado</a>”</p>
@@ -198,9 +231,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Observe que que estamos seleccionando la columna <code>body_mass_g</code> para estimar la media condicionada por la variable <code>species</code>, el nar.rm = TRUE, es para que reconosca que existen NA en nuestra base de datos.</p>
-</section>
-<section id="mediana" class="level4">
-<h4 class="anchored" data-anchor-id="mediana">Mediana</h4>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>Otra medida de tendencia central muy utilizada es la mediana, que corresponde al valor que ocupa la posición central cuando las observaciones se ordenan de menor a mayor.</p>
 <p>Por ejemplo, para calcular la mediana de los cinco conteos radiológicos mencionados en la sección anterior, primero debemos ordenar las observaciones según su magnitud, obteniendo: 1, 2, 4, 5, 9. La mediana es entonces el valor que ocupa la posición central dentro de este conjunto ordenado de observaciones, es decir, 4.</p>
 <p>El procedimiento descrito es adecuado cuando el conjunto de datos tiene un número impar de observaciones, pero evidentemente no puede aplicarse directamente cuando el número de observaciones es par.</p>
@@ -216,9 +248,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     38.80     49.55     47.30 </code></pre>
 </div>
 </div>
-</section>
-<section id="moda" class="level4">
-<h4 class="anchored" data-anchor-id="moda">Moda</h4>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <p>Otra medida común de tendencia central es la moda. La moda es el valor que aparece con mayor frecuencia en un conjunto de observaciones.</p>
 <p>Por ejemplo, en la serie de conteos radiológicos 1, 2, 2, 4, 5, 9, la moda sería 2, ya que es el valor que se repite con mayor frecuencia. Conjuntos de observaciones como este se llaman unimodales, porque tienen una sola moda.</p>
 <p>Sin embargo, si hubiéramos registrado otra observación con valor 4, entonces tanto el 2 como el 4 aparecerían dos veces en el conjunto resultante de siete observaciones. En ese caso, el conjunto se denominaría bimodal.</p>
@@ -243,40 +274,115 @@ Chinstrap   3700 4050
 Gentoo      4700 5550</code></pre>
 </div>
 </div>
-</section>
-</section>
-<section id="measures-of-variablity" class="level3">
-<h3 class="anchored" data-anchor-id="measures-of-variablity">Measures of variablity</h3>
-<section id="range" class="level4">
-<h4 class="anchored" data-anchor-id="range">Range</h4>
-</section>
-<section id="varianza" class="level4">
-<h4 class="anchored" data-anchor-id="varianza">Varianza</h4>
-</section>
-<section id="desviacion-standart" class="level4">
-<h4 class="anchored" data-anchor-id="desviacion-standart">Desviacion standart</h4>
-</section>
-<section id="error-standart" class="level4">
-<h4 class="anchored" data-anchor-id="error-standart">Error standart</h4>
-</section>
-<section id="intervalos-de-confianza" class="level4">
-<h4 class="anchored" data-anchor-id="intervalos-de-confianza">Intervalos de confianza</h4>
-</section>
-<section id="porcentiles-quantiles" class="level4">
-<h4 class="anchored" data-anchor-id="porcentiles-quantiles">Porcentiles, Quantiles</h4>
-</section>
-</section>
 </div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
-<p>De acuerdo con <a href="papers/Zuur2010.pdf">Zuur et al.&nbsp;(2010)</a>, hay seis pasos que se deben seguir en la exploración de datos con el fin de facilitar la elección del método estadístico a utilizar.</p>
-<p>Para este ejercicio utilizaremos la base de datos del estudio de <a href="papers/Nest_size.pdf">O’Neill et al.&nbsp;(2018)</a>.</p>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Rango</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Varianza</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Desviación estándar</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Error estándar</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Percentiles, cuartiles y rangos percentílicos</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>El rango es una medida de variabilidad que indica la diferencia entre el valor máximo y el valor mínimo de un conjunto de datos. Nos da una idea rápida de qué tan dispersos están los datos, aunque no considera cómo se distribuyen los valores intermedios.</p>
+<p>Supongamos que tenemos las siguientes alturas de cinco estudiantes (en cm):</p>
+<p>160, 165,170,175,180</p>
+<p>Valor máximo = 180</p>
+<p>Valor mínimo = 160</p>
+<p>Rango= 180−160 = 20</p>
+<p>Esto significa que las alturas varían en 20 cm entre el estudiante más bajo y el más alto.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>La varianza es una medida de variabilidad o dispersión que indica qué tanto se alejan los valores de un conjunto de datos respecto a su media. Mientras mayor sea la varianza, más dispersos están los datos; mientras menor sea, más cercanos están a la media.</p>
+<p>Fórmula para una población:</p>
+<p><span class="math display">\[
+\sigma^2 = \frac{\sum_{i=1}^{N} \left(x_i - \mu \right)^2}{N}
+\]</span></p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>La desviación estándar es una medida de dispersión que indica qué tanto se alejan los valores de un conjunto de datos respecto a su media. Mientras que la varianza nos da la dispersión en unidades al cuadrado, la desviación estándar devuelve la dispersión en las mismas unidades que los datos originales, lo que facilita su interpretación.</p>
+<p>Una desviación estándar pequeña indica que los valores están muy cercanos a la media.</p>
+<p>Una desviación estándar grande indica que los valores están muy dispersos alrededor de la media. Por ejmplo una desviación estándar de 3.16 significa que los valores, en promedio, se alejan de la media aproximadamente 3.16 unidades.</p>
+<p>Desviación estándar de una población</p>
+<p><span class="math display">\[
+\sigma = \sqrt{\frac{\sum_{i=1}^{N} \left(x_i - \mu \right)^2}{N}}
+\]</span></p>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<p>El error estándar es una medida de la precisión con la que la media muestral estima la media poblacional. Mientras que la desviación estándar mide la variabilidad de los datos individuales, el error estándar mide la variabilidad de la media si se repitieran múltiples muestras de la misma población.</p>
+<p>Fórmula:</p>
+<p>Para una muestra:</p>
+<p><span class="math display">\[
+SE = \frac{s}{\sqrt{n}}
+\]</span></p>
+<p>Podemos calcular el error estándar (SE) de la masa corporal (body_mass_g) por especie y sexo usando</p>
+<p>Función para calcular el error estándar</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(x)          </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sd</span>(x) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(x))  </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Aplicar por especie y sexo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(penguins<span class="sc">$</span>body_mass_g,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">list</span>(penguins<span class="sc">$</span>species, penguins<span class="sc">$</span>sex),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>       SE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            female     male
+Adelie    31.52856 40.59122
+Chinstrap 48.93436 62.10608
+Gentoo    36.97304 40.09585</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<p>Los percentiles son medidas de posición que dividen un conjunto de datos ordenados en 100 partes iguales. Cada percentil indica el valor por debajo del cual se encuentra un cierto porcentaje de las observaciones. Por ejemplo, el percentil 25 (P25) es el valor que deja el 25% de los datos por debajo y el 75% por encima.</p>
+<p>Los cuantiles son generalizaciones de los percentiles. Un cuantil de orden q (donde 0&lt;q&lt;1) es el valor que deja una fracción q de los datos por debajo. Por ejemplo:</p>
+<p>El cuartil 1 (Q1) es equivalente al percentil 25</p>
+<p>La mediana (Q2) es equivalente al percentil 50</p>
+<p>El cuartil 3 (Q3) es equivalente al percentil 75</p>
+<p>Los rangos percentílicos (percentile ranks) indican el porcentaje de observaciones que se encuentran por debajo de un valor específico dentro del conjunto de datos. Por ejemplo, si un valor de glucosa tiene un rango percentílico del 90%, significa que el 90% de los valores medidos son menores que este valor.</p>
+<p>Estas medidas son útiles en biología y ciencias de la salud porque permiten:</p>
+<ul>
+<li><p>Comparar valores individuales con respecto a la distribución de la población.</p></li>
+<li><p>Identificar valores extremos o atípicos.</p></li>
+<li><p>Evaluar el crecimiento, la presión arterial, o parámetros clínicos en función de la población de referencia.</p></li>
+</ul>
+<p>En resumen, los percentiles y cuantiles proporcionan una forma de describir la posición relativa de los datos dentro de un conjunto ordenado, mientras que los rangos percentílicos permiten expresar esa posición en términos de porcentaje de la población.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pesos <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(penguins<span class="sc">$</span>body_mass_g)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(pesos, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> 10%  25%  50%  75%  90% 
+3300 3550 4050 4750 5400 </code></pre>
+</div>
+</div>
+<p>Supongamos que queremos el rango percentílico del pingüino que pesa 4000 g:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(pesos <span class="sc">&lt;</span> <span class="dv">4000</span>) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 48.24561</code></pre>
+</div>
+</div>
+<p>Esto devuelve el porcentaje de pingüinos que pesan menos de 4000 g.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-5-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-5-tab">
+<p>De acuerdo con <a href="http://www.respond2articles.com/MEE/">Zuur et al.&nbsp;(2010)</a>, hay seis pasos que se deben seguir en la exploración de datos con el fin de facilitar la elección del método estadístico a utilizar.</p>
+<p>Para este ejercicio utilizaremos la base de datos del estudio de <a href="https://doi.org/10.1098/rsos.172036">O’Neill et al.&nbsp;(2018)</a>.</p>
 <p>para cargar la base de datos utilizares el comando:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cyanistes <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"data/cyanistes.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cyanistes <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"data/cyanistes.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Comencemos inspeccionando la estructura de la base de datos con la función ‘str()’</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(cyanistes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(cyanistes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   438 obs. of  7 variables:
  $ id    : chr  "B1" "B10" "B111" "B112" ...
@@ -290,26 +396,29 @@ Gentoo      4700 5550</code></pre>
 </div>
 <p>¿Existen valores nulos (NAs) en el conjunto de datos?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(cyanistes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(cyanistes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    id   zone   year  multi height    day  depth 
      0      0      0      0      0      0      0 </code></pre>
 </div>
 </div>
-<section id="valores-extremos-outliers-en-la-variable-respuesta-y-predictora." class="level3">
-<h3 class="anchored" data-anchor-id="valores-extremos-outliers-en-la-variable-respuesta-y-predictora.">1) Valores extremos (outliers) en la variable respuesta y predictora.</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">1) Valores extremos (outliers) en la variable respuesta y predictora.</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">2) Normalidad y homogeneidad en la variable respuesta.</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false" href="">3) Exceso de ceros en la variable respuesta.</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false" href="">4) Multicolinealidad entre variables predictoras.</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false" href="">5) Relaciones entre variables respuesta y predictoras.</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-6" role="tab" aria-controls="tabset-4-6" aria-selected="false" href="">6) Independencia en las observaciones de la variable respuesta.</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>Los valores extremos: Es una oservación individual de la variable respuesta (Y) o de las variables predictoras (X) que muestra un valor relativamente muy alto o muy bajo en comparación con la mayoría de los datos del conjunto. Es decir, son valores que se alejan claramente de la tendencia central del resto de las observaciones y que pueden afectar de forma importante los resultados de algunos análisis si no se detectan y se consideran adecuadamente antes de construir modelos estadísticos.</p>
 <p>Análisis visual:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(depth <span class="sc">~</span> zone,</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span> <span class="st">"Profundidad del nido"</span>,</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Zona del bosque"</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span> cyanistes,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">outpch =</span> <span class="dv">16</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">las=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(depth <span class="sc">~</span> zone,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab=</span> <span class="st">"Profundidad del nido"</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Zona del bosque"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span> cyanistes,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">outpch =</span> <span class="dv">16</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">las=</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Clase1_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Clase1_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -317,7 +426,7 @@ Gentoo      4700 5550</code></pre>
 <p>Prueba estadística:</p>
 <p>Para este ejercicio, utilizaremos el paquete <code>outliers</code>. Los <strong>::</strong> después de outliers indican que usaremos la función <code>grubbs.test</code> del paquete <code>outliers</code> sin necesidad de cargarlo previamente.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>outliers<span class="sc">::</span><span class="fu">grubbs.test</span>(cyanistes<span class="sc">$</span>depth, <span class="at">type =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>outliers<span class="sc">::</span><span class="fu">grubbs.test</span>(cyanistes<span class="sc">$</span>depth, <span class="at">type =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Grubbs test for one outlier
@@ -328,7 +437,7 @@ alternative hypothesis: highest value 0.75 is an outlier</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>outliers<span class="sc">::</span><span class="fu">grubbs.test</span>(cyanistes<span class="sc">$</span>height, <span class="at">type =</span> <span class="dv">11</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>outliers<span class="sc">::</span><span class="fu">grubbs.test</span>(cyanistes<span class="sc">$</span>height, <span class="at">type =</span> <span class="dv">11</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Grubbs test for two opposite outliers
@@ -339,7 +448,7 @@ alternative hypothesis: 0.6 and 3.5 are outliers</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>outliers<span class="sc">::</span><span class="fu">grubbs.test</span>(cyanistes<span class="sc">$</span>day, <span class="at">type =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>outliers<span class="sc">::</span><span class="fu">grubbs.test</span>(cyanistes<span class="sc">$</span>day, <span class="at">type =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Grubbs test for one outlier
@@ -349,12 +458,11 @@ G = 2.41610, U = 0.98661, p-value = 1
 alternative hypothesis: highest value 37 is an outlier</code></pre>
 </div>
 </div>
-</section>
-<section id="normalidad-y-homogeneidad-en-la-variable-respuesta." class="level3">
-<h3 class="anchored" data-anchor-id="normalidad-y-homogeneidad-en-la-variable-respuesta.">2) Normalidad y homogeneidad en la variable respuesta.</h3>
-<p>Un supuesto de algunas pruebas estadísticas es que la variable respuesta sigue una distribución normal. Para verificar este supuesto, se puede utilizar una prueba de normalidad, como la prueba de Shapiro-Wilk. La hipótesis nula de esta prueba establece que los datos se distribuyen normalmente. Si el valor p es menor que 0.05 (p &lt; 0.05), se rechaza la hipótesis nula.</p>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<p>Antes de ajustar cualquier modelo estadístico, como modelos lineales o generalizados, es fundamental explorar la normalidad de la variable respuesta. La normalidad se refiere a que los residuos del modelo o los valores de la variable respuesta se distribuyen de manera aproximadamente normal, siguiendo la clásica campana de Gauss. Esta propiedad es importante porque muchos métodos estadísticos paramétricos dependen de ella para que los intervalos de confianza, los valores p y las predicciones sean válidos. En la práctica, y especialmente en estudios ecológicos o biológicos, los datos rara vez cumplen estrictamente con la normalidad; sin embargo, examinar su distribución permite identificar posibles transformaciones necesarias, como logarítmicas o raíces cuadradas, que pueden mejorar la aproximación a la normalidad. La evaluación de la normalidad puede realizarse mediante gráficos como histogramas y Q-Q plots, así como a través de pruebas estadísticas como Shapiro-Wilk o Kolmogorov-Smirnov.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(cyanistes<span class="sc">$</span>depth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(cyanistes<span class="sc">$</span>depth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -363,24 +471,24 @@ data:  cyanistes$depth
 W = 0.89872, p-value &lt; 2.2e-16</code></pre>
 </div>
 </div>
-<p>La homogeneidad de varianzas es otro supuesto importante en muchas pruebas estadísticas. Para visualizar la homogeneidad de varianzas en una variable categórica, se puede utilizar un gráfico de caja. Sin embargo, un gráfico de dispersión es más adecuado para visualizar la homogeneidad en variables numéricas.</p>
+<p>De igual manera, es esencial verificar la homogeneidad de varianza (o homocedasticidad) de la variable respuesta. La homogeneidad implica que la variabilidad de los datos es similar para todos los niveles de los predictores. Cuando la varianza no es homogénea (heterocedasticidad), los errores estándar y los valores p obtenidos de los modelos pueden ser incorrectos, afectando la confiabilidad de los resultados. La detección de heterocedasticidad se realiza generalmente mediante gráficos de residuos versus valores ajustados, que permiten visualizar si existe un patrón en la dispersión de los datos, o mediante pruebas específicas como la de Breusch-Pagan.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> cyanistes, <span class="fu">aes</span>(<span class="at">x=</span> height, <span class="at">y=</span> depth)) <span class="sc">+</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.33</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)<span class="sc">+</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2.19</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> cyanistes, <span class="fu">aes</span>(<span class="at">x=</span> height, <span class="at">y=</span> depth)) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.33</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)<span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">2.19</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Clase1_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Clase1_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Existen varias pruebas estadísticas para evaluar la homogeneidad de varianzas, como la prueba de Bartlett, la prueba F y la prueba de Levene.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(depth <span class="sc">~</span> zone, <span class="at">data =</span> cyanistes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(depth <span class="sc">~</span> zone, <span class="at">data =</span> cyanistes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in leveneTest.default(y = y, group = group, ...): group coerced to
 factor.</code></pre>
@@ -392,57 +500,66 @@ group   8  0.6051 0.7738
       429               </code></pre>
 </div>
 </div>
-</section>
-<section id="exceso-de-ceros-en-la-variable-respuesta." class="level3">
-<h3 class="anchored" data-anchor-id="exceso-de-ceros-en-la-variable-respuesta.">3) Exceso de ceros en la variable respuesta.</h3>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<p>En muchos estudios ecológicos y biológicos, es frecuente encontrar que la variable respuesta contiene un número inusualmente alto de ceros, es decir, observaciones donde no ocurre el evento de interés o la cantidad medida es nula. Por ejemplo, en estudios de abundancia de aves, insectos o plantas, algunas especies pueden no estar presentes en muchas parcelas, generando ceros en la base de datos. Este fenómeno se conoce como exceso de ceros y puede afectar de manera significativa el ajuste y la interpretación de los modelos estadísticos tradicionales, como los modelos lineales generalizados con distribución Poisson o normal.</p>
+<p>El exceso de ceros puede surgir por diferentes razones. Algunos ceros son “ceros estructurales”, que ocurren porque el evento simplemente no es posible en ciertas condiciones (por ejemplo, un insecto que no habita un tipo particular de hábitat). Otros ceros son “ceros de muestreo”, que ocurren debido a que el evento es raro y no se detecta en la muestra, aunque podría estar presente en la población. Distinguir entre estos tipos de ceros es importante para seleccionar el modelo estadístico adecuado, como modelos de Poisson cero-inflados o binomial negativo cero-inflado, que permiten separar la probabilidad de ocurrencia de ceros estructurales y la variabilidad de la abundancia real.</p>
 <p>Los ceros no pueden ser omitidos de un conjunto de datos; sin embargo, un exceso de ceros en la variable respuesta, conocido como inflación de ceros, puede causar problemas en los análisis. Una forma de evaluar la inflación de ceros es calculando el porcentaje de ceros en la variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(cyanistes<span class="sc">$</span>depth <span class="sc">==</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span> <span class="sc">/</span> <span class="fu">nrow</span>(cyanistes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(cyanistes<span class="sc">$</span>depth <span class="sc">==</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span> <span class="sc">/</span> <span class="fu">nrow</span>(cyanistes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
 </div>
 <p>En este caso, no tenemos problemas con los ceros. Sin embargo, de presentarse, tendríamos que buscar alternativas para manejarlos, lo cual abordaremos más adelante.</p>
-</section>
-<section id="multicolinealidad-entre-variables-predictoras." class="level3">
-<h3 class="anchored" data-anchor-id="multicolinealidad-entre-variables-predictoras.">4) Multicolinealidad entre variables predictoras.</h3>
-<p>La multicolinealidad entre variables predictoras se refiere a una situación en la que dos o más variables independientes en un modelo de regresión están altamente correlacionadas entre sí. Esto puede dificultar la estimación de los coeficientes del modelo, ya que hace que sea complicado determinar el efecto individual de cada variable en la variable dependiente. La multicolinealidad puede inflar los errores estándar de los coeficientes, lo que lleva a inferencias estadísticas poco confiables, como valores p engañosos y una disminución en la capacidad predictiva del modelo.</p>
+<p><a href="https://doi.org/10.1111/j.1461-0248.2005.00826.x">Zero tolerance ecology: improving ecological inference by modelling the source of zero observations</a></p>
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<p>La multicolinealidad entre variables predictoras se produce cuando dos o más variables independientes en un modelo de regresión presentan una alta correlación entre sí. Esta situación puede complicar considerablemente la estimación de los coeficientes del modelo, ya que es difícil separar el efecto individual de cada variable sobre la variable dependiente. En otras palabras, los efectos de las variables predictoras se vuelven confusos porque parte de la información que aportan se solapa con la de otras variables.</p>
+<p>Uno de los principales problemas de la multicolinealidad es que inflar los errores estándar de los coeficientes, lo que puede conducir a resultados estadísticamente poco confiables. Por ejemplo, los valores p asociados a los coeficientes pueden volverse engañosos, haciendo que variables importantes parezcan no significativas, o viceversa. Además, la presencia de multicolinealidad puede reducir la capacidad predictiva del modelo, dificultando la generalización de los resultados a nuevos datos.</p>
+<p>Para detectar la multicolinealidad, se recomienda explorar matrices de correlación entre las variables predictoras, calcular el Factor de Inflación de la Varianza (VIF) o utilizar técnicas de reducción de dimensionalidad, como análisis de componentes principales. En casos donde se detecta multicolinealidad alta, puede ser necesario eliminar variables redundantes o combinar variables altamente correlacionadas para mejorar la estabilidad y la interpretabilidad del modelo.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>GGally<span class="sc">::</span><span class="fu">ggpairs</span>(cyanistes[,<span class="dv">2</span><span class="sc">:</span><span class="dv">7</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>GGally<span class="sc">::</span><span class="fu">ggpairs</span>(cyanistes[,<span class="dv">2</span><span class="sc">:</span><span class="dv">7</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Clase1_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Clase1_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="relaciones-entre-variables-respuesta-y-predictoras." class="level3">
-<h3 class="anchored" data-anchor-id="relaciones-entre-variables-respuesta-y-predictoras.">5) Relaciones entre variables respuesta y predictoras.</h3>
-<p>Las relaciones entre variables respuesta y predictoras se refieren a cómo la variable dependiente (respuesta) se ve afectada por las variables independientes (predictoras) en un conjunto de datos. Examinar estas relaciones es fundamental en la exploración de datos porque permite identificar patrones, tendencias y correlaciones que pueden influir en el comportamiento de la variable respuesta. Comprender estas relaciones ayuda a construir modelos predictivos más precisos, a formular hipótesis y a guiar la interpretación de resultados, facilitando así la toma de decisiones informadas en el análisis estadístico y en la investigación.</p>
+<p><a href="https://doi.org/10.1111/j.1600-0587.2012.07348.x">Collinearity: a review of methods to deal with it and a simulation study evaluating their performance</a></p>
+</div>
+<div id="tabset-4-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-5-tab">
+<p>Las relaciones entre la variable respuesta y las variables predictoras se refieren a cómo la variable dependiente es influenciada o explicada por las variables independientes presentes en un conjunto de datos. Explorar estas relaciones es un paso esencial en la fase de exploración de datos, ya que permite identificar patrones, tendencias o correlaciones que pueden afectar el comportamiento de la variable respuesta.</p>
+<p>Comprender estas relaciones no solo ayuda a detectar asociaciones importantes, sino que también proporciona información clave para construir modelos predictivos más precisos. Al observar cómo cada predictor se relaciona con la respuesta, los investigadores pueden formular hipótesis fundamentadas y seleccionar las variables más relevantes para su modelo.</p>
+<p>Además, examinar estas relaciones facilita la interpretación de los resultados y la toma de decisiones informadas en el análisis estadístico. Por ejemplo, permite distinguir entre efectos lineales o no lineales, identificar interacciones potenciales entre predictores y detectar anomalías o tendencias inesperadas que podrían influir en la validez de los modelos.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cyanistes, <span class="fu">aes</span>(<span class="at">x =</span> height, <span class="at">y =</span> depth)) <span class="sc">+</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>zone) <span class="sc">+</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cyanistes, <span class="fu">aes</span>(<span class="at">x =</span> height, <span class="at">y =</span> depth)) <span class="sc">+</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>zone) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Clase1_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Clase1_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="independencia-en-las-observaciones-de-la-variable-respuesta." class="level3">
-<h3 class="anchored" data-anchor-id="independencia-en-las-observaciones-de-la-variable-respuesta.">6) Independencia en las observaciones de la variable respuesta.</h3>
-<p>La independencia en las observaciones de la variable respuesta se refiere a la suposición de que cada observación en el conjunto de datos es independiente de las demás. Esto significa que el valor de una observación no debe influir en el valor de otra. La independencia es crucial en el análisis estadístico porque garantiza que las inferencias y los resultados sean válidos. Si las observaciones no son independientes, puede haber una correlación no reconocida entre ellas, lo que puede conducir a errores en la estimación de parámetros, aumento de la varianza de los errores y, en última instancia, a conclusiones incorrectas sobre las relaciones entre variables. Por lo tanto, verificar la independencia de las observaciones es un paso esencial en la exploración de datos y en la construcción de modelos estadísticos.</p>
-</section>
+</div>
+<div id="tabset-4-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-6-tab">
+<p>La independencia en las observaciones de la variable respuesta se refiere a la suposición de que cada dato registrado en un conjunto de observaciones es independiente de los demás. Es decir, el valor de una observación no debe estar influenciado por el valor de otra. Esta suposición es fundamental en el análisis estadístico, ya que la validez de muchas inferencias, estimaciones de parámetros y pruebas estadísticas depende de que las observaciones sean independientes.</p>
+<p>Cuando las observaciones no son independientes, puede existir una correlación no reconocida entre ellas, lo que provoca problemas en el análisis. Entre los efectos más importantes se encuentran el sesgo en la estimación de los parámetros, un aumento en la varianza de los errores y, en general, la posibilidad de llegar a conclusiones incorrectas sobre las relaciones entre variables.</p>
+<p>Por ello, verificar la independencia de las observaciones constituye un paso esencial durante la exploración de datos y la construcción de modelos estadísticos. En estudios ecológicos y biológicos, la independencia puede verse afectada por factores como la ubicación geográfica, la temporalidad de las mediciones o la estructura jerárquica de los datos (por ejemplo, individuos anidados en parcelas). En tales casos, se pueden emplear modelos específicos, como modelos mixtos, que incluyen efectos aleatorios para corregir la falta de independencia entre observaciones relacionadas.</p>
+<p><a href="https://doi.org/10.7717/peerj.4794">A brief introduction to mixed effects modelling and multi-model inference in ecology</a></p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>

@@ -85,7 +85,11 @@ Es importante señalar que la estadística descriptiva no tiene como objetivo pr
 
 Sin embargo, las conclusiones a las que se llegue dependerán en gran medida de cómo se seleccionen y utilicen las estadísticas descriptivas. Una elección inadecuada puede conducir a inferencias científicas erróneas. Un ejemplo de esto ocurre cuando se seleccionan únicamente ciertas partes del conjunto de datos y se excluyen aquellas que no coinciden con las ideas preconcebidas del investigador sobre cómo debería comportarse la naturaleza, lo cual puede sesgar la interpretación de los resultados.
 
+::: {.panel-tabset}
+
 ### Medidas de posición o de tendencia central
+
+::: {.panel-tabset}
 
 #### Media Aritmetica
 
@@ -179,26 +183,133 @@ tapply(penguins$body_mass_g,
        moda)
 ```
 
+:::
 
-### Measures of variablity
+### Medidas de variabilidad
 
-#### Range
+::: {.panel-tabset}
+
+#### Rango
+
+El rango es una medida de variabilidad que indica la diferencia entre el valor máximo y el valor mínimo de un conjunto de datos. Nos da una idea rápida de qué tan dispersos están los datos, aunque no considera cómo se distribuyen los valores intermedios.
+
+Supongamos que tenemos las siguientes alturas de cinco estudiantes (en cm):
+
+160, 165,170,175,180
+
+Valor máximo = 180
+
+Valor mínimo = 160
+
+Rango= 180−160 = 20
+
+Esto significa que las alturas varían en 20 cm entre el estudiante más bajo y el más alto.
 
 #### Varianza
 
-#### Desviacion standart
+La varianza es una medida de variabilidad o dispersión que indica qué tanto se alejan los valores de un conjunto de datos respecto a su media. Mientras mayor sea la varianza, más dispersos están los datos; mientras menor sea, más cercanos están a la media.
 
-#### Error standart
+Fórmula para una población:
 
-#### Intervalos de confianza
+$$
+\sigma^2 = \frac{\sum_{i=1}^{N} \left(x_i - \mu \right)^2}{N}
+$$
 
-#### Porcentiles, Quantiles
+
+#### Desviación estándar
+
+La desviación estándar es una medida de dispersión que indica qué tanto se alejan los valores de un conjunto de datos respecto a su media. Mientras que la varianza nos da la dispersión en unidades al cuadrado, la desviación estándar devuelve la dispersión en las mismas unidades que los datos originales, lo que facilita su interpretación.
+
+Una desviación estándar pequeña indica que los valores están muy cercanos a la media.
+
+Una desviación estándar grande indica que los valores están muy dispersos alrededor de la media. Por ejmplo una desviación estándar  de 3.16 significa que los valores, en promedio, se alejan de la media aproximadamente 3.16 unidades.
+
+Desviación estándar de una población
+
+$$
+\sigma = \sqrt{\frac{\sum_{i=1}^{N} \left(x_i - \mu \right)^2}{N}}
+$$
+
+
+#### Error estándar
+
+El error estándar es una medida de la precisión con la que la media muestral estima la media poblacional. Mientras que la desviación estándar mide la variabilidad de los datos individuales, el error estándar mide la variabilidad de la media si se repitieran múltiples muestras de la misma población.
+
+Fórmula:
+
+Para una muestra: 
+
+$$
+SE = \frac{s}{\sqrt{n}}
+$$
+
+Podemos calcular el error estándar (SE) de la masa corporal (body_mass_g) por especie y sexo usando
+
+Función para calcular el error estándar
+```{r}
+SE <- function(x) {
+  x <- na.omit(x)          
+  sd(x) / sqrt(length(x))  
+}
+```
+
+Aplicar por especie y sexo
+```{r}
+
+tapply(penguins$body_mass_g,
+       list(penguins$species, penguins$sex),
+       SE)
+```
+
+#### Percentiles, cuartiles y rangos percentílicos
+
+Los percentiles son medidas de posición que dividen un conjunto de datos ordenados en 100 partes iguales. Cada percentil indica el valor por debajo del cual se encuentra un cierto porcentaje de las observaciones. Por ejemplo, el percentil 25 (P25) es el valor que deja el 25% de los datos por debajo y el 75% por encima.
+
+Los cuantiles son generalizaciones de los percentiles. Un cuantil de orden 
+q (donde 0<q<1) es el valor que deja una fracción q de los datos por debajo. Por ejemplo:
+
+El cuartil 1 (Q1) es equivalente al percentil 25
+
+La mediana (Q2) es equivalente al percentil 50
+
+El cuartil 3 (Q3) es equivalente al percentil 75
+
+Los rangos percentílicos (percentile ranks) indican el porcentaje de observaciones que se encuentran por debajo de un valor específico dentro del conjunto de datos. Por ejemplo, si un valor de glucosa tiene un rango percentílico del 90%, significa que el 90% de los valores medidos son menores que este valor.
+
+Estas medidas son útiles en biología y ciencias de la salud porque permiten:
+
+- Comparar valores individuales con respecto a la distribución de la población.
+
+- Identificar valores extremos o atípicos.
+
+- Evaluar el crecimiento, la presión arterial, o parámetros clínicos en función de la población de referencia.
+
+En resumen, los percentiles y cuantiles proporcionan una forma de describir la posición relativa de los datos dentro de un conjunto ordenado, mientras que los rangos percentílicos permiten expresar esa posición en términos de porcentaje de la población.
+
+
+```{r}
+pesos <- na.omit(penguins$body_mass_g)
+
+quantile(pesos, probs = c(0.1, 0.25, 0.5, 0.75, 0.9))
+```
+
+
+Supongamos que queremos el rango percentílico del pingüino que pesa 4000 g:
+
+```{r}
+mean(pesos < 4000) * 100
+```
+
+Esto devuelve el porcentaje de pingüinos que pesan menos de 4000 g.
+:::
+
+:::
 
 ## Exploración de datos
 
-De acuerdo con [Zuur et al. (2010)](papers/Zuur2010.pdf), hay seis pasos que se deben seguir en la exploración de datos con el fin de facilitar la elección del método estadístico a utilizar.
+De acuerdo con [Zuur et al. (2010)]( http://www.respond2articles.com/MEE/), hay seis pasos que se deben seguir en la exploración de datos con el fin de facilitar la elección del método estadístico a utilizar.
 
-Para este ejercicio utilizaremos la base de datos del estudio de [O'Neill et al. (2018)](papers/Nest_size.pdf).
+Para este ejercicio utilizaremos la base de datos del estudio de [O'Neill et al. (2018)](https://doi.org/10.1098/rsos.172036).
 
 para cargar la base de datos utilizares el comando:
 
@@ -221,8 +332,11 @@ str(cyanistes)
 colSums(is.na(cyanistes))
 ```
 
+::: {.panel-tabset}
 
 ### 1) Valores extremos (outliers) en la variable respuesta y predictora.
+
+Los valores extremos: Es una oservación individual de la variable respuesta (Y) o de las variables predictoras (X) que muestra un valor relativamente muy alto o muy bajo en comparación con la mayoría de los datos del conjunto. Es decir, son valores que se alejan claramente de la tendencia central del resto de las observaciones y que pueden afectar de forma importante los resultados de algunos análisis si no se detectan y se consideran adecuadamente antes de construir modelos estadísticos.
 
 Análisis visual:
 
@@ -258,13 +372,14 @@ outliers::grubbs.test(cyanistes$day, type = 10)
 
 ### 2) Normalidad y homogeneidad en la variable respuesta.
 
-Un supuesto de algunas pruebas estadísticas es que la variable respuesta sigue una distribución normal. Para verificar este supuesto, se puede utilizar una prueba de normalidad, como la prueba de Shapiro-Wilk. La hipótesis nula de esta prueba establece que los datos se distribuyen normalmente. Si el valor p es menor que 0.05 (p < 0.05), se rechaza la hipótesis nula.
+Antes de ajustar cualquier modelo estadístico, como modelos lineales o generalizados, es fundamental explorar la normalidad de la variable respuesta. La normalidad se refiere a que los residuos del modelo o los valores de la variable respuesta se distribuyen de manera aproximadamente normal, siguiendo la clásica campana de Gauss. Esta propiedad es importante porque muchos métodos estadísticos paramétricos dependen de ella para que los intervalos de confianza, los valores p y las predicciones sean válidos. En la práctica, y especialmente en estudios ecológicos o biológicos, los datos rara vez cumplen estrictamente con la normalidad; sin embargo, examinar su distribución permite identificar posibles transformaciones necesarias, como logarítmicas o raíces cuadradas, que pueden mejorar la aproximación a la normalidad. La evaluación de la normalidad puede realizarse mediante gráficos como histogramas y Q-Q plots, así como a través de pruebas estadísticas como Shapiro-Wilk o Kolmogorov-Smirnov.
+
 
 ```{r}
 shapiro.test(cyanistes$depth)
 ```
 
-La homogeneidad de varianzas es otro supuesto importante en muchas pruebas estadísticas. Para visualizar la homogeneidad de varianzas en una variable categórica, se puede utilizar un gráfico de caja. Sin embargo, un gráfico de dispersión es más adecuado para visualizar la homogeneidad en variables numéricas.
+De igual manera, es esencial verificar la homogeneidad de varianza (o homocedasticidad) de la variable respuesta. La homogeneidad implica que la variabilidad de los datos es similar para todos los niveles de los predictores. Cuando la varianza no es homogénea (heterocedasticidad), los errores estándar y los valores p obtenidos de los modelos pueden ser incorrectos, afectando la confiabilidad de los resultados. La detección de heterocedasticidad se realiza generalmente mediante gráficos de residuos versus valores ajustados, que permiten visualizar si existe un patrón en la dispersión de los datos, o mediante pruebas específicas como la de Breusch-Pagan.
 
 ```{r}
 library(ggplot2)
@@ -283,26 +398,41 @@ car::leveneTest(depth ~ zone, data = cyanistes)
 
 ### 3) Exceso de ceros en la variable respuesta.
 
+En muchos estudios ecológicos y biológicos, es frecuente encontrar que la variable respuesta contiene un número inusualmente alto de ceros, es decir, observaciones donde no ocurre el evento de interés o la cantidad medida es nula. Por ejemplo, en estudios de abundancia de aves, insectos o plantas, algunas especies pueden no estar presentes en muchas parcelas, generando ceros en la base de datos. Este fenómeno se conoce como exceso de ceros y puede afectar de manera significativa el ajuste y la interpretación de los modelos estadísticos tradicionales, como los modelos lineales generalizados con distribución Poisson o normal.
+
+El exceso de ceros puede surgir por diferentes razones. Algunos ceros son “ceros estructurales”, que ocurren porque el evento simplemente no es posible en ciertas condiciones (por ejemplo, un insecto que no habita un tipo particular de hábitat). Otros ceros son “ceros de muestreo”, que ocurren debido a que el evento es raro y no se detecta en la muestra, aunque podría estar presente en la población. Distinguir entre estos tipos de ceros es importante para seleccionar el modelo estadístico adecuado, como modelos de Poisson cero-inflados o binomial negativo cero-inflado, que permiten separar la probabilidad de ocurrencia de ceros estructurales y la variabilidad de la abundancia real.
+
 Los ceros no pueden ser omitidos de un conjunto de datos; sin embargo, un exceso de ceros en la variable respuesta, conocido como inflación de ceros, puede causar problemas en los análisis. Una forma de evaluar la inflación de ceros es calculando el porcentaje de ceros en la variable:
 
 ```{r}
 sum(cyanistes$depth == 0, na.rm = TRUE) * 100 / nrow(cyanistes)
 ```
+
 En este caso, no tenemos problemas con los ceros. Sin embargo, de presentarse, tendríamos que buscar alternativas para manejarlos, lo cual abordaremos más adelante.
+
+[Zero tolerance ecology: improving ecological inference by modelling the source of zero observations](https://doi.org/10.1111/j.1461-0248.2005.00826.x)
 
 ### 4) Multicolinealidad entre variables predictoras.
 
-La multicolinealidad entre variables predictoras se refiere a una situación en la que dos o más variables independientes en un modelo de regresión están altamente correlacionadas entre sí. Esto puede dificultar la estimación de los coeficientes del modelo, ya que hace que sea complicado determinar el efecto individual de cada variable en la variable dependiente. La multicolinealidad puede inflar los errores estándar de los coeficientes, lo que lleva a inferencias estadísticas poco confiables, como valores p engañosos y una disminución en la capacidad predictiva del modelo. 
+La multicolinealidad entre variables predictoras se produce cuando dos o más variables independientes en un modelo de regresión presentan una alta correlación entre sí. Esta situación puede complicar considerablemente la estimación de los coeficientes del modelo, ya que es difícil separar el efecto individual de cada variable sobre la variable dependiente. En otras palabras, los efectos de las variables predictoras se vuelven confusos porque parte de la información que aportan se solapa con la de otras variables.
+
+Uno de los principales problemas de la multicolinealidad es que inflar los errores estándar de los coeficientes, lo que puede conducir a resultados estadísticamente poco confiables. Por ejemplo, los valores p asociados a los coeficientes pueden volverse engañosos, haciendo que variables importantes parezcan no significativas, o viceversa. Además, la presencia de multicolinealidad puede reducir la capacidad predictiva del modelo, dificultando la generalización de los resultados a nuevos datos.
+
+Para detectar la multicolinealidad, se recomienda explorar matrices de correlación entre las variables predictoras, calcular el Factor de Inflación de la Varianza (VIF) o utilizar técnicas de reducción de dimensionalidad, como análisis de componentes principales. En casos donde se detecta multicolinealidad alta, puede ser necesario eliminar variables redundantes o combinar variables altamente correlacionadas para mejorar la estabilidad y la interpretabilidad del modelo.
 
 ```{r, message=FALSE, warning=FALSE}
 GGally::ggpairs(cyanistes[,2:7])
 ```
 
-
+[Collinearity: a review of methods to deal with it and a simulation study evaluating their performance](https://doi.org/10.1111/j.1600-0587.2012.07348.x)
 
 ### 5) Relaciones entre variables respuesta y predictoras.
 
-Las relaciones entre variables respuesta y predictoras se refieren a cómo la variable dependiente (respuesta) se ve afectada por las variables independientes (predictoras) en un conjunto de datos. Examinar estas relaciones es fundamental en la exploración de datos porque permite identificar patrones, tendencias y correlaciones que pueden influir en el comportamiento de la variable respuesta. Comprender estas relaciones ayuda a construir modelos predictivos más precisos, a formular hipótesis y a guiar la interpretación de resultados, facilitando así la toma de decisiones informadas en el análisis estadístico y en la investigación.
+Las relaciones entre la variable respuesta y las variables predictoras se refieren a cómo la variable dependiente es influenciada o explicada por las variables independientes presentes en un conjunto de datos. Explorar estas relaciones es un paso esencial en la fase de exploración de datos, ya que permite identificar patrones, tendencias o correlaciones que pueden afectar el comportamiento de la variable respuesta.
+
+Comprender estas relaciones no solo ayuda a detectar asociaciones importantes, sino que también proporciona información clave para construir modelos predictivos más precisos. Al observar cómo cada predictor se relaciona con la respuesta, los investigadores pueden formular hipótesis fundamentadas y seleccionar las variables más relevantes para su modelo.
+
+Además, examinar estas relaciones facilita la interpretación de los resultados y la toma de decisiones informadas en el análisis estadístico. Por ejemplo, permite distinguir entre efectos lineales o no lineales, identificar interacciones potenciales entre predictores y detectar anomalías o tendencias inesperadas que podrían influir en la validez de los modelos.
 
 ```{r}
 ggplot(data = cyanistes, aes(x = height, y = depth)) +
@@ -315,8 +445,15 @@ ggplot(data = cyanistes, aes(x = height, y = depth)) +
 
 ### 6) Independencia en las observaciones de la variable respuesta.
 
-La independencia en las observaciones de la variable respuesta se refiere a la suposición de que cada observación en el conjunto de datos es independiente de las demás. Esto significa que el valor de una observación no debe influir en el valor de otra. La independencia es crucial en el análisis estadístico porque garantiza que las inferencias y los resultados sean válidos. Si las observaciones no son independientes, puede haber una correlación no reconocida entre ellas, lo que puede conducir a errores en la estimación de parámetros, aumento de la varianza de los errores y, en última instancia, a conclusiones incorrectas sobre las relaciones entre variables. Por lo tanto, verificar la independencia de las observaciones es un paso esencial en la exploración de datos y en la construcción de modelos estadísticos.
+La independencia en las observaciones de la variable respuesta se refiere a la suposición de que cada dato registrado en un conjunto de observaciones es independiente de los demás. Es decir, el valor de una observación no debe estar influenciado por el valor de otra. Esta suposición es fundamental en el análisis estadístico, ya que la validez de muchas inferencias, estimaciones de parámetros y pruebas estadísticas depende de que las observaciones sean independientes.
 
+Cuando las observaciones no son independientes, puede existir una correlación no reconocida entre ellas, lo que provoca problemas en el análisis. Entre los efectos más importantes se encuentran el sesgo en la estimación de los parámetros, un aumento en la varianza de los errores y, en general, la posibilidad de llegar a conclusiones incorrectas sobre las relaciones entre variables.
+
+Por ello, verificar la independencia de las observaciones constituye un paso esencial durante la exploración de datos y la construcción de modelos estadísticos. En estudios ecológicos y biológicos, la independencia puede verse afectada por factores como la ubicación geográfica, la temporalidad de las mediciones o la estructura jerárquica de los datos (por ejemplo, individuos anidados en parcelas). En tales casos, se pueden emplear modelos específicos, como modelos mixtos, que incluyen efectos aleatorios para corregir la falta de independencia entre observaciones relacionadas.
+
+[A brief introduction to mixed effects modelling and multi-model inference in ecology](https://doi.org/10.7717/peerj.4794)
+
+:::
 
 :::
 

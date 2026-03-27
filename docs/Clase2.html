@@ -69,11 +69,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="estimación-de-parámetros" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-de-parámetros">Estimación de parámetros</h3>
+<p><em>El propósito principal de la inferencia estadística</em></p>
+<p>La inferencia estadística tiene como objetivo estimar los valores de los parámetros (desconocidos) en un modelo estadístico. Todo modelo estadístico es una construcción teórica formulada como una ecuación matemática que podría generar los datos observados para alguna combinación de sus parámetros y de los valores de las variables explicativas. Estimar los valores de los parámetros del modelo permite utilizar el modelo estadístico como un mecanismo generador de datos, cuyas predicciones pueden compararse con la evidencia disponible.</p>
+<p>El objetivo de la estadística rara vez es llegar a conclusiones o hacer afirmaciones sobre los datos específicos que se tienen a mano. Más bien, estos se consideran un pequeño subconjunto obtenido de una colección mucho más amplia de valores potenciales de las variables de respuesta y explicativas que podrían haberse registrado para el mismo proceso hipotético generador de datos. La población estadística se define como el conjunto completo de valores de la variable de respuesta que podrían incluirse en una muestra. La información contenida en una muestra (desde el punto de vista de la inferencia estadística, las estimaciones de los parámetros) no es más que un medio transitorio para alcanzar el objetivo mayor de obtener conclusiones confiables sobre la población estadística. En otras palabras, la estimación estadística trata típicamente sobre el proceso que se piensa generó los datos observados o, de manera equivalente, sobre “todos” los conjuntos de datos que dicho proceso podría haber producido.</p>
+<p>Referencia principal de la clase: <a href="https://doi.org/10.1093/oso/9780192859013.003.0003">Statistical Modeling with R: CHAPTER 3 Estimating Parameters: The main purpose of statistical inference</a></p>
+</section>
+<section id="métodos-de-estimación-de-parámetros" class="level2">
+<h2 class="anchored" data-anchor-id="métodos-de-estimación-de-parámetros">Métodos de estimación de parámetros</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Concepto de hipótesis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Valor P</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Intervalos de confianza</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Error tipo I y II</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Poder estadístico</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Mínimos cuadrados</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Máxima verosimilitud</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Estimación bayesiana de parámetros</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-
+<p><strong>A theory of errors and the normal distribution</strong></p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 
@@ -81,14 +90,32 @@ ul.task-list li input[type="checkbox"] {
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 
 </div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+</div>
+</div>
+<section id="pruebas-de-hipótesis" class="level3">
+<h3 class="anchored" data-anchor-id="pruebas-de-hipótesis">Pruebas de hipótesis</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Concepto de hipótesis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Valor P</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Intervalos de confianza</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Error tipo I y II</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Poder estadístico</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 
 </div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
 
 </div>
 </div>
 </div>
+</section>
+</section>
 
 </main>
 <!-- /main column -->

@@ -5,6 +5,31 @@ format: html
 editor: visual
 ---
 
+### Estimación de parámetros
+
+*El propósito principal de la inferencia estadística*
+
+La inferencia estadística tiene como objetivo estimar los valores de los parámetros (desconocidos) en un modelo estadístico. Todo modelo estadístico es una construcción teórica formulada como una ecuación matemática que podría generar los datos observados para alguna combinación de sus parámetros y de los valores de las variables explicativas. Estimar los valores de los parámetros del modelo permite utilizar el modelo estadístico como un mecanismo generador de datos, cuyas predicciones pueden compararse con la evidencia disponible.
+
+El objetivo de la estadística rara vez es llegar a conclusiones o hacer afirmaciones sobre los datos específicos que se tienen a mano. Más bien, estos se consideran un pequeño subconjunto obtenido de una colección mucho más amplia de valores potenciales de las variables de respuesta y explicativas que podrían haberse registrado para el mismo proceso hipotético generador de datos. La población estadística se define como el conjunto completo de valores de la variable de respuesta que podrían incluirse en una muestra. La información contenida en una muestra (desde el punto de vista de la inferencia estadística, las estimaciones de los parámetros) no es más que un medio transitorio para alcanzar el objetivo mayor de obtener conclusiones confiables sobre la población estadística. En otras palabras, la estimación estadística trata típicamente sobre el proceso que se piensa generó los datos observados o, de manera equivalente, sobre “todos” los conjuntos de datos que dicho proceso podría haber producido.
+
+Referencia principal de la clase: [Statistical Modeling with R: CHAPTER 3 Estimating Parameters: The main purpose of statistical inference](https://doi.org/10.1093/oso/9780192859013.003.0003)
+
+## Métodos de estimación de parámetros
+
+::: {.panel-tabset}
+
+### Mínimos cuadrados
+
+**A theory of errors and the normal distribution**
+
+### Máxima verosimilitud
+
+### Estimación bayesiana de parámetros
+
+:::
+
+### Pruebas de hipótesis
 
 ::: {.panel-tabset}
 

@@ -307,7 +307,7 @@ Esto devuelve el porcentaje de pingüinos que pesan menos de 4000 g.
 
 ## Exploración de datos
 
-De acuerdo con [Zuur et al. (2010)]( http://www.respond2articles.com/MEE/), hay seis pasos que se deben seguir en la exploración de datos con el fin de facilitar la elección del método estadístico a utilizar.
+De acuerdo con [Zuur et al. (2010)](https://doi.org/10.1111/j.2041-210X.2009.00001.x), hay seis pasos que se deben seguir en la exploración de datos con el fin de facilitar la elección del método estadístico a utilizar.
 
 Para este ejercicio utilizaremos la base de datos del estudio de [O'Neill et al. (2018)](https://doi.org/10.1098/rsos.172036).
 

@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -35,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="Clase2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="Clase2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -79,26 +142,115 @@ ul.task-list li input[type="checkbox"] {
 <section id="métodos-de-estimación-de-parámetros" class="level2">
 <h2 class="anchored" data-anchor-id="métodos-de-estimación-de-parámetros">Métodos de estimación de parámetros</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Mínimos cuadrados</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Máxima verosimilitud</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Estimación bayesiana de parámetros</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p><strong>A theory of errors and the normal distribution</strong></p>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-
-</div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-
-</div>
-</div>
-</div>
-<section id="pruebas-de-hipótesis" class="level3">
-<h3 class="anchored" data-anchor-id="pruebas-de-hipótesis">Pruebas de hipótesis</h3>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Concepto de hipótesis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Valor P</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Intervalos de confianza</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Error tipo I y II</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Poder estadístico</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Mínimos cuadrados</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Máxima verosimilitud</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Estimación bayesiana de parámetros</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Pruebas de hipótesis</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p><em>Una teoría de los errores y la distribución normal</em></p>
+<p>El primer enfoque para la estimación de parámetros puede encontrarse en el artículo de Bayes (1763). Fue desarrollado de manera independiente y sustancial por Laplace (1814) hasta convertirse en lo que hoy llamamos métodos bayesianos. Tanto Bayes como Laplace utilizaron la probabilidad inversa, mediante el ahora estándar teorema de Bayes, para estimar los parámetros de un modelo estadístico a partir de los datos. El método Bayes-Laplace fue el único método disponible de inferencia estadística hasta que Gauss desarrolló el método de mínimos cuadrados en 1809, en conexión con la distribución normal. Así, generó una teoría de los errores al ajustar curvas y superficies a mediciones en geodesia y astronomía. En 1814, Laplace demostró el primer teorema central del límite, según el cual la composición aditiva de variables aleatorias independientes e idénticamente distribuidas sigue una distribución normal. De esta manera, justificó el uso del método de mínimos cuadrados para tamaños de muestra grandes. El siglo XIX presenció la creciente recopilación de grandes conjuntos de datos en las ciencias sociales y naturales, lo que llevó al desarrollo de métodos analíticos como la regresión lineal y la correlación. El método de mínimos cuadrados desempeñó un papel importante en el análisis de esos grandes conjuntos de datos de variables cuantitativas que podían asumirse como normalmente distribuidas.</p>
+<p>El método de mínimos cuadrados es un método de estimación de parámetros en modelos lineales en el que la variable de respuesta sigue una distribución normal con varianza constante (esto se conoce como homocedasticidad). Sin embargo, muchas variables de respuesta no siguen una distribución normal, ni pueden transformarse para cumplirla. Por lo tanto, el método de mínimos cuadrados solo puede utilizarse en un conjunto relativamente limitado de circunstancias.</p>
+<p>La estimación por mínimos cuadrados (Least Squares) busca encontrar los parámetros de un modelo que minimicen la suma de los errores al cuadrado entre los valores observados y los valores predichos por el modelo.</p>
+<p>Modelo lineal simple:</p>
+<p><span class="math display">\[y_i = \beta_0 + \beta_1 x_1 + \varepsilon_i\]</span> Donde:</p>
+<p><span class="math inline">\(y_i\)</span>: valor observado de la variable respuesta en la observación <em>i</em><br>
+<span class="math inline">\(x_i\)</span>: valor de la variable explicativa en la observación <em>i</em><br>
+<span class="math inline">\(\beta_0\)</span>: intercepto del modelo<br>
+<span class="math inline">\(\beta_1\)</span>: coeficiente de regresión (pendiente)<br>
+<span class="math inline">\(\varepsilon_i\)</span>: término de error aleatorio asociado a la observación <em>i</em></p>
+<p>¿Qué hace mínimos cuadrados?</p>
+<p><a href="https://myz303.com/linear_regression_en.html">Mathematical Derivation of Linear Regression Coefficients</a></p>
+<p><a href="https://doi.org/10.1117/12.2628017">Statistical derivation of linear regression</a></p>
+<p>Busca los valores <span class="math inline">\(\beta_0\)</span> y <span class="math inline">\(\beta_1\)</span> que minimicen la suma de los errores al cuadrado (SSE, por sus siglas en inglés):</p>
+<p><span class="math display">\[\sum_{i=1}^{n} (y_i - \hat{y}_i)^2\]</span></p>
+<p><span class="math inline">\(y_i\)</span>: valor observado de a variable respuesta</p>
+<p><span class="math inline">\(\hat{y}_i\)</span>: valor estimado o predicho por el modelo</p>
+<p>Solución (modelo lineal simple)</p>
+<p>Pendiente:</p>
+<p><span class="math display">\[\beta_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}\]</span> Intercepto:</p>
+<p><span class="math display">\[\beta_0 = \bar{y} - \beta_1\bar{x}\]</span></p>
+<p><span class="math inline">\(\bar{x}\)</span>: Media muestral de la variable <em>x</em></p>
+<p><span class="math inline">\(\bar{y}\)</span>: Media muestral de la variable <em>y</em></p>
+<section id="ejercicio" class="level4">
+<h4 class="anchored" data-anchor-id="ejercicio">Ejercicio</h4>
+<p>Es momento de aplicar el método de mínimos cuadrados utilizando una base de datos recopilada por el Dr.&nbsp;McGarigal durante su doctorado en el noroeste del Pacífico. Esta base de datos contiene información sobre la abundancia de Certhia americana (trepador americano) y diversas variables predictoras.</p>
+<ul>
+<li>abund: abundancia de Certhia americana</li>
+<li>elevation: elevación promedio del sitio</li>
+<li>road.dens: densidad de carreteras en el sitio</li>
+<li>stream.den: densidad de arroyos en el sitio</li>
+<li>mps.CS: tamaño medio de parche en el sitio, donde el tamaño del parche se define por la composición y estructura de la vegetación</li>
+<li>mps.S: tamaño medio de parche en el sitio, donde el tamaño del parche se define únicamente por la estructura de la vegetación</li>
+<li>contagion: medida de la agregación (o “agrupamiento”) del mosaico de parches, donde los parches se definieron a partir de mps.S</li>
+<li>conifer: porcentaje del paisaje compuesto por bosque de coníferas</li>
+<li>saw: porcentaje del paisaje compuesto por rodales de madera madura (fase tardía de sucesión)</li>
+<li>pole: porcentaje del paisaje compuesto por rodales en etapa intermedia de sucesión</li>
+<li>sapling: porcentaje del paisaje compuesto por rodales jóvenes (fase temprana de sucesión)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>CerthiaAmericana <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(<span class="st">"data/creeps.txt"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> CerthiaAmericana<span class="sc">$</span>abund</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> CerthiaAmericana<span class="sc">$</span>conifer</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Promedios</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>x_media <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>y_media <span class="ot">&lt;-</span> <span class="fu">mean</span>(y)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Pendiente (beta1)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="fu">sum</span>((x <span class="sc">-</span> x_media) <span class="sc">*</span> (y <span class="sc">-</span> y_media)) <span class="sc">/</span> <span class="fu">sum</span>((x <span class="sc">-</span> x_media)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Intercepto (beta0)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> y_media <span class="sc">-</span> beta1 <span class="sc">*</span> x_media</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores predichos</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuales</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>residuals <span class="ot">&lt;-</span> y <span class="sc">-</span> y_hat</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># SSE (suma de cuadrados del error)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>(residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>beta0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 52.51517</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>beta1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -3.108091</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13282.93</code></pre>
+</div>
+</div>
+<p>Una vez que hemos calculado correctamente el intercepto y la pendiente, procederemos a validar nuestros resultados comparándolos con los obtenidos mediante un modelo lineal.</p>
+<p>El modelo lineal, específicamente la regresión lineal, utiliza el método de mínimos cuadrados para estimar los parámetros del modelo (la pendiente y el intercepto).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x)
 
+Residuals:
+   Min     1Q Median     3Q    Max 
+-46.39 -15.50   4.66  15.87  34.48 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   52.515      8.121   6.467 5.26e-07 ***
+x             -3.108     18.051  -0.172    0.865    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 21.78 on 28 degrees of freedom
+Multiple R-squared:  0.001058,  Adjusted R-squared:  -0.03462 
+F-statistic: 0.02965 on 1 and 28 DF,  p-value: 0.8645</code></pre>
+</div>
+</div>
+</section>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 
@@ -107,14 +259,29 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 <div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Concepto de hipótesis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Valor P</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Intervalos de confianza</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Error tipo I y II</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Poder estadístico</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 
 </div>
-<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
 
 </div>
 </div>
 </div>
-</section>
+</div>
+</div>
+</div>
 </section>
 
 </main>

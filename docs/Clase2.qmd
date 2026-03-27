@@ -21,26 +21,130 @@ Referencia principal de la clase: [Statistical Modeling with R: CHAPTER 3 Estima
 
 ### Mínimos cuadrados
 
-**A theory of errors and the normal distribution**
+*Una teoría de los errores y la distribución normal*
+
+El primer enfoque para la estimación de parámetros puede encontrarse en el artículo de Bayes (1763). Fue desarrollado de manera independiente y sustancial por Laplace (1814) hasta convertirse en lo que hoy llamamos métodos bayesianos. Tanto Bayes como Laplace utilizaron la probabilidad inversa, mediante el ahora estándar teorema de Bayes, para estimar los parámetros de un modelo estadístico a partir de los datos. El método Bayes-Laplace fue el único método disponible de inferencia estadística hasta que Gauss desarrolló el método de mínimos cuadrados en 1809, en conexión con la distribución normal. Así, generó una teoría de los errores al ajustar curvas y superficies a mediciones en geodesia y astronomía. En 1814, Laplace demostró el primer teorema central del límite, según el cual la composición aditiva de variables aleatorias independientes e idénticamente distribuidas sigue una distribución normal. De esta manera, justificó el uso del método de mínimos cuadrados para tamaños de muestra grandes. El siglo XIX presenció la creciente recopilación de grandes conjuntos de datos en las ciencias sociales y naturales, lo que llevó al desarrollo de métodos analíticos como la regresión lineal y la correlación. El método de mínimos cuadrados desempeñó un papel importante en el análisis de esos grandes conjuntos de datos de variables cuantitativas que podían asumirse como normalmente distribuidas.
+
+El método de mínimos cuadrados es un método de estimación de parámetros en modelos lineales en el que la variable de respuesta sigue una distribución normal con varianza constante (esto se conoce como homocedasticidad). Sin embargo, muchas variables de respuesta no siguen una distribución normal, ni pueden transformarse para cumplirla. Por lo tanto, el método de mínimos cuadrados solo puede utilizarse en un conjunto relativamente limitado de circunstancias.
+
+La estimación por mínimos cuadrados (Least Squares) busca encontrar los parámetros de un modelo que minimicen la suma de los errores al cuadrado entre los valores observados y los valores predichos por el modelo.
+
+Modelo lineal simple:
+
+$$y_i = \beta_0 + \beta_1 x_1 + \varepsilon_i$$
+Donde:
+
+$y_i$: valor observado de la variable respuesta en la observación *i*  
+$x_i$: valor de la variable explicativa en la observación *i*  
+$\beta_0$: intercepto del modelo  
+$\beta_1$: coeficiente de regresión (pendiente)  
+$\varepsilon_i$: término de error aleatorio asociado a la observación *i*
+
+
+¿Qué hace mínimos cuadrados?
+
+[Mathematical Derivation of Linear Regression Coefficients](https://myz303.com/linear_regression_en.html)
+
+[Statistical derivation of linear regression](https://doi.org/10.1117/12.2628017)
+
+Busca los valores $\beta_0$ y $\beta_1$ que minimicen la suma de los errores al cuadrado (SSE, por sus siglas en inglés):
+
+$$\sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
+
+$y_i$: valor observado de a variable respuesta
+
+$\hat{y}_i$: valor estimado o predicho por el modelo
+
+Solución (modelo lineal simple)
+
+Pendiente: 
+
+$$\beta_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}$$
+Intercepto:
+
+$$\beta_0 = \bar{y} - \beta_1\bar{x}$$
+
+$\bar{x}$:	Media muestral de la variable *x*
+
+$\bar{y}$:  Media muestral de la variable *y*
+
+
+#### Ejercicio 
+
+Es momento de aplicar el método de mínimos cuadrados utilizando una base de datos recopilada por el Dr. McGarigal durante su doctorado en el noroeste del Pacífico. Esta base de datos contiene información sobre la abundancia de Certhia americana (trepador americano) y diversas variables predictoras.
+
+- abund: abundancia de Certhia americana
+- elevation: elevación promedio del sitio
+- road.dens: densidad de carreteras en el sitio
+- stream.den: densidad de arroyos en el sitio
+- mps.CS: tamaño medio de parche en el sitio, donde el tamaño del parche se define por la composición y estructura de la vegetación
+- mps.S: tamaño medio de parche en el sitio, donde el tamaño del parche se define únicamente por la estructura de la vegetación
+- contagion: medida de la agregación (o “agrupamiento”) del mosaico de parches, donde los parches se definieron a partir de mps.S
+- conifer: porcentaje del paisaje compuesto por bosque de coníferas
+- saw: porcentaje del paisaje compuesto por rodales de madera madura (fase tardía de sucesión)
+- pole: porcentaje del paisaje compuesto por rodales en etapa intermedia de sucesión
+- sapling: porcentaje del paisaje compuesto por rodales jóvenes (fase temprana de sucesión)
+
+```{r}
+CerthiaAmericana <- read.delim("data/creeps.txt")
+# Datos
+x <- CerthiaAmericana$abund
+y <- CerthiaAmericana$conifer
+
+# Promedios
+x_media <- mean(x)
+y_media <- mean(y)
+
+# Pendiente (beta1)
+beta1 <- sum((x - x_media) * (y - y_media)) / sum((x - x_media)^2)
+
+# Intercepto (beta0)
+beta0 <- y_media - beta1 * x_media
+
+# Valores predichos
+y_hat <- beta0 + beta1 * x
+
+# Residuales
+residuals <- y - y_hat
+
+# SSE (suma de cuadrados del error)
+SSE <- sum(residuals^2)
+
+# Mostrar resultados
+beta0
+beta1
+SSE
+```
+
+Una vez que hemos calculado correctamente el intercepto y la pendiente, procederemos a validar nuestros resultados comparándolos con los obtenidos mediante un modelo lineal.
+
+El modelo lineal, específicamente la regresión lineal, utiliza el método de mínimos cuadrados para estimar los parámetros del modelo (la pendiente y el intercepto).
+
+```{r}
+modelo <- lm(y ~ x)
+summary(modelo)
+```
+
 
 ### Máxima verosimilitud
 
 ### Estimación bayesiana de parámetros
 
-:::
 
 ### Pruebas de hipótesis
 
 ::: {.panel-tabset}
 
-### Concepto de hipótesis
+#### Concepto de hipótesis
 
-### Valor P
+#### Valor P
 
-### Intervalos de confianza
+#### Intervalos de confianza
 
-### Error tipo I y II
+#### Error tipo I y II
 
-### Poder estadístico
+#### Poder estadístico
+
+:::
 
 :::

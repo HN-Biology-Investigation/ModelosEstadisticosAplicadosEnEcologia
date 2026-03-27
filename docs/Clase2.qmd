@@ -88,8 +88,8 @@ Es momento de aplicar el método de mínimos cuadrados utilizando una base de da
 ```{r}
 CerthiaAmericana <- read.delim("data/creeps.txt")
 # Datos
-x <- CerthiaAmericana$abund
-y <- CerthiaAmericana$conifer
+x <- CerthiaAmericana$conifer
+y <- CerthiaAmericana$abund
 
 # Promedios
 x_media <- mean(x)
@@ -128,7 +128,112 @@ summary(modelo)
 
 ### Máxima verosimilitud
 
+Este es un método general para la estimación de parámetros en modelos estadísticos, creado de manera independiente por R. A. Fisher entre 1912 y 1922. El método de máxima verosimilitud puede estimar los valores de los parámetros del modelo para cualquier distribución de probabilidad utilizada para describir una variable de respuesta. La máxima verosimilitud se convirtió en una herramienta esencial de propósito general en la inferencia estadística frecuentista, ya que permite evaluar la significancia estadística, calcular intervalos de confianza, realizar la evaluación y comparación de modelos, y hacer predicciones. Es importante destacar que los estimadores de máxima verosimilitud para una variable de respuesta normal coinciden con los correspondientes estimadores de mínimos cuadrados.
+
+Los estimadores de máxima verosimilitud de los parámetros de un modelo se obtienen al maximizar la función de verosimilitud con respecto a sus parámetros. Esto produce los valores de los parámetros que tienen mayor probabilidad de haber generado los datos observados, dado la Función de masa de probabilidad (PMF) o Función de densidad de probabilidad (PDF) utilizada para modelar la variable de respuesta. Por lo tanto, la función de verosimilitud ni surge de la nada ni su definición requiere inspiración divina. Más bien, está definida por la función de densidad de probabilidad o de masa de probabilidad de la variable de respuesta en el modelo estadístico.
+
+Entonces, ¿cómo podemos obtener los valores de los parámetros que maximizan esa función? En algunos casos, los estimadores de máxima verosimilitud de los parámetros del modelo pueden obtenerse calculando analíticamente la derivada de la función de verosimilitud con respecto a sus parámetros, y luego igualándola a cero para determinar su máximo. Cuando hacemos esto, obtenemos fórmulas simples que nos permiten obtener directamente los estimadores de máxima verosimilitud a partir de los datos. En otros casos, maximizar la función de verosimilitud se logra mediante métodos numéricos, muchos de los cuales han sido implementados en R.
+
+Nota: *En el análisis de datos ecológicos, es fundamental seleccionar la distribución de probabilidad adecuada según la naturaleza de la variable de respuesta. Por ejemplo, los conteos de aves suelen modelarse mediante una función de masa de probabilidad (PMF) bajo una distribución de Poisson, implementada en R con dpois(). De manera similar, los datos de presencia/ausencia se describen mediante una PMF con distribución binomial, utilizando dbinom(). En contraste, las variables continuas, como medidas de biomasa o peso, se modelan mediante una función de densidad de probabilidad (PDF) bajo una distribución normal, implementada en R con dnorm().*
+
+Conteos de aves → PMF (Poisson) → dpois()
+
+Presencia/ausencia → PMF (Binomial) → dbinom()
+
+Variables continuas → PDF (Normal) → dnorm()
+
+#### Ejercicio
+
+Para este ejercicio, se utilizará la misma base de datos de Certhia americana empleada en el ejercicio de mínimos cuadrados.
+
+```{r}
+y <- CerthiaAmericana$abund
+x <- CerthiaAmericana$conifer
+```
+
+El gráfico generado con geom_density() muestra la distribución de la variable abund a partir de los datos observados, proporcionando una estimación suavizada de la densidad. En este caso, la forma de la curva refleja cómo se distribuyen los valores en el conjunto de datos, indicando en qué rangos se concentran con mayor frecuencia. Las áreas donde la curva es más alta representan valores más comunes, mientras que las zonas donde la curva se acerca a cero indican valores menos frecuentes. Este tipo de gráfico permite identificar patrones en la distribución de los datos, como asimetrías, multimodalidad o concentración de valores, sin asumir previamente una forma específica de distribución, a diferencia de un modelo paramétrico como el definido por dnorm().
+
+```{r}
+library(ggplot2)
+
+ggplot(data = CerthiaAmericana, aes(x= abund))+
+  geom_density()+
+  theme_classic()
+```
+
+Secuencia de valores para evaluar la densidad
+
+```{r}
+x <- seq(min(y), max(y), length = 100)
+```
+
+Densidad usando dnorm
+
+```{r}
+densidad <- dnorm(x, mean = 0.39, sd = 0.22)
+
+plot(x, densidad, type = "l", lwd = 2,
+     xlab = "abund", ylab = "Densidad",
+     main = "Densidad teórica usando dnorm()")
+```
+El gráfico generado representa la densidad teórica de una distribución normal calculada con la función dnorm(), utilizando una media de 0.39 y una desviación estándar de 0.22.
+
+En el eje x se muestran los posibles valores de la variable abund, definidos a través del vector x, el cual contiene una secuencia continua de valores dentro del rango observado. En el eje y se presenta la densidad de probabilidad, que indica qué tan probable es cada valor de abund bajo el modelo normal especificado.
+
+La curva obtenida tiene forma de campana (curva gaussiana), característica de la distribución normal. El punto más alto de la curva corresponde a la media (0.39), donde se concentra la mayor densidad, lo que indica que los valores cercanos a 0.39 son los más probables bajo este modelo. A medida que los valores se alejan de la media hacia ambos lados, la densidad disminuye gradualmente, reflejando que los valores extremos son menos probables.
+
+
+El método de máxima verosimilitud busca identificar los valores de los parámetros que hacen más probable observar los datos dados bajo un modelo estadístico. En este caso, se evalúa la verosimilitud de diferentes valores de la media (0.4, 0.01 y 1) utilizando la función dnorm(), que calcula la densidad de probabilidad para cada observación bajo una distribución normal. Como los datos se asumen independientes, las probabilidades individuales se combinan mediante una multiplicación; sin embargo, debido a problemas numéricos y de interpretación, se utiliza el logaritmo de la verosimilitud, lo que transforma la multiplicación en una suma, facilitando el cálculo y evitando valores extremadamente pequeños. Por esta razón, se usa log = TRUE y luego se suman los valores con sum(). El valor de verosimilitud resultante indica qué tan bien cada valor de la media explica los datos: el modelo con el mayor valor (más cercano a cero o positivo, como 2.797019 en el caso de 0.4) es el que mejor ajusta los datos, mientras que valores más negativos (como -42.46961 para 0.01) indican un peor ajuste. De esta forma, el método de máxima verosimilitud permite comparar distintos parámetros y seleccionar aquel que maximiza la probabilidad de los datos observados.
+
+```{r}
+sum(dnorm(y, mean = 0.4, sd = 0.22, log = TRUE))
+sum(dnorm(y, mean = 0.01, sd = 0.22, log = TRUE))
+sum(dnorm(y, mean = 1, sd = 0.22, log = TRUE))
+```
+
+A continuación, se aplicará el método de máxima verosimilitud para encontrar el intercepto y la pendiente más apropiados que permitan explicar la relación entre la abundancia de Certhia americana y el porcentaje de bosque de coníferas. En este ejercicio, se explorarán diferentes combinaciones de parámetros dentro de un modelo lineal y se calculará la verosimilitud para cada una, con el objetivo de identificar los valores que maximicen la probabilidad de observar los datos. De esta manera, se seleccionarán el intercepto y la pendiente que mejor describan el patrón presente en los datos, permitiendo interpretar cómo cambia la abundancia de la especie en función de la cobertura de bosque de coníferas.
+
+```{r}
+
+y <- CerthiaAmericana$abund
+x <- CerthiaAmericana$conifer
+
+set.seed(1234)
+
+beta0_vals <- seq(0.1, 0.8, length.out = 100)  
+beta1_vals <- seq(-0.001, 0.001, length.out = 10)  
+sigma <- sd(y)
+```
+
+Evaluar cada combinación paso a paso
+
+```{r}
+results <- data.frame()
+
+for (b0 in beta0_vals) {
+  for (b1 in beta1_vals) {
+    
+    mu <- b0 + b1 * x
+    
+    logLik <- sum(dnorm(y, mean = mu, sd = sigma, log = TRUE))
+    
+    results <- rbind(results, data.frame(beta0 = b0,
+                                         beta1 = b1,
+                                         logLik = logLik))
+  }
+}
+```
+
+Identificar el mejor modelo
+
+```{r}
+results[which.max(results$logLik), ]
+```
+Los resultados indican que el modelo con $\beta_0$ = 0.411 y $\beta_1$ = -0.00031 presenta el valor de log-verosimilitud más alto (2.82154) entre las combinaciones evaluadas, lo que sugiere que esta combinación de parámetros es la que mejor explica los datos bajo el modelo asumido. En este caso, el intercepto cercano a 0.41 representa el valor esperado de la variable respuesta cuando el predictor es cero, mientras que la pendiente negativa indica que existe una relación inversa entre la variable explicativa y la respuesta, es decir, a medida que aumenta el predictor, la variable respuesta tiende a disminuir. El valor relativamente alto de la log-verosimilitud indica un buen ajuste del modelo a los datos, en comparación con otras combinaciones evaluadas.
+
 ### Estimación bayesiana de parámetros
+
+La estadística bayesiana se fundamenta en el teorema de Bayes, el cual establece la relación entre probabilidades condicionadas mediante la expresión: Pr(A|B) × Pr(B) = Pr(B|A) × Pr(A). Este enfoque parte de una creencia inicial sobre un parámetro o evento, conocida como prior, la cual representa el conocimiento previo antes de observar los datos. Posteriormente, esta creencia se actualiza mediante la incorporación de nueva evidencia proveniente de los datos observados, conocida como verosimilitud. El resultado de esta combinación es la probabilidad posterior, que representa la nueva estimación del parámetro después de considerar la información disponible. Por ejemplo, al estimar la presencia de una especie en un área determinada, se puede asignar inicialmente una probabilidad basada en conocimiento previo; luego, al observar datos de campo, esta probabilidad se actualiza para reflejar de manera más precisa la evidencia empírica. De esta forma, la estadística bayesiana permite integrar el conocimiento previo con la información nueva para mejorar la inferencia y la toma de decisiones. 
 
 
 ### Pruebas de hipótesis
@@ -137,13 +242,37 @@ summary(modelo)
 
 #### Concepto de hipótesis
 
+[Basic Concept of Hypothesis Testing and Parametric Test](https://doi.org/10.1007/978-981-19-4411-6) In: Concept Building in Fisheries Data Analysis. Springer, Singapore.
+
+[When are hypotheses useful in ecology and evolution?](https://doi.org/10.1002/ece3.7365)
+
+[Null Hypothesis Testing: Problems, Prevalence, and an Alternative](https://doi.org/10.2307/3803199)
+
 #### Valor P
+
+[Applied statistics in ecology: common pitfalls and simple solutions](https://doi.org/10.1890/ES13-00160.1)
+
+[Scientific method: Statistical errors](https://www.nature.com/articles/506150a)
+
+[In defense of P values](https://doi.org/10.1890/13-0590.1)
+
+[In defense of P values: comment on the statistical methods actually used by ecologists](https://www.jstor.org/stable/43495190)
+
+
 
 #### Intervalos de confianza
 
+[A confidence interval approach to data analysis](https://doi.org/10.1016/S0378-1127(03)00331-1)
+
+[Effect size, confidence interval and statistical significance: a practical guide for biologists](https://doi.org/10.1111/j.1469-185X.2007.00027.x)
+
 #### Error tipo I y II
 
+[Power, precaution, Type II error and sampling design in assessment of environmental impacts](https://doi.org/10.1016/S0022-0981(03)00304-6)
+
 #### Poder estadístico
+
+[A survey of the statistical power of research in behavioral ecology and animal behavior](https://doi.org/10.1093/beheco/14.3.438)
 
 :::
 

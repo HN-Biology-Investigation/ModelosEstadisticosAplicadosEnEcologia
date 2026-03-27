@@ -24,7 +24,7 @@ Cada clase incluirá explicaciones conceptuales, ejemplos aplicados a problemas 
 
 [Clase 1: ¿Qué es ecología? ¿Qué es la estadística?](Clase1.html)
 
-[Clase 2: t de Student y análisis de varianza](Clase2.html)
+[Clase 2: Inferencia estadística](Clase2.html)
 
 [Clase 3: Pruebas no paramétricas](Clase3.html)
 

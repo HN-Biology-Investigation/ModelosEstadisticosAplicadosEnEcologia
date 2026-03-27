@@ -1,0 +1,21 @@
+---
+title: "Inferencia estadística"
+author: "David Murillo"
+format: html
+editor: visual
+---
+
+
+::: {.panel-tabset}
+
+### Concepto de hipótesis
+
+### Valor P
+
+### Intervalos de confianza
+
+### Error tipo I y II
+
+### Poder estadístico
+
+:::

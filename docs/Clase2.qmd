@@ -291,6 +291,78 @@ Dado que las pruebas de hipótesis se basan en muestras y no en la población co
 
 #### Valor P
 
+Referencia: [Gale, R. P., Hochhaus, A., & Zhang, M. J. (2016). What is the (p-) value of the P-value?. Leukemia, 30(10), 1965-1967.](https://www.nature.com/articles/leu2016193)
+
+Los procesos inferenciales, incluidas las nociones de causa y efecto, están cada vez más dominados por los análisis estadísticos, un proceso en el que el concepto del valor P se ha vuelto central. Todo investigador científico cree que sabe qué es un valor P. Algunos pueden calcularlo por sí mismos; otros necesitan la ayuda de un estadístico o, a veces, de varios estadísticos para encontrar un valor P aceptable. ¿Por qué buscar entre diferentes opciones (comúnmente denominado P-hacking o «pesca de valor P»)? Porque sin un valor P estadísticamente significativo es difícil o imposible publicar tu investigación en una revista científica con un alto factor de impacto. (Más sobre los factores de impacto en un editorial posterior). Habitualmente, la significación estadística en este contexto se define como un valor P preestablecido <0,05. 
+
+Curiosamente, y para nosotros algo alarmante, los estadísticos están menos seguros que los propios investigadores acerca de qué es exactamente un valor P, qué significa y qué implica sobre la reproducibilidad y replicabilidad de los datos científicos. Esto es completamente comprensible si consideramos la compleja historia del valor P.
+
+El mérito de introducir el valor P en la investigación científica se le atribuye habitualmente al distinguido estadístico Fisher. Fisher definió el valor P como: «la probabilidad del resultado observado, junto con resultados más extremos, si la hipótesis nula fuera cierta». Es importante destacar, para lo que veremos después, que el valor P de Fisher no pretendía utilizarse de forma aislada, sino como una medida de inferencia estadística en el contexto del proceso más complejo de la inferencia científica.
+
+El uso adecuado de la definición de Fisher del valor P requiere varios supuestos, entre ellos: que no exista relación entre el factor causal y el desenlace, que no haya errores sistemáticos —como clasificaciones erróneas o sesgos de confusión— y que se utilice la prueba estadística apropiada. Dados estos supuestos, es fácil entender por qué algunos investigadores piensan que el valor P indica la probabilidad de que la hipótesis nula sea cierta, o que un valor P alto indica que no hay asociación entre una variable y un desenlace. Como veremos, ambas ideas son incorrectas.
+
+El siguiente avance en la interacción entre el pensamiento inferencial y la inferencia estadística llegó con Neyman y Pearson, quienes, a diferencia de Fisher, postularon una hipótesis alternativa formal y mutuamente excluyente respecto a la hipótesis nula, junto con un nivel de significación preelegido para rechazar la hipótesis nula. El enfoque de Neyman–Pearson estaba concebido como un análisis de toma de decisiones, mientras que el de Fisher no lo estaba.
+
+La rigidez inherente al enfoque de Neyman–Pearson conlleva dos errores potenciales inevitables: rechazar la hipótesis nula cuando en realidad es verdadera (error de tipo I) y aceptar la hipótesis nula cuando en realidad es falsa (error de tipo II).
+
+Es importante tener en cuenta que tanto el enfoque de Fisher como el de Neyman–Pearson son frecuentistas; ambos dejan de lado un tercer enfoque: el razonamiento inductivo bayesiano (que veremos más adelante).
+
+Consideremos un ejemplo reciente del uso y abuso del valor P. Cuando los físicos descubrieron el bosón de Higgs, afirmaron que la solidez de los datos que lo respaldaban era de 5 sigma, lo que equivale a un valor P de 3 × 10⁻⁷, es decir, aproximadamente 1 en 3,5 millones. Contrario a lo que podrías pensar, esto no es la probabilidad de que el bosón de Higgs exista. Más bien, es la probabilidad de que, si el bosón de Higgs no existiera (la hipótesis nula), los datos experimentales obtenidos fueran al menos tan extremos como los observados. Dicho de otro modo, estos resultados ocurrirían solo en 1 de cada 3,5 millones de experimentos replicados. Tengamos en cuenta que el primer experimento podría ser el que arrojó ese resultado, y replicar el experimento 3,5 millones de veces más produciría resultados menos extremos. Este tipo de afirmación molesta a la mayoría de las personas interesadas en saber si el bosón de Higgs probablemente existe. Lo siento, pero de eso no trata el valor P. Además, cabe señalar que, a pesar del uso generalizado de P < 0,05 o incluso P < 0,01 como evidencia de significación estadística en la investigación biomédica, otras disciplinas científicas como la física de altas energías requieren valores P más bajos, de P < 0,003 o incluso P < 0,0000003, dependiendo de la novedad e importancia del hallazgo.
+
+También vale la pena considerar los llamados eventos raros que ocurren cuando se realizan suficientes experimentos. Por ejemplo, si lanzas una moneda justa (con dos caras igualmente probables) 100 veces, es bastante improbable que obtengas 66 caras y 34 cruces. Sin embargo, si 1000 personas lanzan la misma moneda 100 veces cada una, algunas obtendrán más de 60 caras y menos de 40 cruces. Así que, incluso si un observador obtiene este resultado poco probable, se equivocaría al concluir que la moneda no es justa. Esta noción se conoce como el principio de improbabilidad y se aborda en otras publicaciones.
+
+Otro punto a considerar es que el valor P no depende solo de los datos, sino también de cómo se analizaron. Por ejemplo, con exactamente los mismos datos, el valor P reportado será diferente según se hayan realizado 1, 2 o más análisis intermedios. Además, el enfoque del valor P debe considerar no solo los datos observados, sino también datos más extremos; de lo contrario, los valores P serían muy pequeños. Si lanzas una moneda justa 6 veces, la probabilidad de obtener 4 caras y 2 cruces es 0,23. Pero para probar la hipótesis nula (de que la moneda no está sesgada), debes sumar la probabilidad de 5 caras y 1 cruz (0,09) y la probabilidad de 6 caras y ninguna cruz (0,01) a la probabilidad de los datos reales. Por lo tanto, el valor P sería aproximadamente 0,33 y la hipótesis nula no se rechazaría.
+
+Recientemente, la Asociación Estadounidense de Estadística publicó un informe sobre el valor P: «qué es, qué significa y cómo deben interpretarse los valores P». Este es un evento extraordinario, algo que la Asociación —la organización profesional de estadísticos más grande del mundo— nunca había hecho antes, lo que indica la importancia que ha adquirido este tema. La Asociación solicitó la opinión de estadísticos, muchos de ellos muy conocidos para los lectores de LEUKEMIA, como Donald Berry, Sander Greenland, John Ioannidis y Kenneth Rothman. El panel de expertos preparó y publicó un informe. Sería una tergiversación calificarlo como un documento de consenso, ya que a menudo no hay consenso. Nosotros interpretamos esta controversia de manera favorable porque el consenso implicaría un grado de acuerdo que el panel no alcanzó. Después de todo, citando a Michael Crichton: «Históricamente, el consenso ha sido el primer refugio de los sinvergüenzas. Es una forma de evitar el debate afirmando que el asunto está resuelto». ¿Lo dudan? Piensen en el consenso de que la Tierra es plana o de que la Tierra es el centro del universo. Ambos resultaron falsos a pesar del llamado consenso. Aunque la amenaza de excomunión era un buen incentivo para el consenso en el pasado (piensen en Galileo y Cardano), hoy en día es el temor de perder el vuelo del viernes por la tarde desde el aeropuerto de Dulles después de una conferencia de consenso de los Institutos Nacionales de Salud.
+
+El tema que abordó la Asociación es el contexto, el proceso y el propósito del valor P. La cuestión surgió a raíz de una consulta del profesor George Cobb a la Asociación, quien preguntó (retóricamente): «(1) ¿por qué tantos colegios y escuelas de posgrado enseñan P = 0,05?; y (2) ¿por qué tantas personas siguen usando P = 0,05?». Las respuestas parecían ser «porque eso es lo que la comunidad científica y los editores de revistas quieren» y «porque eso es lo que se les enseñó a los estudiantes en la universidad o el posgrado». Estas explicaciones no son muy tranquilizadoras. Tampoco son nuevas estas preocupaciones. Las inquietudes sobre los usos y abusos de P < 0,05 como base para rechazar la hipótesis nula se han descrito como con más fallos que la política de privacidad de Facebook. El mal uso de los valores P en la contrastación de hipótesis ha llevado a una crisis de reproducibilidad en la ciencia moderna y especialmente en la medicina clínica. Los lectores recordarán el estudio de científicos de Amgen, que no pudieron reproducir los resultados de 47 de 53 artículos emblemáticos sobre cáncer publicados en la literatura científica. Debido a esta controversia, algunas revistas han llegado incluso a prohibir el uso de valores P.
+
+El informe del panel de la Asociación Estadounidense de Estadística señaló la noción de significación estadística que sustenta muchas conclusiones científicas, un concepto en el que la implicación de la significación estadística se deriva o infiere de un índice denominado valor P. Desafortunadamente, este índice se utiliza e interpreta de manera incorrecta con frecuencia. Citando su informe: «La validez de las conclusiones científicas, incluida su reproducibilidad, depende de algo más que los métodos estadísticos en sí mismos. Las técnicas apropiadamente elegidas, los análisis correctamente realizados y la interpretación adecuada de los resultados estadísticos también juegan un papel clave para garantizar que las conclusiones sean sólidas y que la incertidumbre que las rodea se represente correctamente».
+
+Entonces, ¿qué dice el informe? Primero, define el valor P como la probabilidad bajo un modelo estadístico especificado de que un resumen estadístico de los datos sea igual o más extremo que los valores observados. Enfatizamos la noción de bajo un modelo estadístico especificado. Cuando calculamos un valor P, no estamos probando si la diferencia entre grupos o cohortes ocurrió por azar, sino la consistencia de los datos con un modelo estadístico propuesto. A menudo, el modelo estadístico que se prueba en ensayos clínicos es la llamada hipótesis nula. En consecuencia, cuando consideramos el valor P, debemos entender que no aborda si la hipótesis nula es cierta ni si el análisis estadístico de los resultados puede explicarse por el azar. Es decir, no proporciona una explicación de los resultados observados, sino qué tan bien se ajustan al modelo estadístico hipotetizado.
+
+Otra consideración es que el valor P no refleja el tamaño del efecto. El informe afirma: «las conclusiones científicas y las decisiones comerciales o de política no deben basarse únicamente en si un valor P supera un umbral específico». Estamos de acuerdo. Efectos clínicamente poco importantes pueden tener valores P muy bajos cuando el tamaño de la muestra es grande, mientras que efectos clínicamente más importantes pueden tener valores P más altos debido a un tamaño de muestra pequeño. Los efectos clínicamente importantes estimados, con intervalos de confianza y valores P, deben reportarse de manera transparente. Por ejemplo, las razones de riesgo para eventos de tiempo hasta la ocurrencia pueden ser grandes y estadísticamente significativas incluso cuando el tamaño del efecto es pequeño. Por esta razón, también deben reportarse medidas basadas en tiempos de supervivencia media restringida.
+
+Algunos estudios biomédicos seleccionan resultados con valores P < 0,05 basándose en múltiples análisis de subgrupos, ignorando los pequeños tamaños de muestra en estos subgrupos. Los investigadores deberían reportar todos los análisis estadísticos realizados y todas las hipótesis probadas, para que el lector pueda considerar las tasas de falsos descubrimientos, que pueden ser necesarias cuando se realizan comparaciones múltiples. El informe no aborda la potencia (error tipo II), un aspecto importante al evaluar un valor P no estadísticamente significativo.
+
+El panel enfatiza lo desaconsejable de centrarse en un punto arbitrario como P < 0,05 para justificar afirmaciones científicas. Hay dos cuestiones aquí. Primero, considerar P = 0,05 como un punto para decidir la significación estadística es arbitrario y carece de una justificación matemática sensata. Segundo, hay otros factores que deben considerarse al evaluar si un resultado es estadísticamente significativo, como el diseño del estudio, la precisión de las mediciones, la evidencia externa al estudio, la exactitud de las mediciones y la validez de los supuestos subyacentes a los análisis de datos. Por ejemplo, un punto final de supervivencia suele ser más válido que un punto final de recaída de leucemia. Los autores afirman correctamente: «El uso generalizado de la significación estadística (generalmente aceptada como P < 0,05) como licencia para hacer una afirmación de hallazgo científico (o verdad implícita) conduce a una considerable distorsión del proceso científico».
+
+Estas consideraciones permanecen en el ámbito de los estadísticos frecuentistas. Aunque una discusión sobre el uso del razonamiento inductivo bayesiano con un espectro de probabilidades (como los límites de credibilidad) para expresar inferencia causal está fuera del alcance de nuestra discusión, también debería considerarse. Una revisión reciente de Kyriacou analiza el uso y las limitaciones del enfoque de inducción bayesiana. Las inferencias científicas basadas en el uso de métodos frecuentistas y bayesianos no son mutuamente excluyentes y a menudo son complementarias.
+
+Otro problema es que los investigadores a menudo realizan múltiples análisis de sus datos, pero pueden presentar solo aquellos con un valor P estadísticamente significativo. Esto no permite al lector evaluar adecuadamente la validez de las afirmaciones y conclusiones de los investigadores ni considerar los posibles sesgos. Esta p-hacking (pesca de significación) es injusta, inapropiada y debe evitarse. La conclusión final es que el valor P, aisladamente, no puede ser utilizado para determinar si la hipótesis nula es correcta o no. Hay varias otras consideraciones importantes sobre el valor P que no se cubren en el informe de la Asociación, y remitimos a los lectores interesados a otras revisiones.
+
+Aunque no planeamos ningún cambio inmediato en el proceso de revisión estadística para LEUKEMIA, es importante que los investigadores que envían artículos sigan las mejores prácticas estadísticas y reconozcan en sus análisis y discusiones las limitaciones del valor P para establecer inferencia causal.
+
+**Ejemplo en ecología**
+
+Imagina que un equipo de ecólogos quiere evaluar si la presencia de un depredador, el lobo (Canis lupus), afecta la densidad de población de una especie de ciervo en un área de bosque. Para ello, seleccionan 20 parcelas de bosque similares: en 10 parcelas los lobos están presentes, y en las otras 10 están ausentes. Miden la densidad de ciervos (número de individuos por kilómetro cuadrado) en cada parcela.
+
+Hipótesis nula: No hay diferencia en la densidad de ciervos entre las parcelas con lobos y las parcelas sin lobos.
+
+Hipótesis alternativa: Sí hay diferencia.
+
+Supongamos que realizan una prueba estadística apropiada (por ejemplo, una prueba t de Student) y obtienen los siguientes resultados:
+
+Densidad media en parcelas con lobos: 4.2 ciervos/km²
+
+Densidad media en parcelas sin lobos: 7.8 ciervos/km²
+
+Diferencia observada: 3.6 ciervos/km²
+
+Valor P = 0.03
+
+Interpretación correcta
+
+*"Si la hipótesis nula fuera cierta (es decir, si realmente no hubiera diferencia en la densidad de ciervos entre parcelas con y sin lobos), la probabilidad de obtener una diferencia de 3,6 ciervos/km² o más (en valor absoluto) entre los dos grupos sería de 0,03 (3 %)."*
+
+dicho de otra forma:
+
+*Bajo el supuesto de que los lobos no tienen ningún efecto sobre la densidad de ciervos, y asumiendo que el modelo estadístico es correcto (muestreo aleatorio, independencia, distribución adecuada, etc.), una diferencia tan grande como 3,6 ciervos/km² (o mayor) ocurriría solo en el 3 % de las repeticiones hipotéticas del experimento.*
+
+O, dicho de otra forma
+
+*"Si el experimento se repite 100 veces, y si la hipótesis nula fuera cierta (es decir, si realmente no hubiera diferencia en la densidad de ciervos entre parcelas con y sin lobos), una diferencia de 3,6 ciervos/km² o mayor se observaría solo en 3 de esas 100 repeticiones."*
+
 [Applied statistics in ecology: common pitfalls and simple solutions](https://doi.org/10.1890/ES13-00160.1)
 
 [Scientific method: Statistical errors](https://www.nature.com/articles/506150a)
@@ -303,15 +375,37 @@ Dado que las pruebas de hipótesis se basan en muestras y no en la población co
 
 #### Intervalos de confianza
 
+Las dos subcategorías generales de la inferencia estadística son la estimación y el contraste de hipótesis.
+
+Las distribuciones de probabilidad dependen frecuentemente de parámetros. Por ejemplo, si se conocen la media y la varianza de una distribución normal, es posible determinar las probabilidades de distintos eventos. En la práctica, sin embargo, estos parámetros son atributos de la población subyacente y, por lo tanto, son desconocidos. Nos enfrentamos entonces al problema de aprender todo lo posible sobre ellos a partir de la información contenida en una muestra aleatoria; es decir, debemos estimar su valor numérico.
+
+Debido a la variabilidad muestral, no podemos afirmar que el valor del parámetro sea un número específico con certeza absoluta. Pero sí podemos hacer, en cierto sentido, una elección óptima basada en la información de la muestra y, a partir de ella, indicar un rango de valores dentro del cual confiamos que se encuentra el parámetro desconocido. Este tipo de inferencias corresponde a la categoría de estimación.
+
+Un intervalo de confianza es un rango de valores, calculado a partir de los datos de una muestra, dentro del cual se estima que se encuentra el verdadero valor de un parámetro poblacional desconocido, con un cierto nivel de confianza.
+
+Supongamos que en el estudio de los lobos y los ciervos, la diferencia media observada en densidad fue de 3.6 ciervos/km². Construimos un intervalo de confianza del 95 % y obtenemos:
+
+Diferencia = 3.6 ciervos/km² (IC 95 %: 1.2 a 6.0)
+
+Esto se interpreta de la siguiente manera:
+
+*"Con un 95 % de confianza, la verdadera diferencia en densidad de ciervos entre parcelas con y sin lobos se encuentra entre 1,2 y 6,0 ciervos/km²."*
+
+*"Si tomáramos 100 muestras diferentes de la misma población y construyéramos un intervalo de confianza del 95 % para cada una, aproximadamente 95 de esos 100 intervalos contendrían el verdadero valor del parámetro poblacional."*
+
 [A confidence interval approach to data analysis](https://doi.org/10.1016/S0378-1127(03)00331-1)
 
 [Effect size, confidence interval and statistical significance: a practical guide for biologists](https://doi.org/10.1111/j.1469-185X.2007.00027.x)
 
 #### Error tipo I y II
 
+En el contraste de hipótesis, tomamos una decisión (rechazar o no rechazar la hipótesis nula) basándonos en los datos de una muestra. Como trabajamos con muestras, existe la posibilidad de equivocarnos. Los errores tipo I y tipo II son las dos formas posibles de equivocarnos en esta decisión.
+
 [Power, precaution, Type II error and sampling design in assessment of environmental impacts](https://doi.org/10.1016/S0022-0981(03)00304-6)
 
 #### Poder estadístico
+
+El poder estadístico (o potencia) de un contraste de hipótesis es la capacidad que tiene un estudio para detectar un efecto real cuando ese efecto realmente existe.
 
 [A survey of the statistical power of research in behavioral ecology and animal behavior](https://doi.org/10.1093/beheco/14.3.438)
 

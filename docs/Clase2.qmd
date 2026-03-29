@@ -140,6 +140,8 @@ Nota: *En el análisis de datos ecológicos, es fundamental seleccionar la distr
 
 #### Probabilidad
 
+Referencia: [Applied Statistical Modelling for Ecologists](https://doi.org/10.1016/B978-0-443-13715-0.00023-6)
+
 La probabilidad y la inferencia estadística mantienen una relación de simetría conceptual. Por un lado, la probabilidad parte de un proceso estocástico conocido y se pregunta qué tipo de datos es probable que genere. Es decir, asume un mecanismo generador de datos y explora sus posibles resultados. Por otro lado, la inferencia estadística recorre el camino inverso: parte de un conjunto de datos observados y formula preguntas sobre el proceso estocástico que pudo haberlos producido. Esta inversión de perspectiva es fundamental para comprender el papel de la probabilidad en la estadística. La máxima verosimilitud, como veremos más adelante, constituye precisamente un puente entre ambas aproximaciones, al buscar aquellos valores de los parámetros de un modelo que hacen más probable la observación de los datos que realmente se han obtenido.
 
 2. El experimento aleatorio y el espacio muestral
@@ -306,14 +308,18 @@ Interpretación: El valor devuelto por dnorm(13.2, 12, 1.5) es aproximadamente $
 
 #### Ejercicio
 
-Para este ejercicio, se utilizará la misma base de datos de Certhia americana empleada en el ejercicio de mínimos cuadrados.
+En este ejercicio se utilizará la base de datos de $Certhia$ $americana$ para ilustrar el principio de máxima verosimilitud. Primero se mostrará cómo evaluar la verosimilitud de diferentes valores de un parámetro en una distribución simple, y luego se extenderá el concepto a un modelo lineal con dos parámetros.
 
 ```{r}
 y <- CerthiaAmericana$abund
 x <- CerthiaAmericana$conifer
 ```
 
-El gráfico generado con geom_density() muestra la distribución de la variable abund a partir de los datos observados, proporcionando una estimación suavizada de la densidad. En este caso, la forma de la curva refleja cómo se distribuyen los valores en el conjunto de datos, indicando en qué rangos se concentran con mayor frecuencia. Las áreas donde la curva es más alta representan valores más comunes, mientras que las zonas donde la curva se acerca a cero indican valores menos frecuentes. Este tipo de gráfico permite identificar patrones en la distribución de los datos, como asimetrías, multimodalidad o concentración de valores, sin asumir previamente una forma específica de distribución, a diferencia de un modelo paramétrico como el definido por dnorm().
+La variable $y$ representa la abundancia observada de $Certhia$ $americana$, y $x$ corresponde al porcentaje de bosque de coníferas en cada sitio.
+
+**Distribución empírica de los datos**
+
+El siguiente gráfico muestra la densidad empírica de la variable $y$ mediante geom_density(). Esta curva es una estimación no paramétrica que permite observar la forma de la distribución de los datos sin imponer un modelo específico.
 
 ```{r}
 library(ggplot2)
@@ -323,29 +329,30 @@ ggplot(data = CerthiaAmericana, aes(x= abund))+
   theme_classic()
 ```
 
-Secuencia de valores para evaluar la densidad
+**Distribución normal con parámetros fijos**
+
+Para introducir el concepto de verosimilitud, se define una distribución normal con media $\mu = 0.39$ y desviación estándar $\sigma = 0.22$. La función dnorm() calcula la densidad para cada valor de $y$ bajo este modelo.
 
 ```{r}
-x <- seq(min(y), max(y), length = 100)
-```
+x_vals <- seq(min(y), max(y), length = 100)
+densidad <- dnorm(x_vals, mean = 0.39, sd = 0.22)
 
-Densidad usando dnorm
-
-```{r}
-densidad <- dnorm(x, mean = 0.39, sd = 0.22)
-
-plot(x, densidad, type = "l", lwd = 2,
+plot(x_vals, densidad, type = "l", lwd = 2,
      xlab = "abund", ylab = "Densidad",
-     main = "Densidad teórica usando dnorm()")
+     main = "Densidad normal con media 0.39 y sd 0.22")
 ```
-El gráfico generado representa la densidad teórica de una distribución normal calculada con la función dnorm(), utilizando una media de 0.39 y una desviación estándar de 0.22.
 
-En el eje x se muestran los posibles valores de la variable abund, definidos a través del vector x, el cual contiene una secuencia continua de valores dentro del rango observado. En el eje y se presenta la densidad de probabilidad, que indica qué tan probable es cada valor de abund bajo el modelo normal especificado.
+La curva obtenida es una campana gaussiana que representa qué valores de $y$ son más probables según el modelo propuesto.
 
-La curva obtenida tiene forma de campana (curva gaussiana), característica de la distribución normal. El punto más alto de la curva corresponde a la media (0.39), donde se concentra la mayor densidad, lo que indica que los valores cercanos a 0.39 son los más probables bajo este modelo. A medida que los valores se alejan de la media hacia ambos lados, la densidad disminuye gradualmente, reflejando que los valores extremos son menos probables.
+**Evaluación de la verosimilitud para distintos valores de la media**
 
+El método de máxima verosimilitud consiste en encontrar los valores de los parámetros que maximizan la probabilidad de observar los datos. En este caso, se fija $\sigma = 0.22$ y se evalúa la log-verosimilitud para tres valores diferentes de $\mu$: 0.4, 0.01 y 1.
 
-El método de máxima verosimilitud busca identificar los valores de los parámetros que hacen más probable observar los datos dados bajo un modelo estadístico. En este caso, se evalúa la verosimilitud de diferentes valores de la media (0.4, 0.01 y 1) utilizando la función dnorm(), que calcula la densidad de probabilidad para cada observación bajo una distribución normal. Como los datos se asumen independientes, las probabilidades individuales se combinan mediante una multiplicación; sin embargo, debido a problemas numéricos y de interpretación, se utiliza el logaritmo de la verosimilitud, lo que transforma la multiplicación en una suma, facilitando el cálculo y evitando valores extremadamente pequeños. Por esta razón, se usa log = TRUE y luego se suman los valores con sum(). El valor de verosimilitud resultante indica qué tan bien cada valor de la media explica los datos: el modelo con el mayor valor (más cercano a cero o positivo, como 2.797019 en el caso de 0.4) es el que mejor ajusta los datos, mientras que valores más negativos (como -42.46961 para 0.01) indican un peor ajuste. De esta forma, el método de máxima verosimilitud permite comparar distintos parámetros y seleccionar aquel que maximiza la probabilidad de los datos observados.
+Para cada valor de $\mu$, se calcula:
+
+$$\log L(\mu \mid y) = \sum_{i=1}^{n} \log f(y_i \mid \mu, \sigma)$$
+
+donde $f(y_i \mid \mu, \sigma)$ es la densidad normal evaluada en cada observación.
 
 ```{r}
 sum(dnorm(y, mean = 0.4, sd = 0.22, log = TRUE))
@@ -353,23 +360,26 @@ sum(dnorm(y, mean = 0.01, sd = 0.22, log = TRUE))
 sum(dnorm(y, mean = 1, sd = 0.22, log = TRUE))
 ```
 
-A continuación, se aplicará el método de máxima verosimilitud para encontrar el intercepto y la pendiente más apropiados que permitan explicar la relación entre la abundancia de Certhia americana y el porcentaje de bosque de coníferas. En este ejercicio, se explorarán diferentes combinaciones de parámetros dentro de un modelo lineal y se calculará la verosimilitud para cada una, con el objetivo de identificar los valores que maximicen la probabilidad de observar los datos. De esta manera, se seleccionarán el intercepto y la pendiente que mejor describan el patrón presente en los datos, permitiendo interpretar cómo cambia la abundancia de la especie en función de la cobertura de bosque de coníferas.
+El resultado con el valor más alto (menos negativo) indica qué valor de $\mu$ hace más probable la observación de los datos. En este ejemplo, $\mu = 0.4$ produce la mayor log-verosimilitud, por lo que es el valor más plausible bajo el modelo asumido.
+
+**Extensión a un modelo lineal: búsqueda del intercepto y la pendiente**
+
+Ahora se busca modelar la relación entre $y$ (abundancia) y $x$ (porcentaje de coníferas) mediante un modelo lineal de la forma:
+
+$$\mu_i = \beta_0 + \beta_1 x_i$$
+
+$$y_i \sim \text{Normal}(\mu_i, \sigma)$$
+
+La desviación estándar $\sigma$ se fija como la desviación estándar de $y$, aunque en una implementación completa también se estimaría. Se explora una grilla de posibles valores para $\beta_0$ y $\beta_1$ y se calcula la log-verosimilitud para cada combinación:
 
 ```{r}
-
-y <- CerthiaAmericana$abund
-x <- CerthiaAmericana$conifer
 
 set.seed(1234)
 
 beta0_vals <- seq(0.1, 0.8, length.out = 100)  
 beta1_vals <- seq(-0.001, 0.001, length.out = 10)  
 sigma <- sd(y)
-```
 
-Evaluar cada combinación paso a paso
-
-```{r}
 results <- data.frame()
 
 for (b0 in beta0_vals) {
@@ -386,12 +396,15 @@ for (b0 in beta0_vals) {
 }
 ```
 
-Identificar el mejor modelo
+Se identifica la combinación que maximiza la log-verosimilitud:
 
 ```{r}
 results[which.max(results$logLik), ]
 ```
-Los resultados indican que el modelo con $\beta_0$ = 0.411 y $\beta_1$ = -0.00031 presenta el valor de log-verosimilitud más alto (2.82154) entre las combinaciones evaluadas, lo que sugiere que esta combinación de parámetros es la que mejor explica los datos bajo el modelo asumido. En este caso, el intercepto cercano a 0.41 representa el valor esperado de la variable respuesta cuando el predictor es cero, mientras que la pendiente negativa indica que existe una relación inversa entre la variable explicativa y la respuesta, es decir, a medida que aumenta el predictor, la variable respuesta tiende a disminuir. El valor relativamente alto de la log-verosimilitud indica un buen ajuste del modelo a los datos, en comparación con otras combinaciones evaluadas.
+
+Interpretación de los resultados
+
+La combinación con el mayor valor de log-verosimilitud corresponde a $\beta_0 = 0.411$ y $\beta_1 = -0.00033$. Esto significa que, bajo el modelo normal supuesto, estos parámetros hacen más probable la observación de los datos. El intercepto $\beta_0$ representa la abundancia esperada cuando el porcentaje de coníferas es cero. La pendiente $\beta_1$ negativa sugiere una relación inversa entre la cobertura de coníferas y la abundancia de la especie, aunque su magnitud es muy pequeña.
 
 :::
 

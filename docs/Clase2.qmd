@@ -136,11 +136,173 @@ Entonces, ¿cómo podemos obtener los valores de los parámetros que maximizan e
 
 Nota: *En el análisis de datos ecológicos, es fundamental seleccionar la distribución de probabilidad adecuada según la naturaleza de la variable de respuesta. Por ejemplo, los conteos de aves suelen modelarse mediante una función de masa de probabilidad (PMF) bajo una distribución de Poisson, implementada en R con dpois(). De manera similar, los datos de presencia/ausencia se describen mediante una PMF con distribución binomial, utilizando dbinom(). En contraste, las variables continuas, como medidas de biomasa o peso, se modelan mediante una función de densidad de probabilidad (PDF) bajo una distribución normal, implementada en R con dnorm().*
 
-Conteos de aves → PMF (Poisson) → dpois()
+::: {.panel-tabset}
 
-Presencia/ausencia → PMF (Binomial) → dbinom()
+#### Probabilidad
 
-Variables continuas → PDF (Normal) → dnorm()
+La probabilidad y la inferencia estadística mantienen una relación de simetría conceptual. Por un lado, la probabilidad parte de un proceso estocástico conocido y se pregunta qué tipo de datos es probable que genere. Es decir, asume un mecanismo generador de datos y explora sus posibles resultados. Por otro lado, la inferencia estadística recorre el camino inverso: parte de un conjunto de datos observados y formula preguntas sobre el proceso estocástico que pudo haberlos producido. Esta inversión de perspectiva es fundamental para comprender el papel de la probabilidad en la estadística. La máxima verosimilitud, como veremos más adelante, constituye precisamente un puente entre ambas aproximaciones, al buscar aquellos valores de los parámetros de un modelo que hacen más probable la observación de los datos que realmente se han obtenido.
+
+2. El experimento aleatorio y el espacio muestral
+
+Un concepto central en probabilidad es el de experimento aleatorio, entendido como cualquier proceso que conduce a la observación o medición de un fenómeno cuyo resultado no puede predecirse con certeza. Cada observación particular realizada en dicho experimento recibe el nombre de resultado, mientras que el conjunto de todos los resultados posibles se denomina espacio muestral. En ecología, por ejemplo, cuando se selecciona un individuo de una población y se mide su masa corporal, el espacio muestral corresponde al rango de valores posibles que dicha masa puede tomar, como ocurre con los halcones peregrinos, cuyas masas corporales pueden oscilar entre 400 y 1600 gramos. De manera similar, cuando se registra el morfo de color de una serpiente, el espacio muestral se reduce a dos categorías —negro o gris—, mientras que si se cuenta el número de ectoparásitos en una libélula, el espacio muestral está constituido por todos los números enteros no negativos. En todos estos casos, el elemento común es la presencia de un mecanismo aleatorio que hace que los resultados varíen entre una observación y otra.
+
+3. Eventos y la cuantificación del azar
+
+Con frecuencia, el interés no se centra en cada resultado individual del experimento aleatorio, sino en ciertos resúmenes o eventos, entendidos como subconjuntos del espacio muestral. Por ejemplo, puede resultar más relevante clasificar a los halcones peregrinos en "pesados" o "livianos" utilizando un umbral de 800 gramos, que considerar cada valor exacto de masa corporal. Del mismo modo, en un estudio de presencia de una especie en múltiples sitios, puede ser más útil concentrarse en el número total de sitios ocupados que en la lista detallada de cada sitio. Para describir matemáticamente la incertidumbre asociada a estos eventos, se emplea la probabilidad, que se define a partir de tres axiomas fundamentales: primero, la probabilidad de cualquier evento es un número comprendido entre 0 y 1, donde 0 indica un evento imposible y 1 un evento cierto; segundo, la probabilidad de todo el espacio muestral es igual a 1; y tercero, la probabilidad de la unión de eventos mutuamente excluyentes es igual a la suma de sus probabilidades individuales. A estos axiomas se suma con frecuencia la regla de la multiplicación, que establece que la probabilidad de que ocurran dos eventos de forma conjunta es igual al producto de la probabilidad de uno de ellos por la probabilidad del segundo condicionada a que el primero haya ocurrido.
+
+4. Variabilidad muestral y el puente hacia la máxima verosimilitud
+
+Una consecuencia directa de la naturaleza aleatoria de los experimentos es que los resultados observados varían inevitablemente cuando el experimento se repite, ya sea porque se seleccionan distintos individuos, porque distintos investigadores realizan las mediciones o debido a errores de medición inherentes. Esta variabilidad, conocida como variabilidad muestral, constituye la fuente principal de incertidumbre que los modelos estadísticos deben abordar. La probabilidad proporciona el lenguaje formal para describir esta variabilidad, permitiendo calcular, bajo un conjunto de supuestos, qué tan plausible es observar una determinada muestra. La máxima verosimilitud aprovecha esta capacidad de la probabilidad, pero invierte su uso: en lugar de calcular la probabilidad de los datos dados unos parámetros conocidos, busca aquellos valores de los parámetros que hacen máxima dicha probabilidad. De este modo, la probabilidad no solo describe el azar, sino que se convierte en la herramienta fundamental para aprender sobre los mecanismos subyacentes a partir de los datos observados.
+
+**Variables aleatorias **
+
+Una variable aleatoria es simplemente una forma de convertir los resultados de un experimento (como medir el peso de un halcón o contar cuántas plantas hay en un lugar) en números que podemos analizar. Lo importante es entender que hay dos formas de verla: la variable en sí misma, que es el proceso o la idea de lo que estamos midiendo, y el valor concreto que obtenemos cuando hacemos una medición real. Por ejemplo, cuando decimos "vamos a medir el peso de un halcón", esa es la variable aleatoria; cuando ya lo pesamos y obtenemos 850 gramos, ese es el valor observado. En estadística, solemos usar mayúsculas para la variable ($Y$) y minúsculas para el valor observado ($y$).
+
+Pensar de esta manera es muy útil porque nos permite entender que los datos que recolectamos no son fijos, sino que son el resultado de un proceso que tiene algo de azar. Cuando construimos un modelo estadístico para estimar parámetros (por ejemplo, usando máxima verosimilitud), lo que hacemos es describir cómo ese proceso aleatorio genera los datos. Así, en lugar de ver los datos como simples números, los vemos como "realizaciones" de variables aleatorias, lo cual nos ayuda a hacer inferencias más sólidas y a cuantificar nuestra incertidumbre.
+
+Podemos distinguir dos clases de variables aleatorias: las de valor discreto y las continuas. En cierta medida, esta distinción coincide con las escalas de medición nominal, ordinal y métrica o de intervalo (Zar, 1998): las dos primeras producen variables aleatorias de valor discreto, mientras que las dos últimas producen variables aleatorias continuas.
+
+Ejemplos de variables aleatorias discretas incluyen descripciones, etiquetas o nombres de clases, como el sexo; el color del cabello, pelaje o plumaje; estratos geográficos como "Población A", "Población B" y "Población C"; o la identidad del técnico de campo que realiza un conteo de aves por punto. En estas etiquetas de clase no existe un sentido de orden. En contraste, el otro caso típico de variable aleatoria discreta es un conteo, que sí tiene un orden natural. Ejemplos de conteos incluyen el número de polluelos en un nido, el número de serpientes observadas por visita a un sitio, o el número de ballenas que migran frente a un punto de la costa durante un intervalo de tiempo.
+
+Las variables aleatorias continuas pueden tomar cualquier valor dentro de algún rango, al menos hasta la precisión de la medición. Las mediciones de longitud, distancia, área, duración o masa son ejemplos típicos de una variable aleatoria continua. Algunas mediciones pueden ser discretas o continuas, dependiendo del tipo específico. Por ejemplo, la ubicación de un animal en un estudio de movimiento puede ser continua, cuando se registran sus coordenadas exactas en un momento dado, o discreta, cuando solo se anota la identidad de la celda de cuadrícula en la que se encuentra el animal. En general, se puede pasar de variables aleatorias continuas a discretas mediante la "categorización" o agrupación de los resultados de la primera. Hay que tener en cuenta que la precisión de la medición siempre es finita. Por lo tanto, estrictamente hablando, toda variable aleatoria continua se mide en un número finito de clases discretas, pero en la práctica esto generalmente puede ignorarse al modelar variables aleatorias continuas.
+
+Muchos tipos de variables aleatorias tienen límites naturales. Por ejemplo, un conteo no puede ser negativo, como tampoco pueden serlo la mayoría de las mediciones, pero una variable aleatoria formada como la diferencia entre dos conteos o mediciones sí puede serlo. El rango de una variable aleatoria también se denomina su soporte y puede ser una consideración importante al elegir un modelo de probabilidad adecuado para un conjunto de datos.
+
+**Descripción de variables aleatorias mediante distribuciones de probabilidad**
+
+Un modelo estadístico emplea distribuciones de probabilidad para describir el comportamiento de las variables aleatorias. Una distribución puede entenderse como una representación que establece, para cada valor posible que puede arrojar una medición, su grado de probabilidad de ocurrencia. La probabilidad total asociada a todos los resultados posibles suma 1, y la distribución se encarga de repartir ese valor unitario entre los distintos resultados del espacio muestral. Por ejemplo, al lanzar un dado equilibrado, la distribución asigna una probabilidad de 1/6 a cada una de las seis caras. De este modo, una distribución de probabilidad proporciona, para cada valor que una variable aleatoria puede tomar, una medida cuantitativa de su plausibilidad dentro del proceso estocástico que se está modelando.
+
+Utilizamos una función de masa de probabilidad (PMF, por sus siglas en inglés) para variables aleatorias discretas y una función de densidad de probabilidad (PDF, por sus siglas en inglés) para variables aleatorias continuas. Hay que tener en cuenta que en la práctica a menudo utilizamos los términos "PDF" o "densidad" indistintamente para referirnos tanto a una PMF como a una PDF, y el contexto determina cuál se quiere decir. Comenzaremos describiendo una PMF.
+
+Una PMF $f(Y)$ asigna la probabilidad a cada valor observable posible $y$ de una variable aleatoria discreta $Y$:
+
+$$f(Y) = P(Y = y)$$
+
+El valor de una función de masa de probabilidad (PMF) se encuentra siempre entre 0 y 1, dado que es una probabilidad, y la suma de la PMF sobre todos los valores posibles es igual a 1. En efecto, estas son las características que definen una PMF.
+
+Algunas variables aleatorias son binarias y tienen solo dos valores posibles; por ejemplo, un proceso de supervivencia y su variable aleatoria asociada $Y$ solo puede producir un individuo que esté muerto o vivo. Por lo tanto, si se define $y=1$ como un animal que está vivo y $y=0$ como uno que está muerto, entonces es suficiente definir la probabilidad $P(y=1)=\phi$, es decir, la probabilidad de supervivencia, para describir completamente la variable aleatoria binaria (Royle & Dorazio, 2008). Dado que el espacio muestral del experimento aleatorio subyacente contiene solo dos valores, y puesto que la probabilidad de todo el espacio muestral es igual a 1, se sabe que $P(y=0)=1-\phi$. Para describir una variable aleatoria discreta con más de dos resultados posibles, como el color de cabello, donde existen $n$ eventos mutuamente excluyentes en un conjunto finito, solo se necesitan $n-1$ probabilidades libres, ya que la probabilidad de un evento siempre puede expresarse como 1 menos la suma de las probabilidades de todos los demás. Las distribuciones binomial, multinomial o categórica son ejemplos de este tipo de PMF (Royle & Dorazio, 2008: capítulo 2; Schaub & Kéry, 2022: capítulo 2).
+
+Una función de densidad de probabilidad (PDF) proporciona la densidad de probabilidad $f(Y)$ para cada valor observable posible de una variable aleatoria continua $Y$. Esta densidad es un valor no negativo que representa el límite del área de un rectángulo con altura $f(Y)$ y base $(y-\delta, y+\delta)$, cuando la semianchura $\delta$ del rectángulo tiende a 0. Una PDF tiene la característica peculiar de que la probabilidad (pero no la densidad) de cualquier valor particular de $Y$ es 0, y que la densidad puede ser mayor que 1 para algunos valores de $Y$. Para obtener la probabilidad de un rango de valores de $Y$, por ejemplo para $(y_1, y_2)$ dada la densidad $f(Y)$, es necesario integrar $f$ entre $y_1$ y $y_2$, es decir:
+
+$$P(y_1 < Y < y_2) = \int_{y_1}^{y_2} f(Y) , dY$$
+La integral sobre todo el soporte de una PDF es nuevamente igual a 1 por definición.
+
+En estadística, existe un gran número de procesos estocásticos que ocurren con tal frecuencia que sus distribuciones de probabilidad asociadas han recibido nombres propios. Estas distribuciones estadísticas con nombre incluyen la Bernoulli, binomial, Poisson, uniforme y la normal (o gaussiana), las cuales se describen con mayor detalle en el Capítulo 3. Constituyen los componentes básicos típicos de los modelos estadísticos; por lo tanto, es importante lograr una buena comprensión de ellas. Todas las distribuciones están gobernadas por un pequeño número de constantes, denominadas parámetros, que determinan la forma específica de una distribución. Por ejemplo, una distribución de Poisson es un modelo estocástico típico para conteos sin límite superior. La PMF de una variable aleatoria de Poisson es la siguiente (recordando que el signo de exclamación representa la función factorial):
+
+$$f(y \mid \lambda) = P(Y = y \mid \lambda) = \frac{\lambda^y e^{-\lambda}}{y!}$$
+Una PMF proporciona la probabilidad de observar cualquier valor posible de la variable aleatoria $Y$ en función de uno o varios parámetros. Para una PMF de Poisson, $\lambda$ (lambda) es el único parámetro, y representa tanto la media como la varianza de $Y$. En las expresiones para $f$ y $P$ se observa $\lambda$ a la derecha de una barra de condición ($\mid$). Esto significa que los valores de estas funciones dependen del valor específico elegido para $\lambda$. Se sospecha que la mirada de muchos ecólogos se tornará vidriosa al enfrentarse a esta forma explícita de escribir una distribución estadística. Sin embargo, es extremadamente valioso aprender a comprender qué son las funciones de distribución y cómo se utilizan. Se recomienda explorarlas introduciendo algunos valores y observando los resultados, así como generar abundantes gráficos; es decir, adoptar el enfoque experimental hacia la estadística. Debe notarse que $\lambda$ en la PMF de Poisson es solo un nombre convencional, y podría denotarse la media de Poisson con cualquier otra letra griega o romana, o incluso escribirse como una palabra, tal como se hace en los motores de ajuste de modelos. En contraste, $e$ es una "letra de sistema" matemática; es el número de Euler, 2.7183.
+
+Así, la PMF de Poisson permite calcular la probabilidad de observar cualquiera de los resultados posibles de un experimento aleatorio para el cual se define una variable aleatoria que puede ser adecuadamente aproximada por el modelo de una distribución de Poisson. Esto supone que $\lambda$ es conocido. ¿Qué ocurre si por ahora se asume $\lambda = 2$? Entonces, se puede obtener, por ejemplo, la probabilidad de un conteo de 1, que es:
+
+$$\frac{2^1 e^{-2}}{1!} \approx 0.27$$
+
+¿Y la probabilidad de un conteo de cero? Se evalúa la PMF para $Y = 0$ y se obtiene:
+
+$$\frac{2^0 e^{-2}}{0!} \approx 0.14$$
+
+Además, se puede utilizar este modelo de probabilidad para determinar que la probabilidad de un conteo de 2 o de 3 es:
+
+$$\frac{2^2 e^{-2}}{2!} + \frac{2^3 e^{-2}}{3!} \approx 0.27 + 0.18 = 0.45$$
+
+(que estas probabilidades puedan sumarse se deriva directamente de los axiomas de probabilidad). La definición de la PMF de Poisson es la ecuación mencionada, pero con frecuencia se utilizará una notación abreviada. Así, se verá una variable aleatoria de Poisson escrita en diversas formas, incluyendo estas (y recordando el comentario sobre la denominación algo arbitraria del parámetro de Poisson mencionado anteriormente).
+
+$y \sim f(Y \mid \lambda)$
+
+$y \sim f_Y(Y \mid \lambda)$
+
+$y \sim \text{Poisson}(\lambda)$ or $y \sim \text{Pois}(\lambda)$
+
+$y \sim \text{Poisson}(Y \mid \lambda)$ or $y \sim \text{Pois}(Y \mid \lambda)$
+
+**Funciones de densidad y masa en R: dpois, dbinom, dnorm**
+
+En el lenguaje de programación estadística R, las funciones que comienzan con la letra d (de density) corresponden a las funciones de masa de probabilidad (para variables discretas) o de densidad de probabilidad (para variables continuas) de las distribuciones más comúnmente utilizadas. Estas funciones permiten obtener, para un valor dado de una variable aleatoria, la probabilidad (o la densidad) asociada según una distribución específica y sus parámetros.
+
+La función dpois calcula la probabilidad de observar un valor específico $y$ bajo una distribución de Poisson con parámetro $\lambda$. Es decir, evalúa:
+
+$$\text{dpois}(y, \lambda) = \frac{\lambda^y e^{-\lambda}}{y!}$$
+
+De manera análoga, dbinom evalúa la función de masa de probabilidad de una distribución binomial. Dados $n$ ensayos independientes y una probabilidad de éxito $p$, dbinom devuelve la probabilidad de observar exactamente $y$ éxitos:
+
+$$\text{dbinom}(y, n, p) = \binom{n}{y} p^y (1-p)^{n-y}$$
+
+Por su parte, dnorm evalúa la función de densidad de probabilidad de una distribución normal (o gaussiana) con media $\mu$ y desviación estándar $\sigma$. Para un valor $y$, la densidad está dada por:
+
+$$\text{dnorm}(y, \mu, \sigma) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(y-\mu)^2}{2\sigma^2}}$$
+
+Estas funciones son fundamentales en la construcción de modelos estadísticos, ya que permiten calcular la contribución de cada observación a la verosimilitud. En el marco de la estimación por máxima verosimilitud, la función de verosimilitud se construye como el producto (o la suma de logaritmos) de las evaluaciones individuales de estas funciones para cada dato observado, dadas las distribuciones supuestas en el modelo. Así, dpois, dbinom y dnorm no son meros cálculos aislados, sino los componentes esenciales que conectan la teoría de la probabilidad con la práctica del ajuste de modelos estadísticos.
+
+- 1. dpois: distribución de Poisson
+
+Contexto: Supóngase que se estudia el número de aves migratorias que llegan a un humedal por día. Con base en registros históricos, se sabe que la tasa promedio es de $\lambda = 3$ aves por día. Si se asume que el proceso sigue una distribución de Poisson, se desea calcular la probabilidad de observar exactamente 2 aves en un día determinado.
+
+Explicación: La función dpois evalúa la función de masa de probabilidad de Poisson para un valor dado de $y$ y un parámetro $\lambda$. En este caso, $y = 2$ y $\lambda = 3$.
+
+```{r}
+# Parámetro lambda: tasa promedio de aves por día
+lambda <- 3
+
+# Valor observado (número de aves)
+y <- 2
+
+# Calcular la probabilidad de observar exactamente 2 aves
+prob <- dpois(y, lambda)
+
+# Mostrar el resultado
+print(prob)
+```
+
+Interpretación: El valor devuelto por dpois(2, 3) es aproximadamente $0.224$. Esto significa que, bajo el modelo supuesto, existe una probabilidad del $22.4%$ de observar exactamente dos aves en un día. Este cálculo es la contribución de una observación individual a la verosimilitud si se estuviera estimando $\lambda$ a partir de datos.
+
+- 2. dbinom: distribución binomial
+
+Contexto: En un estudio de supervivencia de plantas, se trasplantan $n = 10$ individuos de una especie en una parcela experimental. Con base en estudios previos, se estima que la probabilidad de supervivencia de cada planta es $p = 0.7$, independientemente de las demás. Se desea calcular la probabilidad de que exactamente 8 plantas sobrevivan.
+
+Explicación: La función dbinom evalúa la función de masa de probabilidad binomial para un número de éxitos $y$, dado un número de ensayos $n$ y una probabilidad de éxito $p$.
+
+```{r}
+# Número de ensayos (plantas trasplantadas)
+n <- 10
+
+# Probabilidad de éxito (supervivencia)
+p <- 0.7
+
+# Número de éxitos observado
+y <- 8
+
+# Calcular la probabilidad de que exactamente 8 sobrevivan
+prob <- dbinom(y, n, p)
+
+# Mostrar el resultado
+print(prob)
+```
+
+Interpretación: El resultado de dbinom(8, 10, 0.7) es aproximadamente $0.233$. Esto indica que, si el modelo binomial es correcto, hay un $23.3%$ de probabilidad de observar exactamente 8 plantas vivas de las 10 trasplantadas. En un análisis de máxima verosimilitud, esta función se utiliza para evaluar la probabilidad de los datos observados dado un valor de $p$.
+
+- 3. dnorm: distribución normal
+
+Contexto: En un estudio de morfometría de una especie de roedor, se ha determinado que la longitud corporal sigue una distribución normal con media $\mu = 12$ cm y desviación estándar $\sigma = 1.5$ cm. Se desea obtener la densidad de probabilidad (no la probabilidad) para un individuo que mide exactamente $y = 13.2$ cm.
+
+Explicación: La función dnorm evalúa la función de densidad de probabilidad normal para un valor $y$, dados los parámetros de media $\mu$ y desviación estándar $\sigma$. En variables continuas, el valor de la densidad no es una probabilidad, sino una altura que, al integrarse en un intervalo, produce una probabilidad.
+
+```{r}
+# Media de la distribución
+mu <- 12
+
+# Desviación estándar
+sigma <- 1.5
+
+# Valor observado (longitud en cm)
+y <- 13.2
+
+# Calcular la densidad en ese punto
+densidad <- dnorm(y, mean = mu, sd = sigma)
+
+# Mostrar el resultado
+print(densidad)
+```
+
+Interpretación: El valor devuelto por dnorm(13.2, 12, 1.5) es aproximadamente $0.146$. Este número representa la densidad de probabilidad en ese punto. Si se deseara la probabilidad de que un individuo mida entre dos valores, por ejemplo entre 13 y 14 cm, se utilizaría pnorm(14, 12, 1.5) - pnorm(13, 12, 1.5). En máxima verosimilitud, la densidad evaluada en cada observación contribuye al valor de la función de verosimilitud.
 
 #### Ejercicio
 
@@ -230,6 +392,8 @@ Identificar el mejor modelo
 results[which.max(results$logLik), ]
 ```
 Los resultados indican que el modelo con $\beta_0$ = 0.411 y $\beta_1$ = -0.00031 presenta el valor de log-verosimilitud más alto (2.82154) entre las combinaciones evaluadas, lo que sugiere que esta combinación de parámetros es la que mejor explica los datos bajo el modelo asumido. En este caso, el intercepto cercano a 0.41 representa el valor esperado de la variable respuesta cuando el predictor es cero, mientras que la pendiente negativa indica que existe una relación inversa entre la variable explicativa y la respuesta, es decir, a medida que aumenta el predictor, la variable respuesta tiende a disminuir. El valor relativamente alto de la log-verosimilitud indica un buen ajuste del modelo a los datos, en comparación con otras combinaciones evaluadas.
+
+:::
 
 ### Estimación bayesiana de parámetros
 

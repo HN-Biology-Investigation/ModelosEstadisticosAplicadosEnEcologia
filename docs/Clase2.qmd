@@ -13,7 +13,11 @@ La inferencia estadística tiene como objetivo estimar los valores de los parám
 
 El objetivo de la estadística rara vez es llegar a conclusiones o hacer afirmaciones sobre los datos específicos que se tienen a mano. Más bien, estos se consideran un pequeño subconjunto obtenido de una colección mucho más amplia de valores potenciales de las variables de respuesta y explicativas que podrían haberse registrado para el mismo proceso hipotético generador de datos. La población estadística se define como el conjunto completo de valores de la variable de respuesta que podrían incluirse en una muestra. La información contenida en una muestra (desde el punto de vista de la inferencia estadística, las estimaciones de los parámetros) no es más que un medio transitorio para alcanzar el objetivo mayor de obtener conclusiones confiables sobre la población estadística. En otras palabras, la estimación estadística trata típicamente sobre el proceso que se piensa generó los datos observados o, de manera equivalente, sobre “todos” los conjuntos de datos que dicho proceso podría haber producido.
 
-Referencia principal de la clase: [Statistical Modeling with R: CHAPTER 3 Estimating Parameters: The main purpose of statistical inference](https://doi.org/10.1093/oso/9780192859013.003.0003)
+Referencias principales de la clase: 
+
+- [Statistical Modeling with R: CHAPTER 3 Estimating Parameters: The main purpose of statistical inference](https://doi.org/10.1093/oso/9780192859013.003.0003)
+
+- [Applied Statistical Modelling for Ecologists: Chapter 2 - Introduction to statistical inference](https://doi.org/10.1016/B978-0-443-13715-0.00023-6)
 
 ## Métodos de estimación de parámetros
 
@@ -306,6 +310,40 @@ print(densidad)
 
 Interpretación: El valor devuelto por dnorm(13.2, 12, 1.5) es aproximadamente $0.146$. Este número representa la densidad de probabilidad en ese punto. Si se deseara la probabilidad de que un individuo mida entre dos valores, por ejemplo entre 13 y 14 cm, se utilizaría pnorm(14, 12, 1.5) - pnorm(13, 12, 1.5). En máxima verosimilitud, la densidad evaluada en cada observación contribuye al valor de la función de verosimilitud.
 
+#### La función de verosimilitud
+
+La función de verosimilitud es un concepto clave para la inferencia estadística. Es un ingrediente principal tanto de la escuela clásica como de la escuela bayesiana del aprendizaje a partir de datos. La función de verosimilitud representa la conexión formal entre lo que se observa (los datos) y lo que no se observa (las incógnitas), y especialmente los parámetros que se desean estimar.
+
+"la función de verosimilitud es la función de densidad (conjunta) evaluada en los datos observados, y considerada como una función de $\theta$...". Es decir,
+
+$$L(\theta) \equiv L(\theta; y) = f(y; \theta)$$
+
+¿En qué se diferencia la verosimilitud de una densidad de probabilidad?
+
+La confusión suele surgir porque la verosimilitud se escribe igual que una densidad de probabilidad, pero se lee al revés. En una densidad de probabilidad, los parámetros $\theta$ son conocidos y se pregunta: ¿qué tan probable es observar un valor $y$? En cambio, en la verosimilitud, los datos $y$ ya fueron observados y se pregunta: ¿qué tan "creíbles" son los distintos valores de $\theta$?
+
+Esta inversión tiene una consecuencia importante: la función de verosimilitud no es una distribución de probabilidad. A diferencia de una densidad de probabilidad, el área bajo la curva de verosimilitud no suma 1. La verosimilitud es solo una medida de respaldo relativo, no una probabilidad en el sentido estricto.
+
+¿Por qué se usa el logaritmo de la verosimilitud?
+
+Cuando los datos son independientes (i.i.d.), la verosimilitud conjunta es el producto de las densidades individuales:
+
+$$L(\theta) = \prod_{i=1}^{n} f(y_i \mid \theta)$$
+
+Cada $f(y_i \mid \theta)$ es un número entre 0 y 1, por lo que al multiplicar muchos de ellos el resultado se vuelve extremadamente pequeño, especialmente con muestras grandes. Esto hace que los cálculos numéricos sean difíciles. Por eso se usa el logaritmo natural, que convierte el producto en una suma:
+
+$$\log L(\theta) = l(\theta) = \sum_{i=1}^{n} \log f(y_i \mid \theta)$$
+
+El valor de la log-verosimilitud es más manejable numéricamente y, además, maximizar la verosimilitud es equivalente a maximizar su logaritmo.
+
+¿Qué pasa cuando el modelo incluye covariables?
+
+En la mayoría de los modelos reales, el parámetro $\theta$ no es constante, sino que depende de covariables. Por ejemplo, en un modelo lineal la media $\mu$ se expresa como $\beta_0 + \beta_1 x$. En estos casos, simplemente se reemplaza $\theta$ por una función de las covariables y se estiman los nuevos parámetros (como $\beta_0$ y $\beta_1$).
+
+¿Para qué sirve la verosimilitud?
+
+La función de verosimilitud (o su logaritmo: LL) contiene casi toda la información sobre los parámetros que está presente en los datos. Por eso es el punto de partida tanto de la inferencia frecuentista (que maximiza la verosimilitud) como de la inferencia bayesiana (que combina la verosimilitud con una distribución previa para obtener una posterior). En ambos enfoques, la verosimilitud es el mecanismo mediante el cual los datos actualizan el conocimiento sobre los parámetros de interés.
+
 #### Ejercicio
 
 En este ejercicio se utilizará la base de datos de $Certhia$ $americana$ para ilustrar el principio de máxima verosimilitud. Primero se mostrará cómo evaluar la verosimilitud de diferentes valores de un parámetro en una distribución simple, y luego se extenderá el concepto a un modelo lineal con dos parámetros.
@@ -408,9 +446,280 @@ La combinación con el mayor valor de log-verosimilitud corresponde a $\beta_0 =
 
 :::
 
-### Estimación bayesiana de parámetros
+### Inferencia bayesiana
 
-La estadística bayesiana se fundamenta en el teorema de Bayes, el cual establece la relación entre probabilidades condicionadas mediante la expresión: Pr(A|B) × Pr(B) = Pr(B|A) × Pr(A). Este enfoque parte de una creencia inicial sobre un parámetro o evento, conocida como prior, la cual representa el conocimiento previo antes de observar los datos. Posteriormente, esta creencia se actualiza mediante la incorporación de nueva evidencia proveniente de los datos observados, conocida como verosimilitud. El resultado de esta combinación es la probabilidad posterior, que representa la nueva estimación del parámetro después de considerar la información disponible. Por ejemplo, al estimar la presencia de una especie en un área determinada, se puede asignar inicialmente una probabilidad basada en conocimiento previo; luego, al observar datos de campo, esta probabilidad se actualiza para reflejar de manera más precisa la evidencia empírica. De esta forma, la estadística bayesiana permite integrar el conocimiento previo con la información nueva para mejorar la inferencia y la toma de decisiones. 
+Conceptualmente, el inicio de cualquier análisis bayesiano es exactamente el mismo que en un análisis frecuentista con máxima verosimilitud: un modelo estadístico paramétrico. Esto significa que los datos que se desean analizar son vistos como el resultado de un proceso estocástico, y se describe este proceso generador de datos de una manera adecuada para los objetivos del análisis, ya sea descripción, predicción o comprensión mecanicista (Tredennick et al., 2021). Se utiliza la probabilidad para describir el proceso generador de datos.
+
+Por lo tanto, todos los datos observados y, para modelos jerárquicos (véase el Capítulo 3), también todas las variables no observadas, se tratan como variables aleatorias dotadas de una distribución de probabilidad gobernada por un pequeño número de constantes desconocidas llamadas parámetros. Este es el modelo estadístico paramétrico en el que cada variable aleatoria está completamente descrita por una distribución de probabilidad que se afirma conocer, excepto por sus parámetros. Con este modelo se pueden hacer diversas cosas, como estimar entradas desconocidas (covariables faltantes) o salidas desconocidas (hacer predicciones). Lo más importante es que, al combinar un conjunto de datos con un modelo, se pueden estimar parámetros y evaluar la incertidumbre asociada a esas estimaciones. Es solo a partir de este último punto que la inferencia bayesiana difiere fundamentalmente de la inferencia estadística frecuentista.
+
+**La probabilidad como medida general de incertidumbre o de conocimiento imperfecto**
+
+Los bayesianos dividen el mundo entre cosas que son conocidas y cosas que son al menos parcialmente desconocidas y, por lo tanto, inciertas (Hooten & Hefley, 2019). La característica definitoria de la inferencia bayesiana es el uso de la probabilidad como una medida del conocimiento sobre esas cosas inciertas. En la inferencia bayesiana, al igual que en la inferencia por máxima verosimilitud, se utiliza la probabilidad como medida de variabilidad en un proceso estocástico; es decir, se utilizan distribuciones de probabilidad para caracterizar variables aleatorias y construir los modelos estadísticos. Pero, además, la probabilidad se utiliza de manera más general para cuantificar la cantidad de conocimiento sobre cualquier cosa que no se conoce perfectamente.
+
+Spiegelhalter (2019) denomina a estas dos fuentes de incertidumbre como "estocástica" y "epistémica", y ambas son cuantificadas por la probabilidad cuando se utiliza la inferencia bayesiana. A menudo, la interpretación bayesiana de la probabilidad se describe como un grado de creencia probabilístico. Esto es quizás un poco desafortunado, ya que "creencia" tiene una connotación de ser subjetivo y, por lo tanto, posiblemente poco científico. Una mejor descripción del uso bayesiano de la probabilidad es, probablemente, que se trata de un grado de conocimiento personal o una medida de incertidumbre.
+
+Lindley (2006) enfatiza que, bajo esta visión, la probabilidad se vuelve personal, ya que lo que es bien conocido por una persona puede ser parcial o totalmente desconocido para otra. Por ejemplo, como biólogo conservacionista, uno puede preguntarse si la víbora áspid (Vipera aspis) aún ocurre en un sitio donde se sabía que estaba presente hace 30 años. Esto es incierto, por lo que, como bayesiano, se utilizaría una distribución de probabilidad para cuantificar el conocimiento incompleto sobre la presencia o ausencia actual de la víbora. Pero imagínese a otro biólogo que recientemente ha visto una víbora áspid en ese sitio; para él ya no hay incertidumbre. Que la probabilidad de un evento, cuando se utiliza como medida de conocimiento, pueda ser diferente para una persona que para otra, no significa que tal uso de la probabilidad no sea científico.
+
+El mundo está lleno de cosas que no se conocen con certeza. De hecho, si se piensa bien, hay muy pocas cosas que se sepan con certeza. Entre las cosas desconocidas se incluyen:
+
+- En conservación, si la víbora áspid aún ocurre en un sitio donde se sabía que estaba presente anteriormente.
+
+- En un análisis de supervivencia, el destino y la masa corporal de un individuo durante una ocasión en que no es observado o capturado.
+
+- En un ejercicio de modelado de distribución de especies, la presencia/ausencia o abundancia de una especie de estudio en un sitio no muestreado.
+
+- En otra aplicación de modelado de distribución de especies, el número de celdas de cuadrícula ocupadas por una especie de estudio en una región.
+
+- Y en un análisis de viabilidad poblacional, el destino (existente vs. extinto) y el tamaño de una población en algún momento en el futuro.
+
+En el contexto del modelado, el valor de un parámetro es un ejemplo destacado de algo sobre lo que se tiene incertidumbre. Recuérdese que en los modelos estadísticos se afirma ser, al mismo tiempo, omnisciente y completamente ignorante: se sabe exactamente el tipo de proceso generador de datos, por ejemplo, se afirma que los conteos de abejarucos fueron producidos exactamente por un proceso aleatorio conocido como distribución de Poisson. Pero se finge ignorancia completa sobre el valor de las constantes desconocidas en este proceso, es decir, sobre el parámetro $\lambda$ o, más específicamente, sobre $\alpha$ y $\beta$ que reemplazan a $\lambda$ en el modelo lineal generalizado de Poisson.
+
+**Tratar los parámetros como variables aleatorias**
+
+Cuando se realiza un análisis bayesiano, se utiliza la probabilidad como una medida del conocimiento sobre cualquier cosa que no se conoce con certeza, colocando una distribución de probabilidad sobre ella. Por lo tanto, se aborda la incertidumbre sobre las cosas desconocidas de la misma manera que se aborda la variabilidad de las cosas observables, como los datos. Como consecuencia, se tratan los parámetros y otras cantidades desconocidas como si fueran variables aleatorias. Esto no significa que a priori el valor de un parámetro no pueda ser una constante también para un bayesiano. De hecho, la mayoría de los parámetros en un análisis bayesiano son fundamentalmente idénticos a los parámetros en un análisis frecuentista: son simplemente constantes desconocidas y se tiene "incertidumbre epistémica" sobre sus valores (Spiegelhalter, 2019). Es solo debido al uso de la probabilidad como medida de incertidumbre que se tratan como variables aleatorias, pero sus valores verdaderos son realmente fijos. Link & Barker (2010) citan el ejemplo del millonésimo dígito del número $\pi$, que es una constante desconocida para la mayoría de las personas, pero que se trataría como una variable aleatoria en un análisis bayesiano que apuntara a adivinarlo.
+
+En el contexto de los ejemplos anteriores, esto significa:
+
+- En el ejemplo de la víbora áspid, si se denota como $A$ el evento de que todavía haya serpientes en el sitio 30 años después del último avistamiento conocido, entonces se puede escribir $p(A)$ como la probabilidad de que aún viva al menos una serpiente allí.
+
+- En el análisis de supervivencia, para un individuo $i$ que no es detectado durante la ocasión $t$, se colocará una distribución de probabilidad tanto sobre su destino (binario: muerto o vivo) como sobre su masa corporal (continua), por ejemplo, $p(z_{i,t}=1)$ y $p(x_{i,t})$ donde $z$ es el estado vivo y $x$ es la masa.
+
+- En los dos ejemplos de modelado de distribución de especies, se colocan distribuciones de probabilidad sobre la presencia/ausencia desconocida o sobre la abundancia de la especie modelada en un sitio no muestreado, y sobre el número desconocido de celdas de cuadrícula ocupadas en la región.
+
+- De manera similar, en un análisis de viabilidad poblacional se coloca una distribución de probabilidad sobre el destino o el tamaño de la población de estudio en cada paso de tiempo hasta el horizonte de predicción (Petchey et al., 2015).
+
+**Distribuciones de probabilidad como expresión del conocimiento**
+
+En el contexto del segundo ejemplo de modelado de distribución de especies, se resume el uso de la probabilidad como una medida general de incertidumbre. Una densidad de probabilidad permite describir tanto la falta total de conocimiento (una línea horizontal plana) como la certeza absoluta (una línea vertical), así como cualquier situación intermedia. A medida que se aprende, la distribución de probabilidad para el valor de algún parámetro se vuelve cada vez más concentrada o "puntiaguda". Por lo tanto, la amplitud o estrechez de la distribución de probabilidad cuantifica la cantidad de conocimiento que se tiene sobre un parámetro. Nuevamente, este uso de la probabilidad como medida de incertidumbre es la característica definitoria de la inferencia bayesiana.
+
+Curiosamente, esto coincide con la forma en que los humanos tienden a expresar la incertidumbre, cuando se dicen cosas como "estoy 99% seguro de que esta noche va a llover" o "estoy 100% seguro de que esto o aquello va a suceder". La única diferencia es que los bayesianos realizan cálculos con tales evaluaciones de probabilidad.
+
+
+#### La distribución posterior
+
+En un problema de inferencia con un conjunto de datos $y$ y un modelo con parámetro(s) desconocido(s) $\theta$, un bayesiano sostendría que lo más sensato es estimar $\theta$ basándose en la información contenida en los datos utilizando la expresión de probabilidad condicional $p(\theta \mid y)$. Es decir, se busca la probabilidad de lo que es desconocido (el valor del parámetro $\theta$) dado lo que es conocido (los datos $y$). Por lo tanto, aunque los datos sean considerados como el resultado de un proceso aleatorio, una vez que han sido observados son perfectamente conocidos y ya no existe incertidumbre sobre ellos. Entonces, ¿cómo se debe calcular esta probabilidad condicional de los parámetros dados los datos?
+
+Aquí es donde interviene la regla de Bayes, que para dos eventos $A$ y $B$ puede escribirse como:
+
+$$p(A \mid B) = \frac{p(B \mid A) , p(A)}{p(B)}$$
+
+La regla de Bayes (que por razones estéticas se prefiere escribir sin apóstrofe) establece que la probabilidad de $A$, dado que $B$ es verdadero (o ha sido observado), es el producto de la probabilidad de que $B$ sea verdadero, dado que $A$ es verdadero, multiplicado por la probabilidad de que $A$ sea verdadero, dividido por la probabilidad de que $B$ sea verdadero. Esto es equivalente a $p(A \mid B) = p(A, B) / p(B)$, es decir, la probabilidad conjunta de $A$ y $B$ (o de que tanto $A$ como $B$ sean verdaderos), dividida por la probabilidad de $B$.
+
+La regla de Bayes es un hecho matemático que puede derivarse fácilmente de la definición de probabilidad condicional (Blitzstein & Hwang, 2019; Pishro-Nik, 2014), la cual a su vez se obtiene reorganizando la regla de la multiplicación (Sección 2.1). No hay nada intrínsecamente bayesiano en ella y la regla tiene muchas aplicaciones no bayesianas. Estas incluyen la evaluación de la probabilidad de padecer alguna enfermedad cuando se recibe un resultado positivo en una prueba, y la estimación de los valores realizados de efectos aleatorios en un análisis no bayesiano, como el tamaño poblacional específico de un sitio en un modelo de mezcla $N$ (Kéry & Royle, 2016: capítulo 6) y la presencia o ausencia en un sitio donde una especie no fue detectada en un modelo de ocupación (Kéry & Royle, 2016: capítulo 10). De hecho, la Ecuación 2.7 es la expresión estadística general mediante la cual se actualiza el conocimiento a la luz de nueva información (Blitzstein & Hwang, 2019).
+
+El ministro y matemático inglés Thomas Bayes (1702–1761) y otros como Pierre-Simon Laplace (1749–1827) utilizaron lo que más tarde se conocería como la regla de Bayes para hacer inferencias sobre cosas no observables, como los parámetros en modelos estadísticos. En este contexto, la regla de Bayes puede escribirse de la siguiente manera:
+
+$$p(\theta \mid y) = \frac{p(y \mid \theta) , p(\theta)}{p(y)} = \frac{p(y, \theta)}{p(y)}$$
+Los cuatro componentes de la regla de Bayes en el contexto de la inferencia estadística bayesiana son los siguientes:
+
+- la distribución posterior $p(\theta \mid y)$ es la probabilidad (o densidad de probabilidad) de los parámetros dados los datos y la distribución previa,
+
+- la verosimilitud $p(y \mid \theta)$ es la probabilidad (o densidad de probabilidad) de los datos (es decir, una función de masa de probabilidad o una función de densidad de probabilidad) vista como una función de los parámetros,
+
+- la distribución previa $p(\theta)$,
+
+- la distribución marginal de los datos $p(y) = \int p(y \mid \theta) , p(\theta) , d\theta$ es la integral del numerador sobre el o los parámetros $\theta$, es decir, lo que se obtiene al promediar el numerador sobre todos los valores posibles del parámetro $\theta$, ponderados por su plausibilidad dada en $p(\theta)$.
+
+Hay que tener en cuenta que la distribución posterior también viene dada por el cociente entre la distribución conjunta de los datos y los parámetros, y la distribución marginal de los datos.
+
+Se puede observar que el sello distintivo de la inferencia bayesiana —el uso de la probabilidad como medida del conocimiento incierto— aparece en dos lugares de la regla de Bayes: en la distribución previa y en la distribución posterior. Gracias a esto, es posible hacer expresiones probabilísticas formales sobre valores específicos de los parámetros en un modelo. Por ejemplo, en un análisis de viabilidad poblacional se podría afirmar legítimamente algo como "hay un 95% de certeza de que la tasa de disminución de la población es superior al 20% anual". Este tipo de expresiones son imposibles en las formas no bayesianas de aprendizaje a partir de datos, o al menos no pueden obtenerse de manera tan directa.
+
+Los pasos formales que subyacen a todo análisis bayesiano son los siguientes:
+
+- Se utiliza la probabilidad como una medida de incertidumbre sobre cantidades desconocidas, como el parámetro $\theta$.
+
+- Se trata toda inferencia estadística (por ejemplo, estimación de parámetros, pruebas de hipótesis, imputación de valores faltantes o predicciones) como un cálculo de probabilidad mediante la aplicación de la regla de Bayes.
+
+- Se comienza expresando el conocimiento inicial, o previo, sobre el parámetro $\theta$ mediante una distribución de probabilidad, que es la distribución previa $p(\theta)$. Es importante que no se utilice información de los datos para formar la previa; hacerlo sería usar los datos dos veces y constituiría una trampa.
+
+- Luego, se utiliza la regla de Bayes para actualizar el conocimiento previo con la información contenida en los datos y plasmada en la función de verosimilitud $p(y \mid \theta)$.
+
+- El resultado es otra distribución de probabilidad, la distribución posterior $p(\theta \mid y)$, que representa el nuevo estado de conocimiento sobre $\theta$.
+
+- Todos estos pasos pueden repetirse, y la regla de Bayes constituye una forma natural de actualizar el conocimiento de manera secuencial.
+
+Se puede observar que la verosimilitud es una pieza central también de la inferencia bayesiana, ya que es la verosimilitud (a través de los datos $y$) la que transforma el conocimiento previo en conocimiento posterior sobre el parámetro $\theta$. Sin embargo, para realizar inferencia directa por máxima verosimilitud, se utiliza únicamente la función de verosimilitud junto con los datos y se optimiza sobre el espacio paramétrico para encontrar los estimadores de máxima verosimilitud (MLE). En cambio, en la inferencia bayesiana el objetivo es siempre una distribución para cada elemento desconocido.
+
+La regla de Bayes tiene un gran atractivo heurístico como método para aprender sobre cosas inciertas. En primer lugar, se basa en un "concepto humano" de la probabilidad; es decir, se utiliza formalmente la probabilidad como una medida del conocimiento, de manera similar a como los humanos lo hacemos en el lenguaje cotidiano. En segundo lugar, la regla de Bayes se describe a menudo como $p(\theta \mid y) \propto p(y \mid \theta) , p(\theta)$, es decir, la distribución posterior es proporcional al producto de la verosimilitud y la distribución previa. Y esto es exactamente cómo aprenden los humanos: al enfrentarse a una nueva pieza de información, rara vez se la considera de forma aislada. Más bien, casi siempre se la considera en el contexto de lo que ya se sabe y luego se basa la conclusión o decisión en una combinación tanto de la información nueva como de la anterior. Así, la información nueva actualiza la información antigua, y el resultado es un estado de conocimiento nuevo y (con suerte) mejorado.
+
+La identificación de aves proporciona una buena ilustración de la naturaleza bayesiana del pensamiento humano. Cuando se observa un ave y no se está seguro de su identidad, la conclusión final puede ser "es la especie A" o "es muy probablemente la especie B", o quizás "es más probable que sea la especie C que la especie A". Para llegar a esta conclusión, además de las características observadas en el campo o visibles en una fotografía, siempre se utiliza también conocimiento externo (es decir, previo) sobre la probabilidad de que una especie ocurra en un lugar y momento determinados. Por ejemplo, al ver una gran rapaz planeando en Europa, es extremadamente improbable que sea un cóndor, ya que las dos especies de cóndor son endémicas de América. Del mismo modo, sería muy improbable ver un migrante de larga distancia neotropical en el Ártico canadiense durante el invierno, cuando se espera que esa especie esté en sus cuarteles de invierno en América Latina.
+
+Además, cuando se aprende según la regla de Bayes, queda claro que toda posición científica o toda opinión, tal como está plasmada en la distribución previa, puede ser modificada por la llegada de nueva información. Por lo tanto, en ciencia se deben evitar las previas 0/1, que asignan una probabilidad de 0 (que representa imposibilidad) o 1 (que representa certeza absoluta) a algún evento, o al valor específico de una hipótesis cuantitativa (Lindley, 2006). Eso sería el fin del aprendizaje e iría en contra de la actividad definitoria de la ciencia, que es poner a prueba las teorías (representadas de manera flexible por la distribución previa en la regla de Bayes) con datos empíricos, que de manera igualmente flexible se pueden imaginar como equivalentes a la verosimilitud. El contraste entre las ideas sobre cómo podría ser el mundo y las observaciones sobre cómo es realmente, aumentará o disminuirá la confianza en las teorías y, por lo tanto, les otorgará mayor o menor credibilidad. Así, con el tiempo, este procedimiento permite eliminar las explicaciones menos adecuadas del mundo y conservar las mejores.
+
+Cuando se estiman parámetros, se está acostumbrado a tener un número como estimación puntual (es decir, la mejor conjetura sobre el valor del parámetro) y luego uno o dos números que cuantifican el probable margen de error de esa estimación. ¿Cómo se pueden obtener estos cuando el resultado del análisis es una distribución de probabilidad completa (la posterior)? La respuesta es que simplemente se puede utilizar cualquier medida de posición y de dispersión, como en la estadística descriptiva más básica. Como estimación puntual se puede utilizar la media, la mediana o la moda de la distribución posterior, y como evaluación de la incertidumbre se puede utilizar la desviación estándar o un rango dado por algún percentil, como el 95 o 99... o incluso el 89 si realmente se insiste en ser diferente al resto.
+
+::: {.panel-tabset}
+
+#### Distribuciones previas
+
+En cualquier análisis bayesiano se deben especificar distribuciones previas para todos los parámetros desconocidos.
+
+Históricamente, el uso de información previa en análisis estadísticos ha sido controvertido. Los argumentos a favor del uso de distribuciones previas se centran en su valor como una forma formal de incorporar información externa al estudio. Se puede pensar en las distribuciones previas casi como una especie de conector con un letrero que dice "si se tiene información externa y se desea utilizarla en la estimación, colóquela aquí". Esto parece algo positivo, porque a menudo se puede tener un conocimiento contextual bastante sólido o incluso cuantitativo sobre un parámetro. La regla de Bayes permite combinar esta información con la información contenida en el conjunto de datos de manera relativamente directa.
+
+Por ejemplo, en los ejemplos de cosas inciertas de la Sección 2.7.1, quizás se podría pensar que la proporción de sitios históricos de víbora áspid visitados recientemente en la misma región donde aún se encontró que la víbora sobrevive representa una expectativa razonable también para el sitio en cuestión. En un análisis de supervivencia, las estimaciones disponibles para especies de tamaño similar pueden proporcionar una expectativa razonable para la especie de estudio (McCarthy & Masters, 2005). En general, los resultados de "estudios similares cercanos en el espacio, el tiempo o la taxonomía" pueden proporcionar información a priori sensata sobre el valor probable de un parámetro. La regla de Bayes permite utilizar esa información siempre que se pueda expresar como una distribución de probabilidad.
+
+Las distribuciones previas que pretenden incorporar cierta cantidad de información externa en la estimación se denominan informativas. Se podría argumentar que su uso tiene mucho sentido, ya que se pueden imaginar como si fueran datos adicionales. En cualquier tarea de estimación, no tendría sentido ignorar parte de los datos disponibles. Por lo tanto, tampoco tiene sentido ignorar la información a priori cuando está disponible. El uso de distribuciones previas informativas puede tener grandes beneficios. Así como los datos adicionales hacen que las distribuciones posteriores sean más estrechas (es decir, aumentan el conocimiento sobre un parámetro), las distribuciones previas informativas también tienden a aumentar el conocimiento sobre un parámetro. Se obtendrán entonces desviaciones estándar posteriores más pequeñas e intervalos de credibilidad bayesianos más estrechos. Además, se pueden llegar a estimar parámetros adicionales que quizás no serían estimables sin el uso de distribuciones previas informativas.
+
+Por otro lado, quienes se resisten al uso formal de la información previa (y, por extensión, a la inferencia bayesiana) se basan en la creencia de que la inferencia bayesiana es subjetiva, ya que las distribuciones previas deben ser elegidas activamente y no son sugeridas por consideraciones aparentemente objetivas. Esto parece contradecir el principio de que la ciencia debe ser objetiva y debe minimizar las influencias personales del experimentador o analista. Si bien probablemente sea cierto que se debe intentar hacer la ciencia lo más objetiva posible, se considera que el tema de la subjetividad de la inferencia bayesiana a menudo se ha exagerado enormemente: la elección de la distribución previa es solo una entre docenas o incluso cientos de elecciones arbitrarias que se realizan al estudiar una cuestión científica. Por ejemplo, cuando se está interesado en los efectos de la densodependencia en la dinámica poblacional, ¿qué especie se debe elegir para trabajar? ¿Una planta o un animal? ¿Se debe estudiar en el campo, en una jaula o en el invernadero? ¿En América del Norte o en Australia? ¿Durante qué conjunto de años? Y así sucesivamente. Cada una de las elecciones subjetivas a estas preguntas influirá en los resultados hasta cierto punto, pero parece que nadie se inquieta por ello. Cuando se utiliza la inferencia bayesiana, simplemente se añade una elección más a ese conjunto. Realmente no se cree que esto ponga en peligro el valor científico del estudio.
+
+Sin embargo, es cierto que en un análisis bayesiano las distribuciones previas siempre afectan las estimaciones al menos en algún pequeño grado; no hay forma de evitarlo. Es cierto que la mayoría de las veces, la influencia de la distribución previa será pequeña a menos que se utilicen distribuciones previas informativas y a menos que la cantidad de información en los datos sea realmente pequeña. Pero esto no siempre es así. Además, tener que especificar distribuciones previas introduce una ambigüedad adicional, ya que una distribución previa puede llevar a un resultado, mientras que otra puede llevar a un resultado ligeramente diferente. Esto, por supuesto, no es incorrecto, pero puede hacer que la presentación de un estudio sea más compleja, porque quizás se deban presentar dos o incluso más conjuntos de resultados diferentes, uno para cada distribución previa.
+
+Para bien o para mal, lo que se hace en la gran mayoría de los análisis bayesianos aplicados es utilizar las llamadas distribuciones previas vagas, que pretenden minimizar su influencia en las distribuciones posteriores. Es decir, se eligen distribuciones previas de baja información que son casi uniformes en el rango de valores paramétricos donde la verosimilitud tiene un soporte no despreciable. Las distribuciones previas vagas asignan un peso a priori similar a un amplio rango de valores paramétricos plausibles. Por ejemplo, se podría especificar una distribución uniforme(0, 1) para la probabilidad de que una ubicación histórica de víbora áspid esté aún ocupada, como se podría hacer también para cualquier parámetro que represente una probabilidad, como la supervivencia o la ocupación. En la práctica, a menudo se utiliza una distribución uniforme dentro de un rango adecuado o una "normal plana", es decir, una distribución normal con una varianza grande elegida nuevamente para que la probabilidad a priori de los valores de los parámetros sea aproximadamente similar en un amplio rango relevante. Para otra perspectiva, en la que la elección de distribuciones previas débil o moderadamente informativas merece mucha más reflexión, véase Gelman et al. (2020).
+
+Otro aspecto de la inferencia bayesiana que se considera a menudo exagerado es la falta de invariancia frente a transformaciones en la elección de la distribución previa (Royle & Dorazio, 2008). Por ejemplo, en un modelo lineal generalizado de Poisson, típicamente se modela la media en la escala transformada mediante el logaritmo. En un análisis con distribuciones previas vagas, ¿se debería entonces colocar una uniforme en $\log(\lambda)$ o en $\lambda$? Esta elección tendrá algún efecto en la distribución posterior resultante, aunque la mayoría de las veces será menor y despreciable. Otro ejemplo famoso es la elección de una distribución previa uniforme en la escala logit para el intercepto de una regresión logística. Esto implica una distribución previa muy informativa para el intercepto en la escala de probabilidad, con una masa mucho mayor asignada a valores cercanos a 0 y 1 (Link & Barker, 2010; Northrup & Gerber, 2018). En este libro, como en la mayor parte de la investigación de sus autores, se sigue a Royle & Dorazio (2008) y se especifican distribuciones previas vagas en una "escala natural", que es aquella en la que se prefiere pensar sobre un parámetro. Eso sería $\lambda$ en un modelo lineal generalizado de Poisson y la escala de probabilidad en un modelo lineal generalizado binomial, porque la mayoría de las personas no prefieren pensar en términos del logaritmo del número de abejarucos o de probabilidades logit.
+
+Con distribuciones previas vagas, se encontrará que las estimaciones bayesianas (tanto puntuales como de incertidumbre) suelen ser numéricamente extremadamente similares a las mismas estimaciones obtenidas por máxima verosimilitud para un modelo, a menos que los tamaños de muestra sean realmente pequeños. Esto resulta reconfortante y se considera un fuerte argumento a favor de un uso oportunista de la máxima verosimilitud y los métodos bayesianos. Técnicamente, es la moda de la distribución posterior (a veces denominada estimación de máxima a posteriori, o MAP) en un análisis con distribuciones previas vagas la que corresponde al estimador de máxima verosimilitud. Sin embargo, con distribuciones posteriores aproximadamente simétricas, la moda, la mediana y la media coinciden. En la práctica, la media posterior se utiliza con mayor frecuencia como estimación puntual bayesiana, junto con la desviación estándar posterior como análogo bayesiano del error estándar y los percentiles 95% de la distribución posterior que proporcionan un intervalo de credibilidad bayesiano del 95%. A esto se le denomina intervalo de credibilidad, o CRI, para distinguirlo del intervalo de confianza frecuentista. Sin embargo, nótese que para modelos más complejos (específicamente aquellos con parámetros cuyas distribuciones posteriores tienen formas no gaussianas, por ejemplo, distribuciones unilaterales), la mediana suele ser una estimación puntual preferida, ya que representa mejor el centro de la distribución que la media y la moda (Jeff Doser, comunicación personal).
+
+Curiosamente, el uso de información previa en el aprendizaje a partir de datos no es exclusivo de la inferencia bayesiana. Por ejemplo, la verosimilitud penalizada (Lele et al., 2012; Moreno & Lele, 2010; véase también el Capítulo 18) es un método de estimación frecuentista conceptualmente equivalente en el que se asume que algunos valores de un parámetro son a priori menos probables que otros. No obstante, las distribuciones previas son una característica distintiva de la inferencia bayesiana porque no se puede realizar inferencia bayesiana sin ellas. Y como observación final, se señala que a pesar de la preferencia por las distribuciones previas vagas, a menudo se utilizan las que también se denominan distribuciones previas débilmente informativas. Estas distribuciones previas serán un poco más informativas que las muy vagas, pero aun así producen estimaciones que numéricamente se asemejan fuertemente a las obtenidas sin el uso de información previa (por ejemplo, los estimadores de máxima verosimilitud). Pero las distribuciones previas débilmente informativas a menudo producen cadenas de Markov con una convergencia y mezcla mucho mejores (véase la siguiente sección).
+
+#### Cadenas de Markov Monte Carlo (MCMC)
+
+Cuando se realiza inferencia bayesiana, el objetivo es siempre obtener la distribución posterior de las incógnitas en los modelos estadísticos, especialmente las distribuciones posteriores de los parámetros, $p(\theta \mid y)$. ¿Cómo se pueden obtener estas distribuciones posteriores? Durante siglos, este fue el talón de Aquiles de la inferencia bayesiana. Matemáticamente, la regla de Bayes solo puede evaluarse en casos excepcionales porque las integrales requeridas sobre cada parámetro en el modelo son generalmente intratables (Brooks, 2003; Hobbs & Hooten, 2015; Plummer, 2023b). Por lo tanto, la inferencia bayesiana debía basarse en aproximaciones a menudo restrictivas o (en casos especiales) en el uso de las llamadas distribuciones previas conjugadas. Estas distribuciones previas tienen una "forma" similar a la de la verosimilitud y esta combinación conduce a distribuciones posteriores de una forma conocida. El ejemplo clásico de los libros de texto es la combinación de una verosimilitud binomial con una distribución previa beta al observar $r$ éxitos y $n$ fracasos para una variable aleatoria de Bernoulli, como 'presencia' o 'ausencia' en un contexto de modelado de distribución de especies. El uso de una distribución previa beta($a$, $b$) conduce a una distribución posterior que también es una distribución beta con parámetros $a + r$ y $b + n$. Pero tales "trucos" nunca fueron suficientes para convertir la inferencia bayesiana en una herramienta de inferencia de propósito general para un uso generalizado.
+
+Esto cambió drásticamente a principios de la década de 1990, cuando los estadísticos redescubrieron trabajos realizados por físicos en la década de 1950 (Metropolis & Ulam, 1949; Metropolis et al., 1953). Este trabajo mostró cómo se pueden desarrollar algoritmos de simulación para explorar la forma de distribuciones desconocidas (Geman & Geman, 1984; Tanner & Wong, 1987; Gelfand & Smith, 1990), por ejemplo, de distribuciones posteriores que no podían derivarse analíticamente. El redescubrimiento y el posterior desarrollo de lo que ahora se denominan algoritmos de cadenas de Markov Monte Carlo (MCMC) han causado una revolución estadística desde entonces (Brooks, 2003). Los algoritmos MCMC, junto con el gran aumento de la potencia computacional, han sido los principales responsables de la amplia adopción de la inferencia bayesiana tanto en las ciencias estadísticas como, con la llegada de software amigable como WinBUGS y OpenBUGS (Lunn et al., 2013), también en la ecología. Al menos conceptualmente, estos innovadores motores de software representan los precursores y la inspiración para los tres motores de inferencia bayesiana que se cubren en este libro: JAGS, NIMBLE y Stan (Capítulo 4).
+
+Por varias razones, no se recomendaría aprender a programar los propios algoritmos MCMC a todos los ecólogos. En primer lugar, la curva de aprendizaje de estos métodos para modelos complejos puede ser demasiado pronunciada para muchos. En segundo lugar, depurar el software MCMC personalizado llevaría mucho tiempo que quizás se podría emplear mejor en otros aspectos. Y en tercer lugar, los motores de propósito general disponibles como JAGS, NIMBLE y Stan son increíblemente potentes y permiten a un estadístico experto hacer prácticamente todo lo que podría lograr con código MCMC escrito a medida.
+
+Sin embargo, es importante desarrollar una intuición sobre lo que sucede internamente al ejecutar dichos motores, porque puede ayudar a diagnosticar las causas de los problemas, interpretar los resultados de MCMC y, simplemente, ser intelectualmente satisfactorio. Finalmente, algunas personas pueden encontrarse en la situación de tener que usar algún código MCMC personalizado que otra persona escribió. Y una pequeña proporción puede necesitar y querer aprender a escribir sus propios algoritmos MCMC en R o en algún otro lenguaje de programación estadística. Por estas razones, se desea dar una idea de "cómo funciona MCMC". Se mostrará una de las variantes más simples posibles de MCMC: un algoritmo de Metropolis de caminata aleatoria. Se cree que incluso comprender este simple algoritmo MCMC prototípico ayudará a lograr algunos de los objetivos recién formulados. Se recomienda leer Hooten & Hefley (2019) y Zhao (2024) para aprender mucho más sobre MCMC en el contexto de modelos utilizados en ecología. El Capítulo 17 de Royle et al. (2014) es una introducción clara para ecólogos a varias clases de algoritmos MCMC.
+
+Para ayudar a comprender qué se hace al usar JAGS, NIMBLE o Stan, se enfocará la atención en dos temas: la integración Monte Carlo y un algoritmo MCMC simple para implementar el modelo de regresión lineal de Poisson para los datos suizos de abejarucos de la Sección 2.6. En el primero, se utilizan estadísticos muestrales calculados a partir de números aleatorios extraídos de una distribución para aprender sobre características de esa distribución. Un algoritmo MCMC puede verse como un generador de números aleatorios altamente personalizado para las distribuciones posteriores de los parámetros en los modelos que utilizan inferencia bayesiana.
+
+**Integración Monte Carlo**
+
+Un algoritmo MCMC genera números aleatorios a partir de una distribución posterior. Una vez que se dispone de una gran cantidad de estos números aleatorios, por ejemplo, algunos cientos o miles, se pueden describir para conocer las características de la distribución posterior. Extraer un mayor número de valores proporcionará una mejor aproximación. Por ejemplo, se puede tomar la media muestral como una aproximación de la media de la distribución y la desviación estándar muestral como una aproximación de su desviación estándar. Técnicamente, en estos y otros casos se utiliza la simulación para resolver una integral. Por ejemplo, para la media de la distribución, se utiliza la simulación para resolver la integral $E(x) = \int p(x) , x , dx$.
+
+Para ver cómo se puede utilizar una muestra de números aleatorios de una distribución para conocer la media, la desviación estándar u otras características de esa distribución, considérese el siguiente caso artificial. Se utiliza el generador de números aleatorios gaussianos rnorm() y se extrae un número creciente de valores de una distribución normal con parámetros conocidos para la media y la desviación estándar. Luego se observa qué tan bien se pueden estimar estos dos parámetros a partir de las muestras de valores producidas.
+
+```{r}
+set.seed(2)
+par(mfrow = c(2,2), mar = c(3,5,4,2))
+
+# 10 extracciones de la distribución
+out1 <- rnorm(10, mean = 5, sd = 2)
+hist(out1, breaks = 50, col = "gray", main = "¡No puedo creer que sea normal!")
+mean(out1)
+sd(out1)
+
+# 100 extracciones de la distribución
+out2 <- rnorm(100, mean = 5, sd = 2)
+hist(out2, breaks = 50, col = "gray", main = "Bueno, quizás...")
+mean(out2)
+sd(out2)
+
+# 1000 extracciones de la distribución
+out3 <- rnorm(1000, mean = 5, sd = 2)
+hist(out3, breaks = 50, col = "gray", main = "¡Oh!")
+mean(out3)
+sd(out3)
+
+# 1,000,000 extracciones de la distribución
+out4 <- rnorm(10^6, mean = 5, sd = 2)
+hist(out4, breaks = 100, col = "gray", main = "¡Oh, vaya!")
+mean(out4)
+sd(out4)
+
+```
+
+Con muestras cada vez más grandes, se puede obtener una aproximación esencialmente tan buena como se desee de la distribución de la cual se extrajeron estos números aleatorios. Pero quizás aún más asombroso es lo cerca que pueden estar los resúmenes numéricos de los parámetros verdaderos incluso en muestras pequeñas. Obsérvese esto:
+
+10 extracciones de la distribución
+[1] 5.422303
+[1] 1.969975
+
+100 extracciones de la distribución
+[1] 4.969041
+[1] 2.345771
+
+1000 extracciones de la distribución
+[1] 5.134862
+[1] 1.982934
+
+1,000,000 extracciones de la distribución
+[1] 5.000644
+[1] 1.999467
+
+Por lo tanto, con tan solo 100 o 1000 extracciones, se puede obtener una imagen bastante buena de cómo es la distribución de origen, ya sea gráfica o numéricamente. Esto es lo que siempre se hace con la inferencia bayesiana basada en algoritmos de simulación iterativos: se produce un gran número de números aleatorios y luego se resumen de manera adecuada para inferir las distribuciones de las cuales fueron extraídos. Pero esto no es todo, porque con MCMC real se debe asegurar que las distribuciones de las que se extraen los números aleatorios sean, de hecho, las distribuciones posteriores para los parámetros de interés.
+
+#### Ejercicio
+
+En este ejercicio se utilizará la base de datos de Certhia americana para ilustrar los conceptos fundamentales de la inferencia bayesiana. A diferencia del enfoque de máxima verosimilitud, que produce una estimación puntual de los parámetros, el análisis bayesiano genera distribuciones completas de probabilidad para cada parámetro, permitiendo cuantificar la incertidumbre de manera natural.
+
+```{r}
+y <- CerthiaAmericana$abund
+x <- CerthiaAmericana$conifer
+
+# Crear un data frame para el análisis
+datos <- data.frame(abund = y, conifer = x)
+```
+
+La variable $y$ representa la abundancia observada de Certhia americana, y $x$ corresponde al porcentaje de bosque de coníferas en cada sitio.
+
+**Modelo estadístico y especificación de las distribuciones previas**
+
+Se propone un modelo lineal para describir la relación entre la abundancia y el porcentaje de coníferas:
+
+$ \mu_i = \beta_0 + \beta_1 x_i $
+
+$ y_i \sim \text{Normal}(\mu_i, \sigma) $
+
+En el marco bayesiano, se deben especificar distribuciones previas para cada parámetro desconocido: $\beta_0$, $\beta_1$ y $\sigma$. Dado que no se dispone de información externa sustancial, se utilizarán distribuciones previas vagas que permitan que los datos tengan un papel predominante en la estimación:
+
+Para $\beta_0$: distribución normal con media $0$ y desviación estándar $10$, $\beta_0 \sim \text{Normal}(0, 10)$
+
+Para $\beta_1$: distribución normal con media $0$ y desviación estándar $10$, $\beta_1 \sim \text{Normal}(0, 10)$
+
+Para $\sigma$: distribución $t$ de Student con $3$ grados de libertad, media $0$ y desviación estándar $10$, restringida a valores positivos, $\sigma \sim \text{Student-t}(3, 0, 10)$
+
+**Ajuste del modelo bayesiano con brms**
+
+El paquete brms proporciona una interfaz sencilla para ajustar modelos bayesianos utilizando Stan como motor de MCMC:
+
+```{r}
+library(brms)
+
+# Ajustar el modelo lineal bayesiano
+modelo_bayesiano <- brm(
+  abund ~ conifer,                    # Fórmula del modelo
+  data = datos,                       # Data frame con los datos
+  family = gaussian(),                # Distribución normal
+  prior = c(
+    prior(normal(0, 10), class = "Intercept"),   # Previa para $\beta_0$
+    prior(normal(0, 10), class = "b"),           # Previa para $\beta_1$
+    prior(student_t(3, 0, 10), class = "sigma")  # Previa para $\sigma$
+  ),
+  chains = 4,                         # Número de cadenas
+  iter = 2000,                        # Iteraciones por cadena
+  warmup = 1000,                      # Período de adaptación (burn-in)
+  seed = 123,                         # Semilla para reproducibilidad
+  cores = 4                           # Número de núcleos a utilizar
+)
+
+# Ver resumen del modelo
+summary(modelo_bayesiano)
+```
+
+
+:::
+
+### Frecuentista o Bayesiano?
+
+La respuesta breve es: ¡deberías ser ambos! Esta es la razón. La máxima verosimilitud y la inferencia posterior bayesiana son métodos muy poderosos y generales para ajustar modelos a datos, es decir, para realizar inferencias estadísticas basadas en un modelo y un conjunto de datos. Existen una serie de ventajas y desventajas tanto para la máxima verosimilitud como para los métodos bayesianos, que se resumen a continuación.
+
+La máxima verosimilitud es un método extremadamente bien comprendido con una larga historia (Fisher, 1922). Es "automático" ya que simplemente se define la densidad conjunta de los datos, que vincula las incógnitas (los parámetros) con los datos conocidos. Luego, se trata esa densidad como una función de verosimilitud y se minimiza el logaritmo negativo de la verosimilitud para obtener los estimadores de máxima verosimilitud (MLE). Existen varios métodos para obtener evaluaciones de incertidumbre, como errores estándar e intervalos de confianza asociados a los MLE. Además, los MLE tienen una serie de propiedades deseables que, en general, los hacen "buenos". Se podría argumentar que la máxima verosimilitud es el método de estimación más ampliamente utilizado.
+
+Pero la máxima verosimilitud también tiene desventajas. Primero, los MLE pueden ser difíciles o imposibles de obtener para modelos complejos, como aquellos con muchos efectos aleatorios, especialmente cuando se modelan correlaciones como en modelos espaciales o de series temporales. Segundo, los errores estándar y los intervalos de confianza solo son válidos asintóticamente, es decir, para muestras "grandes", y rara vez se tienen muestras verdaderamente grandes en ecología. Tercero, a menudo se desea calcular funciones de los parámetros, como transformaciones de un parámetro o razones de dos parámetros. El método delta y el bootstrap pueden usarse para calcular errores estándar para estos casos (Kéry & Royle, 2016: capítulo 2), pero ambos pueden volverse difíciles o imposibles para funciones y modelos más complicados. Cuarto, la máxima verosimilitud se basa fundamentalmente en una declaración de probabilidad sobre los datos, no sobre los parámetros. Es decir, una probabilidad como el "95%" para un intervalo de confianza no se refiere al parámetro en cuestión, sino a la confiabilidad del método utilizado para calcular el intervalo. Además, no se tiene el derecho de decir cosas como "estoy 95% seguro de que mi población está disminuyendo" si el 0 está fuera de un intervalo de confianza del 95% para un parámetro de tasa de crecimiento poblacional. Y finalmente, la apelación a datos replicados hipotéticos puede parecer ridícula: por ejemplo, ¿qué podría significar "1 millón de poblaciones replicadas de osos panda"?
+
+Existen al menos tres ventajas importantes al utilizar la inferencia bayesiana con herramientas como JAGS, NIMBLE y Stan. Curiosamente, son razones bastante independientes para elegir la inferencia bayesiana.
+
+Primero está el paradigma bayesiano para la inferencia, que interpreta la probabilidad exactamente como la mayoría de los humanos la usan: como una medida del conocimiento sobre cosas inciertas. Además, cuando se desea introducir información externa en el ajuste del modelo, está muy claro cómo hacerlo a través de las distribuciones previas.
+
+La segunda razón para querer optar por los métodos bayesianos tiene que ver con el cálculo bayesiano, que típicamente implica el uso de MCMC y otros algoritmos de simulación. Estos facilitan el ajuste de modelos jerárquicos para incorporar múltiples fuentes de incertidumbre y correlaciones en los datos. Hoy en día, una gran parte de los modelos ajustados en estadística aplicada caen en esta categoría. Además, los algoritmos basados en simulación facilitan enormemente el cálculo de cantidades derivadas o funciones de los parámetros junto con una evaluación completa de su incertidumbre. Así, ya no es necesario preocuparse por la aproximación correcta del método delta para el error estándar de funciones de parámetros.
+
+La tercera buena razón para optar por los métodos bayesianos tiene que ver con el lenguaje de definición de modelos adoptado en JAGS y NIMBLE, y anteriormente en BUGS, WinBUGS y OpenBUGS (Lunn et al., 2013), y en menor medida también en Stan. El lenguaje BUGS ha demostrado ser sumamente accesible tanto para estadísticos como para no estadísticos a la hora de especificar modelos estadísticos incluso muy complejos. Es el lenguaje BUGS el que pone al alcance de los ecólogos la implementación de modelos realmente complejos y personalizados. Con BUGS se pueden desarrollar modelos que nunca se habrían podido ajustar si se hubiera tenido que usar máxima verosimilitud. Por lo tanto, se puede decir que BUGS libera al modelador que llevas dentro.
+
+Pero la inferencia bayesiana también tiene algunas desventajas. Primero, la distribución previa siempre ejercerá cierta influencia en los resultados, y en situaciones con pocos datos, esta influencia será mayor. Esto se verá en varios capítulos más adelante del libro. Esto puede hacer que la presentación de los resultados sea más compleja, ya que es posible que se necesiten contar múltiples historias. Segundo, para modelos complejos y grandes conjuntos de datos, los métodos basados en simulación como MCMC pueden tardar mucho tiempo en ejecutarse, por ejemplo, días o incluso semanas. Peor aún, a veces nunca se alcanza la convergencia en un tiempo razonable. Tercero, la desventaja final es que los motores BUGS pueden ser tan flexibles y poderosos que puede ser fácil ajustar modelos sin sentido. Con esto se hace referencia especialmente a modelos con parámetros que no son identificables, es decir, para los cuales los datos no contienen información. Es cierto, la identificabilidad de los parámetros es un problema muy importante para cualquier modelo estadístico complejo y puede afectar también a las inferencias por máxima verosimilitud. Sin embargo, la falta de identificabilidad de un parámetro puede ser aún más difícil de diagnosticar cuando se utiliza la inferencia bayesiana que cuando se utiliza la máxima verosimilitud. Existen métodos formales para abordar esto (Cole, 2021), pero pueden ser difíciles de implementar para modelos complejos y para no estadísticos. En la práctica, el mejor método para juzgar si un parámetro es identificable es la simulación (Kéry & Royle, 2016: capítulo 4): se simula un gran número de conjuntos de datos con valores variables de todos los parámetros, especialmente del parámetro sospechoso, se ajusta el modelo y se comparan las estimaciones con los valores verdaderos. Para un parámetro identificable, debería haber una clara semejanza numérica entre las estimaciones y los valores verdaderos.
+
+En resumen, se está completamente de acuerdo con Royle & Dorazio (2008) en que los ecólogos necesitan un buen conocimiento práctico tanto de los métodos de máxima verosimilitud como de los métodos bayesianos en el modelado estadístico. De hecho, todo este libro se basa en esta idea. A veces, o para algunos, uno es la mejor opción, mientras que en otro momento o para otros es la otra opción. Además, los dos métodos de inferencia tienen mucho más en común de lo que a veces se cree: la máxima verosimilitud y los métodos bayesianos comparten su base como enfoques de inferencia basados en modelos, con un papel central desempeñado por la función de verosimilitud. Además, la forma más común en que se realizan los análisis bayesianos en la práctica es utilizando la poderosa maquinaria computacional asociada con los métodos MCMC bayesianos para resolver problemas de estimación difíciles, mientras se minimiza la cantidad de información contenida en las distribuciones previas. Es decir, se trabaja con distribuciones previas vagas. Como resultado, al menos numéricamente, casi siempre se regresa a algo que se asemeja mucho a los mismos estimadores de máxima verosimilitud. Esto se demuestra a lo largo del libro.
 
 
 ### Pruebas de hipótesis

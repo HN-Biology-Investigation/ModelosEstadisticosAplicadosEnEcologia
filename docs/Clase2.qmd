@@ -627,6 +627,181 @@ Con muestras cada vez más grandes, se puede obtener una aproximación esencialm
 
 Por lo tanto, con tan solo 100 o 1000 extracciones, se puede obtener una imagen bastante buena de cómo es la distribución de origen, ya sea gráfica o numéricamente. Esto es lo que siempre se hace con la inferencia bayesiana basada en algoritmos de simulación iterativos: se produce un gran número de números aleatorios y luego se resumen de manera adecuada para inferir las distribuciones de las cuales fueron extraídos. Pero esto no es todo, porque con MCMC real se debe asegurar que las distribuciones de las que se extraen los números aleatorios sean, de hecho, las distribuciones posteriores para los parámetros de interés.
 
+**Monte Carlo ejercicio**
+
+Las cadenas de Monte Carlo, o MCMC, son un método que permite explorar una distribución de probabilidad sin necesidad de conocer su forma completa. En lugar de calcular directamente la distribución —lo que a menudo es imposible en problemas complejos—, el algoritmo construye un recorrido aleatorio a través del espacio de los parámetros, donde cada paso depende únicamente del anterior, formando así una cadena de Markov. En cada paso, se propone un nuevo valor y se decide si aceptarlo o rechazarlo basándose en qué tan plausible es respecto al valor actual y a los datos observados. Tras repetir este proceso millones de veces, el conjunto de valores visitados —descartando los primeros pasos donde el recorrido aún no se ha estabilizado— constituye una muestra representativa de la distribución buscada. De este modo, MCMC convierte un problema de integración imposible en un problema de muestreo manejable, permitiendo estimar cualquier característica de interés, como promedios o intervalos de credibilidad, simplemente resumiendo los valores obtenidos a lo largo de la cadena.
+
+Ejemplo: Abundancia de zorzales en el Jardín Botánico de la UNAH
+
+Un biólogo quiere estimar la abundancia promedio de zorzales (*Turdus grayi*) en el Jardín Botánico de la UNAH. Realiza 10 conteos por puntos y obtiene:
+
+$2, 3, 4, 2, 3, 3, 3, 1, 0, 0$
+
+El biólogo asume que los conteos siguen una distribución de Poisson:
+
+$y_i \sim \text{Poisson}(\lambda)$
+
+donde $\lambda$ es la abundancia promedio que quiere estimar.
+
+Usa un prior gamma poco informativo:
+
+$\lambda \sim \text{Gamma}(0.01, 0.01)$
+
+La posterior es proporcional a:
+
+$P(\lambda \mid \mathbf{y}) \propto \lambda^{\sum y_i} e^{-n\lambda} \cdot \lambda^{0.01-1} e^{-0.01\lambda}$
+
+Para obtener muestras de esta posterior sin calcular la integral, usa MCMC:
+
+```{r}
+# Datos
+y <- c(2, 3, 4, 2, 3, 3, 3, 1, 0, 0)
+n <- length(y)
+sum_y <- sum(y)
+
+# Posterior sin normalizar
+posterior <- function(lambda) {
+  lambda^{sum_y} * exp(-n * lambda) * lambda^{0.01-1} * exp(-0.01 * lambda)
+}
+
+# MCMC
+set.seed(123)
+n_iter <- 5000
+lambda <- numeric(n_iter)
+lambda[1] <- 2
+
+for (i in 2:n_iter) {
+  lambda_prop <- rnorm(1, lambda[i-1], 0.5)
+  if (lambda_prop < 0) lambda_prop <- -lambda_prop
+  
+  R <- posterior(lambda_prop) / posterior(lambda[i-1])
+  
+  if (runif(1) < R) {
+    lambda[i] <- lambda_prop
+  } else {
+    lambda[i] <- lambda[i-1]
+  }
+}
+
+# Resultado
+lambda_muestra <- lambda[1001:n_iter]
+mean(lambda_muestra)
+```
+
+El biólogo estima que la abundancia promedio de zorzales en el Jardín Botánico de la UNAH es:
+
+$\lambda \approx 2.09$ aves por punto de conteo.
+
+Las cadenas de Monte Carlo (MCMC) le permitieron llegar a esta estimación muestreando de la distribución posterior $P(\lambda \mid \mathbf{y})$ sin necesidad de calcular la integral de normalización, usando únicamente los datos observados $2, 3, 4, 2, 3, 3, 3, 1, 0, 0$ y el prior $\lambda \sim \text{Gamma}(0.01, 0.01)$.
+
+```{r}
+# Graficar la cadena completa
+plot(lambda, type = "l", 
+     main = "Cadena de Markov para λ",
+     xlab = "Iteración", 
+     ylab = "λ",
+     col = "blue")
+
+# Ver las 3 cadenas (si hicieras múltiples)
+# Pero en este ejercicio solo tenemos una cadena
+```
+La cadena es simplemente un paseo que da el biólogo por todos los valores posibles de abundancia de zorzales. Empieza en un valor cualquiera (2 aves) y da pasos al azar, pero con una regla: si el nuevo valor explica mejor los datos que el anterior, lo acepta; si lo explica peor, a veces lo acepta y a veces no. Así, después de muchos pasos, el biólogo ha visitado valores altos y bajos, pero ha pasado más tiempo en los valores que son más probables según los conteos que hizo en el campo. Los primeros pasos (calentamiento) se descartan porque aún no había encontrado la zona de mayor probabilidad. Con los pasos restantes, se calcula el promedio (2.09 aves) y se observa que la cadena oscila entre valores cercanos, mostrando que esa es la abundancia estimada y cuánta incertidumbre hay
+
+Aunque la cadena oscila alrededor de la abundancia real, podemos resumirla con la mediana, que es el valor que divide en dos mitades iguales todos los valores visitados por la cadena, o con la media, que es el promedio. En distribuciones simétricas ambas son similares, pero en distribuciones con colas largas la mediana es más confiable porque no se deja afectar por valores extremos poco probables.
+
+Usar más de una cadena de Markov es una práctica recomendada porque, aunque una sola cadena puede ser suficiente cuando el modelo es simple y se comporta bien, con varias cadenas que arrancan desde puntos iniciales muy distintos puedes verificar si todas convergen a la misma región de la distribución posterior, lo que te da confianza de que el resultado es fiable; además, múltiples cadenas permiten calcular diagnósticos de convergencia como el factor R‑hat, donde valores cercanos a 1 indican que las cadenas se han mezclado adecuadamente y no se quedaron atrapadas en zonas equivocadas. Es como enviar a tres biólogos a contar zorzales desde diferentes puntos del jardín botánico: si todos terminan reportando una abundancia similar alrededor de @2.09@ aves, puedes confiar en la estimación; si uno encuentra algo muy distinto, sabes que hay que revisar el modelo o dejar que las cadenas recorran más tiempo.
+
+```{r}
+# Datos
+y <- c(2, 3, 4, 2, 3, 3, 3, 1, 0, 0)
+n <- length(y)
+sum_y <- sum(y)
+
+# Posterior sin normalizar
+posterior <- function(lambda) {
+  lambda^{sum_y} * exp(-n * lambda) * lambda^{0.01-1} * exp(-0.01 * lambda)
+}
+
+# Configurar 4 cadenas con puntos iniciales muy distintos
+set.seed(123)
+n_iter <- 5000
+n_cadenas <- 4
+iniciales <- c(0.5, 2, 5, 10)  # valores muy diferentes
+
+# Crear matriz para guardar las 4 cadenas
+cadenas <- matrix(NA, nrow = n_iter, ncol = n_cadenas)
+
+# Ejecutar MCMC para cada cadena
+for (k in 1:n_cadenas) {
+  lambda <- numeric(n_iter)
+  lambda[1] <- iniciales[k]
+  
+  for (i in 2:n_iter) {
+    lambda_prop <- rnorm(1, lambda[i-1], 0.5)
+    if (lambda_prop < 0) lambda_prop <- -lambda_prop
+    
+    R <- posterior(lambda_prop) / posterior(lambda[i-1])
+    
+    if (runif(1) < R) {
+      lambda[i] <- lambda_prop
+    } else {
+      lambda[i] <- lambda[i-1]
+    }
+  }
+  
+  cadenas[, k] <- lambda
+}
+
+# Descartar calentamiento (primeras 1000 iteraciones)
+calentamiento <- 1001:n_iter
+muestras <- cadenas[calentamiento, ]
+
+# Ver resultados por cadena
+for (k in 1:n_cadenas) {
+  cat("Cadena", k, "(inicio =", iniciales[k], "): media =", 
+      round(mean(muestras[, k]), 3), 
+      "mediana =", round(median(muestras[, k]), 3), "\n")
+}
+
+# Media global
+cat("\nMedia global:", round(mean(muestras), 3))
+cat("Mediana global:", round(median(muestras), 3))
+
+# Graficar las 4 cadenas
+par(mfrow = c(2, 2))
+for (k in 1:n_cadenas) {
+  plot(cadenas[, k], type = "l", 
+       main = paste("Cadena", k, "(inicio =", iniciales[k], ")"),
+       xlab = "Iteración", ylab = "λ", 
+       col = "steelblue", ylim = c(0, 15))
+  abline(v = 1000, col = "red", lty = 2)
+  abline(h = mean(muestras[, k]), col = "darkgreen", lwd = 2)
+}
+
+# Graficar todas las cadenas juntas después del calentamiento
+par(mfrow = c(1, 1))
+matplot(muestras, type = "l", lty = 1, 
+        col = c("blue", "red", "green", "purple"),
+        main = "Cuatro cadenas después del calentamiento",
+        xlab = "Iteración (después de burn-in)", 
+        ylab = "λ")
+legend("topright", legend = paste("Cadena", 1:4, "(inicio =", iniciales, ")"),
+       col = c("blue", "red", "green", "purple"), lty = 1, cex = 0.8)
+
+# Histograma con todas las muestras
+hist(muestras, breaks = 50, 
+     main = "Distribución posterior (4 cadenas combinadas)",
+     xlab = "λ", col = "lightblue")
+abline(v = mean(muestras), col = "red", lwd = 2)
+abline(v = median(muestras), col = "darkgreen", lwd = 2, lty = 2)
+legend("topright", legend = c("Media", "Mediana"),
+       col = c("red", "darkgreen"), lwd = 2, lty = c(1, 2))
+```
+
+Todas las cadenas, aunque empezaron desde valores muy distintos ($0.5, 2, 5, 10$), después del calentamiento convergen a la misma región alrededor de $2.09$. Esto te da confianza de que la estimación es robusta y que la cadena no se quedó atrapada en una región equivocada.
+
+La media y mediana globales serán prácticamente iguales ($~2.09$), confirmando la abundancia estimada de zorzales en el Jardín Botánico de la UNAH.
+
 #### Ejercicio
 
 En este ejercicio se utilizará la base de datos de Certhia americana para ilustrar los conceptos fundamentales de la inferencia bayesiana. A diferencia del enfoque de máxima verosimilitud, que produce una estimación puntual de los parámetros, el análisis bayesiano genera distribuciones completas de probabilidad para cada parámetro, permitiendo cuantificar la incertidumbre de manera natural.
@@ -645,9 +820,9 @@ La variable $y$ representa la abundancia observada de Certhia americana, y $x$ c
 
 Se propone un modelo lineal para describir la relación entre la abundancia y el porcentaje de coníferas:
 
-$ \mu_i = \beta_0 + \beta_1 x_i $
+$$\mu_i = \beta_0 + \beta_1 x_i$$
 
-$ y_i \sim \text{Normal}(\mu_i, \sigma) $
+$$y_i \sim \text{Normal}(\mu_i, \sigma)$$
 
 En el marco bayesiano, se deben especificar distribuciones previas para cada parámetro desconocido: $\beta_0$, $\beta_1$ y $\sigma$. Dado que no se dispone de información externa sustancial, se utilizarán distribuciones previas vagas que permitan que los datos tengan un papel predominante en la estimación:
 

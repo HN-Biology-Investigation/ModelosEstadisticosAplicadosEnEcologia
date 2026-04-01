@@ -658,21 +658,212 @@ F-statistic: 0.02965 on 1 and 28 DF,  p-value: 0.8645</code></pre>
 </div>
 <p>Con muestras cada vez más grandes, se puede obtener una aproximación esencialmente tan buena como se desee de la distribución de la cual se extrajeron estos números aleatorios. Pero quizás aún más asombroso es lo cerca que pueden estar los resúmenes numéricos de los parámetros verdaderos incluso en muestras pequeñas.</p>
 <p>Por lo tanto, con tan solo 100 o 1000 extracciones, se puede obtener una imagen bastante buena de cómo es la distribución de origen, ya sea gráfica o numéricamente. Esto es lo que siempre se hace con la inferencia bayesiana basada en algoritmos de simulación iterativos: se produce un gran número de números aleatorios y luego se resumen de manera adecuada para inferir las distribuciones de las cuales fueron extraídos. Pero esto no es todo, porque con MCMC real se debe asegurar que las distribuciones de las que se extraen los números aleatorios sean, de hecho, las distribuciones posteriores para los parámetros de interés.</p>
+<p><strong>Monte Carlo ejercicio</strong></p>
+<p>Las cadenas de Monte Carlo, o MCMC, son un método que permite explorar una distribución de probabilidad sin necesidad de conocer su forma completa. En lugar de calcular directamente la distribución —lo que a menudo es imposible en problemas complejos—, el algoritmo construye un recorrido aleatorio a través del espacio de los parámetros, donde cada paso depende únicamente del anterior, formando así una cadena de Markov. En cada paso, se propone un nuevo valor y se decide si aceptarlo o rechazarlo basándose en qué tan plausible es respecto al valor actual y a los datos observados. Tras repetir este proceso millones de veces, el conjunto de valores visitados —descartando los primeros pasos donde el recorrido aún no se ha estabilizado— constituye una muestra representativa de la distribución buscada. De este modo, MCMC convierte un problema de integración imposible en un problema de muestreo manejable, permitiendo estimar cualquier característica de interés, como promedios o intervalos de credibilidad, simplemente resumiendo los valores obtenidos a lo largo de la cadena.</p>
+<p>Ejemplo: Abundancia de zorzales en el Jardín Botánico de la UNAH</p>
+<p>Un biólogo quiere estimar la abundancia promedio de zorzales (<em>Turdus grayi</em>) en el Jardín Botánico de la UNAH. Realiza 10 conteos por puntos y obtiene:</p>
+<p><span class="math inline">\(2, 3, 4, 2, 3, 3, 3, 1, 0, 0\)</span></p>
+<p>El biólogo asume que los conteos siguen una distribución de Poisson:</p>
+<p><span class="math inline">\(y_i \sim \text{Poisson}(\lambda)\)</span></p>
+<p>donde <span class="math inline">\(\lambda\)</span> es la abundancia promedio que quiere estimar.</p>
+<p>Usa un prior gamma poco informativo:</p>
+<p><span class="math inline">\(\lambda \sim \text{Gamma}(0.01, 0.01)\)</span></p>
+<p>La posterior es proporcional a:</p>
+<p><span class="math inline">\(P(\lambda \mid \mathbf{y}) \propto \lambda^{\sum y_i} e^{-n\lambda} \cdot \lambda^{0.01-1} e^{-0.01\lambda}\)</span></p>
+<p>Para obtener muestras de esta posterior sin calcular la integral, usa MCMC:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>sum_y <span class="ot">&lt;-</span> <span class="fu">sum</span>(y)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior sin normalizar</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda) {</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  lambda<span class="sc">^</span>{sum_y} <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span>n <span class="sc">*</span> lambda) <span class="sc">*</span> lambda<span class="sc">^</span>{<span class="fl">0.01</span><span class="dv">-1</span>} <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.01</span> <span class="sc">*</span> lambda)</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>lambda[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n_iter) {</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>  lambda_prop <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, lambda[i<span class="dv">-1</span>], <span class="fl">0.5</span>)</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (lambda_prop <span class="sc">&lt;</span> <span class="dv">0</span>) lambda_prop <span class="ot">&lt;-</span> <span class="sc">-</span>lambda_prop</span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> <span class="fu">posterior</span>(lambda_prop) <span class="sc">/</span> <span class="fu">posterior</span>(lambda[i<span class="dv">-1</span>])</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> R) {</span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>    lambda[i] <span class="ot">&lt;-</span> lambda_prop</span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>    lambda[i] <span class="ot">&lt;-</span> lambda[i<span class="dv">-1</span>]</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Resultado</span></span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>lambda_muestra <span class="ot">&lt;-</span> lambda[<span class="dv">1001</span><span class="sc">:</span>n_iter]</span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(lambda_muestra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.088658</code></pre>
+</div>
+</div>
+<p>El biólogo estima que la abundancia promedio de zorzales en el Jardín Botánico de la UNAH es:</p>
+<p><span class="math inline">\(\lambda \approx 2.09\)</span> aves por punto de conteo.</p>
+<p>Las cadenas de Monte Carlo (MCMC) le permitieron llegar a esta estimación muestreando de la distribución posterior <span class="math inline">\(P(\lambda \mid \mathbf{y})\)</span> sin necesidad de calcular la integral de normalización, usando únicamente los datos observados <span class="math inline">\(2, 3, 4, 2, 3, 3, 3, 1, 0, 0\)</span> y el prior <span class="math inline">\(\lambda \sim \text{Gamma}(0.01, 0.01)\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar la cadena completa</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, <span class="at">type =</span> <span class="st">"l"</span>, </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Cadena de Markov para λ"</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Iteración"</span>, </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"λ"</span>,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase2_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver las 3 cadenas (si hicieras múltiples)</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Pero en este ejercicio solo tenemos una cadena</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La cadena es simplemente un paseo que da el biólogo por todos los valores posibles de abundancia de zorzales. Empieza en un valor cualquiera (2 aves) y da pasos al azar, pero con una regla: si el nuevo valor explica mejor los datos que el anterior, lo acepta; si lo explica peor, a veces lo acepta y a veces no. Así, después de muchos pasos, el biólogo ha visitado valores altos y bajos, pero ha pasado más tiempo en los valores que son más probables según los conteos que hizo en el campo. Los primeros pasos (calentamiento) se descartan porque aún no había encontrado la zona de mayor probabilidad. Con los pasos restantes, se calcula el promedio (2.09 aves) y se observa que la cadena oscila entre valores cercanos, mostrando que esa es la abundancia estimada y cuánta incertidumbre hay</p>
+<p>Aunque la cadena oscila alrededor de la abundancia real, podemos resumirla con la mediana, que es el valor que divide en dos mitades iguales todos los valores visitados por la cadena, o con la media, que es el promedio. En distribuciones simétricas ambas son similares, pero en distribuciones con colas largas la mediana es más confiable porque no se deja afectar por valores extremos poco probables.</p>
+<p>Usar más de una cadena de Markov es una práctica recomendada porque, aunque una sola cadena puede ser suficiente cuando el modelo es simple y se comporta bien, con varias cadenas que arrancan desde puntos iniciales muy distintos puedes verificar si todas convergen a la misma región de la distribución posterior, lo que te da confianza de que el resultado es fiable; además, múltiples cadenas permiten calcular diagnósticos de convergencia como el factor R‑hat, donde valores cercanos a 1 indican que las cadenas se han mezclado adecuadamente y no se quedaron atrapadas en zonas equivocadas. Es como enviar a tres biólogos a contar zorzales desde diferentes puntos del jardín botánico: si todos terminan reportando una abundancia similar alrededor de <span class="citation" data-cites="2.09">@2.09</span>@ aves, puedes confiar en la estimación; si uno encuentra algo muy distinto, sabes que hay que revisar el modelo o dejar que las cadenas recorran más tiempo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>sum_y <span class="ot">&lt;-</span> <span class="fu">sum</span>(y)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior sin normalizar</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> <span class="cf">function</span>(lambda) {</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  lambda<span class="sc">^</span>{sum_y} <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span>n <span class="sc">*</span> lambda) <span class="sc">*</span> lambda<span class="sc">^</span>{<span class="fl">0.01</span><span class="dv">-1</span>} <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.01</span> <span class="sc">*</span> lambda)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Configurar 4 cadenas con puntos iniciales muy distintos</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>n_iter <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>n_cadenas <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>iniciales <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>)  <span class="co"># valores muy diferentes</span></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear matriz para guardar las 4 cadenas</span></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>cadenas <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> n_iter, <span class="at">ncol =</span> n_cadenas)</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejecutar MCMC para cada cadena</span></span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_cadenas) {</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>  lambda[<span class="dv">1</span>] <span class="ot">&lt;-</span> iniciales[k]</span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n_iter) {</span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>    lambda_prop <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, lambda[i<span class="dv">-1</span>], <span class="fl">0.5</span>)</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (lambda_prop <span class="sc">&lt;</span> <span class="dv">0</span>) lambda_prop <span class="ot">&lt;-</span> <span class="sc">-</span>lambda_prop</span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>    R <span class="ot">&lt;-</span> <span class="fu">posterior</span>(lambda_prop) <span class="sc">/</span> <span class="fu">posterior</span>(lambda[i<span class="dv">-1</span>])</span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> R) {</span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a>      lambda[i] <span class="ot">&lt;-</span> lambda_prop</span>
+<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>      lambda[i] <span class="ot">&lt;-</span> lambda[i<span class="dv">-1</span>]</span>
+<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a>  cadenas[, k] <span class="ot">&lt;-</span> lambda</span>
+<span id="cb48-39"><a href="#cb48-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-40"><a href="#cb48-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-41"><a href="#cb48-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Descartar calentamiento (primeras 1000 iteraciones)</span></span>
+<span id="cb48-42"><a href="#cb48-42" aria-hidden="true" tabindex="-1"></a>calentamiento <span class="ot">&lt;-</span> <span class="dv">1001</span><span class="sc">:</span>n_iter</span>
+<span id="cb48-43"><a href="#cb48-43" aria-hidden="true" tabindex="-1"></a>muestras <span class="ot">&lt;-</span> cadenas[calentamiento, ]</span>
+<span id="cb48-44"><a href="#cb48-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-45"><a href="#cb48-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver resultados por cadena</span></span>
+<span id="cb48-46"><a href="#cb48-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_cadenas) {</span>
+<span id="cb48-47"><a href="#cb48-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Cadena"</span>, k, <span class="st">"(inicio ="</span>, iniciales[k], <span class="st">"): media ="</span>, </span>
+<span id="cb48-48"><a href="#cb48-48" aria-hidden="true" tabindex="-1"></a>      <span class="fu">round</span>(<span class="fu">mean</span>(muestras[, k]), <span class="dv">3</span>), </span>
+<span id="cb48-49"><a href="#cb48-49" aria-hidden="true" tabindex="-1"></a>      <span class="st">"mediana ="</span>, <span class="fu">round</span>(<span class="fu">median</span>(muestras[, k]), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb48-50"><a href="#cb48-50" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cadena 1 (inicio = 0.5 ): media = 2.091 mediana = 2.064 
+Cadena 2 (inicio = 2 ): media = 2.082 mediana = 2.045 
+Cadena 3 (inicio = 5 ): media = 2.029 mediana = 1.985 
+Cadena 4 (inicio = 10 ): media = 2.095 mediana = 2.072 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Media global</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Media global:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(muestras), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Media global: 2.074</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Mediana global:"</span>, <span class="fu">round</span>(<span class="fu">median</span>(muestras), <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mediana global: 2.044</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar las 4 cadenas</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_cadenas) {</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(cadenas[, k], <span class="at">type =</span> <span class="st">"l"</span>, </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Cadena"</span>, k, <span class="st">"(inicio ="</span>, iniciales[k], <span class="st">")"</span>),</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"Iteración"</span>, <span class="at">ylab =</span> <span class="st">"λ"</span>, </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>))</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">1000</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">mean</span>(muestras[, k]), <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar todas las cadenas juntas después del calentamiento</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(muestras, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, </span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"purple"</span>),</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Cuatro cadenas después del calentamiento"</span>,</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Iteración (después de burn-in)"</span>, </span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">"λ"</span>)</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">paste</span>(<span class="st">"Cadena"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="st">"(inicio ="</span>, iniciales, <span class="st">")"</span>),</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"purple"</span>), <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase2_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma con todas las muestras</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(muestras, <span class="at">breaks =</span> <span class="dv">50</span>, </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Distribución posterior (4 cadenas combinadas)"</span>,</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"λ"</span>, <span class="at">col =</span> <span class="st">"lightblue"</span>)</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">mean</span>(muestras), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">median</span>(muestras), <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Media"</span>, <span class="st">"Mediana"</span>),</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"darkgreen"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Clase2_files/figure-html/unnamed-chunk-15-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Todas las cadenas, aunque empezaron desde valores muy distintos (<span class="math inline">\(0.5, 2, 5, 10\)</span>), después del calentamiento convergen a la misma región alrededor de <span class="math inline">\(2.09\)</span>. Esto te da confianza de que la estimación es robusta y que la cadena no se quedó atrapada en una región equivocada.</p>
+<p>La media y mediana globales serán prácticamente iguales (<span class="math inline">\(~2.09\)</span>), confirmando la abundancia estimada de zorzales en el Jardín Botánico de la UNAH.</p>
 </div>
 <div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
 <p>En este ejercicio se utilizará la base de datos de Certhia americana para ilustrar los conceptos fundamentales de la inferencia bayesiana. A diferencia del enfoque de máxima verosimilitud, que produce una estimación puntual de los parámetros, el análisis bayesiano genera distribuciones completas de probabilidad para cada parámetro, permitiendo cuantificar la incertidumbre de manera natural.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> CerthiaAmericana<span class="sc">$</span>abund</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> CerthiaAmericana<span class="sc">$</span>conifer</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear un data frame para el análisis</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">abund =</span> y, <span class="at">conifer =</span> x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> CerthiaAmericana<span class="sc">$</span>abund</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> CerthiaAmericana<span class="sc">$</span>conifer</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear un data frame para el análisis</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">abund =</span> y, <span class="at">conifer =</span> x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La variable <span class="math inline">\(y\)</span> representa la abundancia observada de Certhia americana, y <span class="math inline">\(x\)</span> corresponde al porcentaje de bosque de coníferas en cada sitio.</p>
 <p><strong>Modelo estadístico y especificación de las distribuciones previas</strong></p>
 <p>Se propone un modelo lineal para describir la relación entre la abundancia y el porcentaje de coníferas:</p>
-<p>$ _i = _0 + _1 x_i $</p>
-<p>$ y_i (_i, ) $</p>
+<p><span class="math display">\[\mu_i = \beta_0 + \beta_1 x_i\]</span></p>
+<p><span class="math display">\[y_i \sim \text{Normal}(\mu_i, \sigma)\]</span></p>
 <p>En el marco bayesiano, se deben especificar distribuciones previas para cada parámetro desconocido: <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> y <span class="math inline">\(\sigma\)</span>. Dado que no se dispone de información externa sustancial, se utilizarán distribuciones previas vagas que permitan que los datos tengan un papel predominante en la estimación:</p>
 <p>Para <span class="math inline">\(\beta_0\)</span>: distribución normal con media <span class="math inline">\(0\)</span> y desviación estándar <span class="math inline">\(10\)</span>, <span class="math inline">\(\beta_0 \sim \text{Normal}(0, 10)\)</span></p>
 <p>Para <span class="math inline">\(\beta_1\)</span>: distribución normal con media <span class="math inline">\(0\)</span> y desviación estándar <span class="math inline">\(10\)</span>, <span class="math inline">\(\beta_1 \sim \text{Normal}(0, 10)\)</span></p>
@@ -680,7 +871,7 @@ F-statistic: 0.02965 on 1 and 28 DF,  p-value: 0.8645</code></pre>
 <p><strong>Ajuste del modelo bayesiano con brms</strong></p>
 <p>El paquete brms proporciona una interfaz sencilla para ajustar modelos bayesianos utilizando Stan como motor de MCMC:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: Rcpp</code></pre>
 </div>
@@ -698,60 +889,30 @@ Attaching package: 'brms'</code></pre>
 
     ar</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustar el modelo lineal bayesiano</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>modelo_bayesiano <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  abund <span class="sc">~</span> conifer,                    <span class="co"># Fórmula del modelo</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> datos,                       <span class="co"># Data frame con los datos</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),                <span class="co"># Distribución normal</span></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> <span class="fu">c</span>(</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">class =</span> <span class="st">"Intercept"</span>),   <span class="co"># Previa para $\beta_0$</span></span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">class =</span> <span class="st">"b"</span>),           <span class="co"># Previa para $\beta_1$</span></span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prior</span>(<span class="fu">student_t</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">10</span>), <span class="at">class =</span> <span class="st">"sigma"</span>)  <span class="co"># Previa para $\sigma$</span></span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,                         <span class="co"># Número de cadenas</span></span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">2000</span>,                        <span class="co"># Iteraciones por cadena</span></span>
-<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="dv">1000</span>,                      <span class="co"># Período de adaptación (burn-in)</span></span>
-<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">123</span>,                         <span class="co"># Semilla para reproducibilidad</span></span>
-<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>                           <span class="co"># Número de núcleos a utilizar</span></span>
-<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustar el modelo lineal bayesiano</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>modelo_bayesiano <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  abund <span class="sc">~</span> conifer,                    <span class="co"># Fórmula del modelo</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> datos,                       <span class="co"># Data frame con los datos</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">gaussian</span>(),                <span class="co"># Distribución normal</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">prior =</span> <span class="fu">c</span>(</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">class =</span> <span class="st">"Intercept"</span>),   <span class="co"># Previa para $\beta_0$</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">class =</span> <span class="st">"b"</span>),           <span class="co"># Previa para $\beta_1$</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prior</span>(<span class="fu">student_t</span>(<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">10</span>), <span class="at">class =</span> <span class="st">"sigma"</span>)  <span class="co"># Previa para $\sigma$</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,                         <span class="co"># Número de cadenas</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter =</span> <span class="dv">2000</span>,                        <span class="co"># Iteraciones por cadena</span></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">warmup =</span> <span class="dv">1000</span>,                      <span class="co"># Período de adaptación (burn-in)</span></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">123</span>,                         <span class="co"># Semilla para reproducibilidad</span></span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>                           <span class="co"># Número de núcleos a utilizar</span></span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Compiling Stan program...</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>WARNING: Rtools is required to build R packages, but is not currently installed.
-
-Please download and install the appropriate version of Rtools for 4.4.3 from
-https://cran.r-project.org/bin/windows/Rtools/.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Trying to compile a simple C file</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Running "C:/PROGRA~1/R/R-44~1.3/bin/x64/Rcmd.exe" SHLIB foo.c
-using C compiler: 'gcc.exe (GCC) 13.3.0'
-gcc  -I"C:/PROGRA~1/R/R-44~1.3/include" -DNDEBUG   -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/Rcpp/include/"  -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/RcppEigen/include/"  -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/RcppEigen/include/unsupported"  -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/BH/include" -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/StanHeaders/include/src/"  -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/StanHeaders/include/"  -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/RcppParallel/include/" -DRCPP_PARALLEL_USE_TBB=1 -I"C:/Users/David Murillo/AppData/Local/R/win-library/4.4/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include "C:/Users/David Murillo/AppData/Local/R/win-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp"  -std=c++1y    -I"C:/rtools44/x86_64-w64-mingw32.static.posix/include"     -O2 -Wall  -mfpmath=sse -msse2 -mstackrealign  -c foo.c -o foo.o
-cc1.exe: warning: command-line option '-std=c++14' is valid for C++/ObjC++ but not for C
-In file included from C:/Users/David Murillo/AppData/Local/R/win-library/4.4/RcppEigen/include/Eigen/Core:19,
-                 from C:/Users/David Murillo/AppData/Local/R/win-library/4.4/RcppEigen/include/Eigen/Dense:1,
-                 from C:/Users/David Murillo/AppData/Local/R/win-library/4.4/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22,
-                 from &lt;command-line&gt;:
-C:/Users/David Murillo/AppData/Local/R/win-library/4.4/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: cmath: No such file or directory
-  679 | #include &lt;cmath&gt;
-      |          ^~~~~~~
-compilation terminated.
-make: *** [C:/PROGRA~1/R/R-44~1.3/etc/x64/Makeconf:289: foo.o] Error 1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>WARNING: Rtools is required to build R packages, but is not currently installed.
-
-Please download and install the appropriate version of Rtools for 4.4.3 from
-https://cran.r-project.org/bin/windows/Rtools/.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
 <pre><code>Start sampling</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver resumen del modelo</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_bayesiano)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver resumen del modelo</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_bayesiano)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: gaussian 
   Links: mu = identity 
